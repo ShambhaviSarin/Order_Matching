@@ -15,19 +15,19 @@ const NavigationBar = () => {
     const toggle = () => setIsOpen(!isOpen);
     return(
       <Navbar color="link" light expand="md">
-        <NavbarBrand href="/">M.A.R.S.S.</NavbarBrand>
+        <NavbarBrand href="/"><img src={require('./logo.png')} alt="logo" height="50"/></NavbarBrand>
         <NavbarToggler onClick={toggle} />
         <Collapse isOpen={isOpen} navbar>
           <Nav className="mr-auto" navbar>
             <NavItem>
-              <NavLink href="https://github.com/ShambhaviSarin/Order_Matching">GitHub</NavLink>
+              <NavLink target="_blank" href="https://github.com/ShambhaviSarin/Order_Matching">GitHub</NavLink>
             </NavItem>
           </Nav>
           <NavbarText>
           <Nav>
             <UncontrolledDropdown nav inNavbar>
-              <DropdownToggle nav caret>
-                <FontAwesomeIcon icon={faUserCircle} size="2x"/>
+              <DropdownToggle nav caret style={{color:'#2c6976'}}>
+                <FontAwesomeIcon icon={faUserCircle} size="2x" color="#2c6976"/>
               </DropdownToggle>
 
               <DropdownMenu right>

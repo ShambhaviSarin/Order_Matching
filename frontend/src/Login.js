@@ -9,10 +9,10 @@ import classnames from 'classnames';
 const NavigationBar = () => {
   return(
     <Navbar color="link" light expand="md" style={{marginTop:'1%'}}>
-      <NavbarBrand href="/">M.A.R.S.S.</NavbarBrand>
+      <NavbarBrand href="/"><img src={require('./logo.png')} alt="logo" height="50"/></NavbarBrand>
         <Nav className="mr-auto" navbar>
           <NavItem>
-            <NavLink href="https://github.com/ShambhaviSarin/Order_Matching">GitHub</NavLink>
+            <NavLink target="_blank" href="https://github.com/ShambhaviSarin/Order_Matching">GitHub</NavLink>
           </NavItem>
         </Nav>
     </Navbar>
