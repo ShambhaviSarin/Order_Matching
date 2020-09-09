@@ -3,11 +3,9 @@ import './App.css';
 import FrontPage from './FrontPage';
 import Shares from './Shares';
 import Login from './Login';
-import { BrowserRouter as Router, Route, Switch, Link, withRouter} from 'react-router-dom';
+import { BrowserRouter as Router, Route, Switch, withRouter} from 'react-router-dom';
 
 const App = () => {
-
-  //render(){
     return (
       <Router>
           <Switch>
@@ -17,7 +15,6 @@ const App = () => {
           </Switch>
       </Router>
     );
-  //}
 }
 
 export default App;

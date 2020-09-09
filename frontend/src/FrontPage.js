@@ -1,6 +1,6 @@
 import React from 'react';
 import 'bootstrap/dist/css/bootstrap.css';
-import { BrowserRouter as Router, Link} from 'react-router-dom';
+import { Link} from 'react-router-dom';
 import {Navbar,NavbarBrand,Nav,NavItem,NavLink,NavbarText,Button} from 'reactstrap';
 
 const NavigationBar = () => {
@@ -22,14 +22,12 @@ const NavigationBar = () => {
 }
 
 const FrontPage = () => {
-  //render(){
     return(
       <div style={{marginLeft: '10%', marginRight:'10%'}}>
         <NavigationBar />
-        <hr />
+        <hr style={{marginLeft: '-12%', marginRight:'-12%'}}/>
       </div>
     );
-  //}
 }
 
 export default FrontPage;
