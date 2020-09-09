@@ -14,7 +14,7 @@ const NavigationBar = () => {
     const [isOpen, setIsOpen] = useState(false);
     const toggle = () => setIsOpen(!isOpen);
     return(
-      <Navbar color="light" light expand="md">
+      <Navbar color="link" light expand="md">
         <NavbarBrand href="/">M.A.R.S.S.</NavbarBrand>
         <NavbarToggler onClick={toggle} />
         <Collapse isOpen={isOpen} navbar>
@@ -33,7 +33,7 @@ const NavigationBar = () => {
               <DropdownMenu right>
                 <Table borderless hover>
                 <theader>
-                <tr style={{backgroundColor:'lightgrey'}}>
+                <tr>
                 <DropdownItem>
                   <th><FontAwesomeIcon icon={faUserCircle}size="3x"/></th>
                   <th>Name<br/>Emailid</th>
@@ -150,7 +150,7 @@ const OrdersForm = () => {
 
 const Shares = (props) => {
     return (
-      <div>
+      <div style={{marginLeft: '10%', marginRight:'10%'}}>
         <NavigationBar />
         <Table style={{width:'100%'}}>
           <tbody>

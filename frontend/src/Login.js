@@ -8,14 +8,14 @@ import classnames from 'classnames';
 
 const NavigationBar = () => {
   return(
-    <Navbar color="light" light expand="md">
+    <Navbar color="link" light expand="md" style={{marginTop:'1%'}}>
       <NavbarBrand href="/">M.A.R.S.S.</NavbarBrand>
         <Nav className="mr-auto" navbar>
           <NavItem>
             <NavLink href="https://github.com/ShambhaviSarin/Order_Matching">GitHub</NavLink>
           </NavItem>
         </Nav>
-      </Navbar>
+    </Navbar>
   );
 }
 
@@ -122,8 +122,9 @@ const LoginForm = () => {
 const Login = () => {
   //render(){
     return(
-      <div>
+      <div style={{marginLeft: '10%', marginRight:'10%'}}>
           <NavigationBar />
+          <hr />
           <LoginForm />
       </div>
     );

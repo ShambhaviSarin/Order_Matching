@@ -5,7 +5,7 @@ import {Navbar,NavbarBrand,Nav,NavItem,NavLink,NavbarText,Button} from 'reactstr
 
 const NavigationBar = () => {
   return(
-    <Navbar color="light" light expand="md">
+    <Navbar color="link" light expand="md" style={{marginTop:'1%'}}>
       <NavbarBrand href="/">M.A.R.S.S.</NavbarBrand>
         <Nav className="mr-auto" navbar>
           <NavItem>
@@ -24,8 +24,9 @@ const NavigationBar = () => {
 const FrontPage = () => {
   //render(){
     return(
-      <div>
+      <div style={{marginLeft: '10%', marginRight:'10%'}}>
         <NavigationBar />
+        <hr />
       </div>
     );
   //}
