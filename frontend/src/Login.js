@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import 'bootstrap/dist/css/bootstrap.css';
 import './Login.css';
-import { BrowserRouter as Router, Link} from 'react-router-dom';
+import { Link} from 'react-router-dom';
 import {Navbar,NavbarBrand,Nav,NavItem,NavLink,Button,
   TabContent,TabPane,Row,Col,Form,FormGroup,Input,Label} from 'reactstrap';
 import classnames from 'classnames';
@@ -87,19 +87,19 @@ const LoginForm = () => {
                 <Input type="password" name="password" id="passwordRegisterConfirm" placeholder="Confirm your password" />
               </Col>
             </FormGroup>
-            <Row form style={{marginTop:'5%', marginRight:'-6%'}}>
+            <Row form style={{marginTop:'5%', marginRight:'-15%'}} inline>
              <Col md={6}>
-               <FormGroup row>
+               <FormGroup row style={{marginLeft: '15%'}}>
                  <Label for="contact">Contact</Label>
                  <Col md={9}>
-                  <Input type="text" name="contact" id="contact" />
+                  <Input type="text" name="contact" id="contact" placeholder="Enter your number"/>
                  </Col>
                </FormGroup>
              </Col>
              <Col md={6}>
-               <FormGroup row>
+               <FormGroup row style={{marginRight: '-15%'}}>
                  <Label for="gender" style={{marginTop:'1%'}}>Gender</Label>
-                 <Col md={9}>
+                 <Col md={7}>
                    <Input type="select" name="gender" id="gender" style={{cursor:'pointer'}}>
                     <option>Male</option>
                     <option>Female</option>
