@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { useForm } from 'react-hook-form';
 import 'bootstrap/dist/css/bootstrap.css';
 import {Collapse,Navbar,NavbarToggler,NavbarBrand,Nav,NavItem,NavLink,UncontrolledDropdown,
   DropdownToggle,DropdownMenu,DropdownItem,NavbarText,Table,Button,TabContent,TabPane,Col,
@@ -7,8 +6,8 @@ import {Collapse,Navbar,NavbarToggler,NavbarBrand,Nav,NavItem,NavLink,Uncontroll
 import { Link} from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faList, faCog, faSignOutAlt } from '@fortawesome/free-solid-svg-icons'
-import { faUserCircle } from '@fortawesome/free-regular-svg-icons'
-import styled from 'styled-components';
+import { faUserCircle } from '@fortawesome/free-regular-svg-icons';
+import axios from "axios";
 import classnames from 'classnames';
 import './Shares.css';
 
@@ -75,43 +74,96 @@ const NavigationBar = () => {
 }
 
 const OrdersForm = (props) => {
-  const { register, errors, handleSubmit, formState } = useForm();
-  const onSubmit = values => console.log(values);
 
-  const [activeType, setActiveType] = useState(0);
-  const toggle = (type) => {
-    if(activeType !== type) setActiveType(type);
-  }
-
-  const StyledInput = styled.input`:focus {outline:none; border:none;}`;
+  const category = props.tab;
+  const [qty, setQty] = useState('');
+  const [type, setType] = useState('Limit');
+  const [price, setPrice] = useState('500');
 
   return(
-    <Form onSubmit={handleSubmit(onSubmit)} style={{marginTop:'10%', marginLeft:'5%', marginRight:'5%', fontSize:'15px'}}>
+    <Form style={{marginTop:'10%', marginLeft:'5%', marginRight:'5%', fontSize:'15px'}}>
       <FormGroup row>
         <Label for="shares" sm={2}>Shares</Label>
         <Col sm={10}>
-          <StyledInput type="text" name="shares" id="shares" placeholder="  Enter quantity" style={{marginLeft:'45%', width:'55%', height:'95%', fontSize:'12px', background:'#cce7e8', color:'6E6E6E', border:'none'}} ref={register({required: true})}/>
-          {errors.shares && (<span role="alert">This field is required</span>)}
+          <Input type="text" name="shares" id="shares" placeholder="  Enter quantity" style={{marginLeft:'45%', width:'55%', height:'95%', fontSize:'12px', background:'#cce7e8', color:'6E6E6E', border:'none',textAlign:'center'}} onChange={event => setQty(event.target.value)}/>
         </Col>
       </FormGroup>
       <FormGroup row>
         <Label for="price" sm={2}>Price</Label>
         <Col sm={4}>
-          <Input type="select" name="type" id="OrderType"
-          style={{cursor:'pointer', border:'none', marginLeft:'-18%', width:'100%', fontSize:'12px', fontWeight:'bold', marginTop:'4%'}}
-          ref={register({required: true})} onChange={() => { toggle(!activeType); }}>
+          <Input type="select" name="type" id="type" style={{cursor:'pointer', border:'none', marginLeft:'-18%', width:'100%', fontSize:'12px', fontWeight:'bold', marginTop:'4%'}} onChange={event => setType(event.target.value)}>
            <option>Limit</option>
            <option>Market</option>
          </Input>
         </Col>
         <Col sm={6}>
-          <StyledInput type="text" readOnly={activeType} value={(activeType == 1) ? "MarketPrice" : null} placeholder="  Enter limit" name="price" id="price" style={{width:'100%', height:'95%', fontSize:'12px',  background:'#cce7e8', color:'6E6E6E', border:'none', }} ref={register({required: true})}/>
-          {errors.price && (<span role="alert">This field is required</span>)}
+          <Input type="text" readOnly={(type === 'Market')?true:false} value={price} placeholder="  Enter limit" name="price" id="price" style={{width:'100%', height:'95%', fontSize:'12px',  background:'#cce7e8', color:'6E6E6E', border:'none', textAlign:'center'}}/>
         </Col>
       </FormGroup>
       <hr style={{borderTop: 'dashed 1px', color:'#BDBDBD', marginTop:'8%'}} />
+      <p id="errors"></p>
       <Button type="submit" color="info" outline style={{width:'100%', marginTop: '31%'}} onClick={()=>{
-        
+        var dataValid=false;
+        var errors=[];
+
+        var qtyValid = false;
+        var result = (qty - Math.floor(qty)) === 0;
+        if(result) {
+            qtyValid=true;
+        } else if(qty === ""){
+          errors.push("Quantity is a mandatory field.");
+        } else {
+          errors.push("Quantity should be a whole number.");
+        }
+
+        var priceValid = false;
+        if(/^\d*\.?\d*$/.test(price)) {
+            priceValid=true;
+        } else if(price === ""){
+          errors.push("Price is a mandatory field for limit orders.");
+        } else {
+          errors.push("Invalid price.");
+        }
+
+        dataValid = qtyValid && priceValid;
+
+        if(dataValid) {
+            var cat = (category === "Buy") ? 0 : 1;
+            var status=2;
+            //0->REJECTED
+            //1->ACCEPTED
+            //2->WAITING
+
+            var rem = price%1;
+            if(rem%5 !== 0) {
+              status=0;
+            }
+
+            var order_type = (type==="Limit") ? 0 : 1;
+
+            const data = {
+                uid : 28,
+                qty : qty,
+                category: cat,
+                type: order_type,
+                price: price,
+                description: 0,
+                status: status
+            }
+            console.log(data);
+            axios.post('http://localhost:1337/orders',data).then(res=>{
+              console.log(res);
+              console.log(res.data);
+            }).catch(error => {console.log(error)});
+        } else {
+          var ul = document.createElement('ul');
+          document.getElementById('errors').appendChild(ul);
+          errors.forEach(function (err) {
+            let li = document.createElement('li');
+            ul.appendChild(li);
+            li.innerHTML += err;
+          });
+        }
       }}>{props.tab}</Button>
       <p style={{color:'#A4A4A4', marginTop:'3%', fontSize:'12px'}}>100% SAFE AND SECURE</p>
     </Form>
