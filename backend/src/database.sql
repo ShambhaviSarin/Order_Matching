@@ -10,17 +10,16 @@ CREATE DATABASE order_matching;
 CREATE TABLE users (
 	user_id serial PRIMARY KEY,
 	full_name VARCHAR ( 100 ) NOT NULL,
-	contact INT NOT NULL,
+	contact VARCHAR (15) NOT NULL,
 	email VARCHAR ( 255 ) UNIQUE NOT NULL,
-  gender char(1) NOT NULL,
+  gender VARCHAR(10) NOT NULL,
   pwd VARCHAR(50) NOT NULL
 );
 
 CREATE TABLE orders (
 	order_id serial PRIMARY KEY,
   user_id INT NOT NULL,
-  order_time TIMESTAMP(3) NOT NULL,
-	full_name VARCHAR ( 100 ) NOT NULL,
+  order_time TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP NOT NULL,
 	qty INT NOT NULL,
   category INT NOT NULL,
   order_type INT NOT NULL,

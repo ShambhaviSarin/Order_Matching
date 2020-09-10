@@ -111,7 +111,7 @@ const OrdersForm = (props) => {
       </FormGroup>
       <hr style={{borderTop: 'dashed 1px', color:'#BDBDBD', marginTop:'8%'}} />
       <Button type="submit" color="info" outline style={{width:'100%', marginTop: '31%'}}>{props.tab}</Button>
-      <p style={{color:'#A4A4A4', marginTop:'2%'}}>100% SAFE AND SECURE</p>
+      <p style={{color:'#A4A4A4', marginTop:'3%', fontSize:'12px'}}>100% SAFE AND SECURE</p>
     </Form>
   );
 }
