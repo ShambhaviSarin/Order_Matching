@@ -8,6 +8,7 @@ import { Link} from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faList, faCog, faSignOutAlt } from '@fortawesome/free-solid-svg-icons'
 import { faUserCircle } from '@fortawesome/free-regular-svg-icons'
+import styled from 'styled-components';
 import classnames from 'classnames';
 import './Shares.css';
 
@@ -24,7 +25,7 @@ const NavigationBar = () => {
               <NavLink target="_blank" href="https://github.com/ShambhaviSarin/Order_Matching">GitHub</NavLink>
             </NavItem>
           </Nav>
-          <NavbarText>
+          <NavbarText style={{marginRight:'-4%'}}>
           <Nav>
             <UncontrolledDropdown nav inNavbar>
               <DropdownToggle nav caret style={{color:'#2c6976'}}>
@@ -82,29 +83,35 @@ const OrdersForm = (props) => {
     if(activeType !== type) setActiveType(type);
   }
 
+  const StyledInput = styled.input`:focus {outline:none; border:none;}`;
+
   return(
-    <Form onSubmit={handleSubmit(onSubmit)} style={{marginTop:'10%'}}>
+    <Form onSubmit={handleSubmit(onSubmit)} style={{marginTop:'10%', marginLeft:'5%', marginRight:'5%', fontSize:'15px'}}>
       <FormGroup row>
         <Label for="shares" sm={2}>Shares</Label>
         <Col sm={10}>
-          <Input type="text" name="shares" id="shares" placeholder="Enter quantity" ref={register({required: true})}/>
+          <StyledInput type="text" name="shares" id="shares" placeholder="  Enter quantity" style={{marginLeft:'45%', width:'55%', height:'95%', fontSize:'12px', background:'#cce7e8', color:'6E6E6E', border:'none'}} ref={register({required: true})}/>
           {errors.shares && (<span role="alert">This field is required</span>)}
         </Col>
       </FormGroup>
       <FormGroup row>
         <Label for="price" sm={2}>Price</Label>
         <Col sm={4}>
-          <Input type="select" name="type" id="OrderType" style={{cursor:'pointer'}} ref={register({required: true})} onChange={() => { toggle(!activeType); }}>
+          <Input type="select" name="type" id="OrderType"
+          style={{cursor:'pointer', border:'none', marginLeft:'-18%', width:'100%', fontSize:'12px', fontWeight:'bold', marginTop:'4%'}}
+          ref={register({required: true})} onChange={() => { toggle(!activeType); }}>
            <option>Limit</option>
            <option>Market</option>
          </Input>
         </Col>
         <Col sm={6}>
-          <Input type="text" readOnly={activeType} value={(activeType == 1) ? "MarketPrice" : null} name="price" id="price" ref={register({required: true})}/>
+          <StyledInput type="text" readOnly={activeType} value={(activeType == 1) ? "MarketPrice" : null} placeholder="  Enter limit" name="price" id="price" style={{width:'100%', height:'95%', fontSize:'12px',  background:'#cce7e8', color:'6E6E6E', border:'none', }} ref={register({required: true})}/>
           {errors.price && (<span role="alert">This field is required</span>)}
         </Col>
       </FormGroup>
-      <Button type="submit" color="info" outline style={{width:'100%', marginTop: '12%'}}>{props.tab}</Button>
+      <hr style={{borderTop: 'dashed 1px', color:'#BDBDBD', marginTop:'8%'}} />
+      <Button type="submit" color="info" outline style={{width:'100%', marginTop: '31%'}}>{props.tab}</Button>
+      <p style={{color:'#A4A4A4', marginTop:'2%'}}>100% SAFE AND SECURE</p>
     </Form>
   );
 }
@@ -115,16 +122,28 @@ const BuySell = () => {
     if(activeTab !== tab) setActiveTab(tab);
   }
 
+  const HoverStyleBuy = {border:'white', outline: 'none', color:'#6E6E6E', width:"25%", marginLeft:'14%'}
+  const [hoverStyleBuy, setHoverStyleBuy] = useState(0);
+  const toggleHoverBuy = style => {
+    if(hoverStyleBuy !== style) setHoverStyleBuy(style);
+  }
+
+  const HoverStyleSell = {border:'white', outline: 'none', color:'#6E6E6E', width:"25%", marginLeft:'11%'}
+  const [hoverStyleSell, setHoverStyleSell] = useState(0);
+  const toggleHoverSell = style => {
+    if(hoverStyleSell !== style) setHoverStyleSell(style);
+  }
+
   return(
     <div className="formS">
       <Nav tabs>
-        <NavItem style={{width:'25%', cursor : 'pointer', fontWeight:'bold'}}>
-          <NavLink className={classnames({ active: activeTab === '1' })} onClick={() => { toggle('1'); }} style={(activeTab === '1')?{border:'none', color:'#5dbcd2', borderBottom:'5px solid #5dbcd2'}:{color:'#6E6E6E'}}>
+        <NavItem style={{width:'25%', cursor : 'pointer', fontWeight:'bold'}} onMouseEnter={() => { toggleHoverBuy(!hoverStyleBuy); }} onMouseLeave={() => { toggleHoverBuy(!hoverStyleBuy); }}>
+          <NavLink className={classnames({ active: activeTab === '1' })} onClick={() => { toggle('1'); }} style={(activeTab === '1')?{border:'none', color:'#5dbcd2', borderBottom:'5px solid #5dbcd2'}:((hoverStyleBuy)?HoverStyleBuy:{color:'#6E6E6E'})} >
             BUY
           </NavLink>
         </NavItem>
-        <NavItem style={{width:'25%', cursor : 'pointer', fontWeight:'bold'}}>
-          <NavLink className={classnames({ active: activeTab === '2' })} onClick={() => { toggle('2'); }} style={(activeTab === '2')?{border:'none', color:'#5dbcd2', borderBottom:'5px solid #5dbcd2'}:{color:'#6E6E6E'}}>
+        <NavItem style={{width:'25%', cursor : 'pointer', fontWeight:'bold'}} onMouseEnter={() => { toggleHoverSell(!hoverStyleSell); }} onMouseLeave={() => { toggleHoverSell(!hoverStyleSell); }}>
+          <NavLink className={classnames({ active: activeTab === '2' })} onClick={() => { toggle('2'); }} style={(activeTab === '2')?{border:'none', color:'#5dbcd2', borderBottom:'5px solid #5dbcd2'}:((hoverStyleSell)?HoverStyleSell:{color:'#6E6E6E'})} >
             SELL
           </NavLink>
         </NavItem>
@@ -149,7 +168,7 @@ const Shares = (props) => {
     return (
       <div style={{marginLeft: '10%', marginRight:'10%'}}>
         <NavigationBar />
-        <hr style={{marginLeft: '-12%', marginRight:'-12%'}}/>
+        <hr style={{marginLeft: '-12%', marginRight:'-12%', marginTop:'-0.2%'}}/>
         <Table style={{width:'100%'}} borderless>
           <tbody>
             <tr>
