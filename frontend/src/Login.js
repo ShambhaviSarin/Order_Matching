@@ -2,6 +2,7 @@ import React, {useState} from 'react';
 import 'bootstrap/dist/css/bootstrap.css';
 import './Login.css';
 import { Link} from 'react-router-dom';
+import axios from "axios";
 import {Navbar,NavbarBrand,Nav,NavItem,NavLink,Button,
   TabContent,TabPane,Row,Col,Form,FormGroup,Input,Label} from 'reactstrap';
 import classnames from 'classnames';
@@ -21,21 +22,41 @@ const NavigationBar = () => {
 
 const LoginForm = () => {
   const [activeTab, setActiveTab] = useState('1');
-
   const toggle = tab => {
     if(activeTab !== tab) setActiveTab(tab);
   }
 
+  const [name, setName] = useState('');
+  const [contact, setContact] = useState('');
+  const [email, setEmail] = useState('');
+  const [gender, setGender] = useState('Male');
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+
+  const StyleTab = {border:'none', color:'#5dbcd2', borderBottom:'5px solid #5dbcd2'}
+
+  const HoverStyleLogin = {border:'white', outline: 'none', color:'#6E6E6E', width:"50%", marginLeft:'25%'}
+  const [hoverStyleLogin, setHoverStyleLogin] = useState(0);
+  const toggleHoverLogin = style => {
+    if(hoverStyleLogin !== style) setHoverStyleLogin(style);
+  }
+
+  const HoverStyleReg = {border:'white', outline: 'none', color:'#6E6E6E', width:"50%", marginLeft:'25%'}
+  const [hoverStyleReg, setHoverStyleReg] = useState(0);
+  const toggleHoverReg = style => {
+    if(hoverStyleReg !== style) setHoverStyleReg(style);
+  }
+
   return (
     <div className="form">
-      <Nav tabs>
-        <NavItem style={{width:'50%'}}>
-          <NavLink className={classnames({ active: activeTab === '1' })} onClick={() => { toggle('1'); }} style={{cursor : 'pointer'}}>
+      <Nav tabs style={{marginTop:'2%'}}>
+        <NavItem style={{width:'50%', cursor:'pointer', fontWeight:'bold'}} onMouseEnter={() => { toggleHoverLogin(!hoverStyleLogin); }} onMouseLeave={() => { toggleHoverLogin(!hoverStyleLogin); }}>
+          <NavLink className={classnames({ active: activeTab === '1' })} onClick={() => { toggle('1'); }} style={(activeTab === '1')?StyleTab:((hoverStyleLogin)?HoverStyleLogin:{color:'#6E6E6E'})}>
             LOGIN
           </NavLink>
         </NavItem>
-        <NavItem style={{width:'50%'}}>
-          <NavLink className={classnames({ active: activeTab === '2' })} onClick={() => { toggle('2'); }} style={{cursor : 'pointer'}}>
+        <NavItem style={{width:'50%', cursor:'pointer', fontWeight:'bold'}} onMouseEnter={() => { toggleHoverReg(!hoverStyleReg); }} onMouseLeave={() => { toggleHoverReg(!hoverStyleReg); }}>
+          <NavLink className={classnames({ active: activeTab === '2' })} onClick={() => { toggle('2'); }} style={(activeTab === '2')?StyleTab:((hoverStyleReg)?HoverStyleReg:{color:'#6E6E6E'})}>
             REGISTER
           </NavLink>
         </NavItem>
@@ -43,7 +64,7 @@ const LoginForm = () => {
 
       <TabContent activeTab={activeTab}>
 
-        <TabPane tabId="1" style={{marginTop: '5%'}}>
+        <TabPane tabId="1" style={{marginTop: '10%'}}>
           <Form>
              <FormGroup row>
                <Label for="email" sm={2}>Email</Label>
@@ -58,49 +79,49 @@ const LoginForm = () => {
                </Col>
              </FormGroup>
           </Form>
-          <Link to="/Shares"><Button color="info" outline>SIGN IN</Button></Link>
+          <Button color="info" outline style={{marginTop:'2%', marginBottom:'2%'}} onClick>SIGN IN</Button>
         </TabPane>
 
-        <TabPane tabId="2" style={{marginTop: '5%'}}>
-          <Form>
+        <TabPane tabId="2" style={{marginTop: '10%'}}>
+          <Form style={{marginLeft:'-10%'}}>
             <FormGroup row>
               <Label for="email" sm={4}>Email</Label>
               <Col sm={8}>
-                <Input type="email" name="email" id="emailRegister" placeholder="marss@ubs.com" />
+                <Input type="email" name="email" id="emailRegister" placeholder="marss@ubs.com" onChange={event => setEmail(event.target.value)}/>
               </Col>
             </FormGroup>
             <FormGroup row>
               <Label for="name" sm={4}>Name</Label>
               <Col sm={8}>
-                <Input type="text" name="name" id="name" placeholder="Enter your name" />
+                <Input type="text" name="name" id="name" placeholder="Enter your name" onChange={event => setName(event.target.value)}/>
               </Col>
             </FormGroup>
             <FormGroup row>
               <Label for="password" sm={4}>Password</Label>
               <Col sm={8}>
-                <Input type="password" name="password" id="passwordRegister" placeholder="Enter your password" />
+                <Input type="password" name="password" id="passwordRegister" placeholder="Enter your password" onChange={event => setPassword(event.target.value)}/>
               </Col>
             </FormGroup>
             <FormGroup row>
               <Label for="password" sm={4}>Confirm Password</Label>
               <Col sm={8}>
-                <Input type="password" name="password" id="passwordRegisterConfirm" placeholder="Confirm your password" />
+                <Input type="password" name="password" id="passwordRegisterConfirm" placeholder="Confirm your password" onChange={event => setConfirmPassword(event.target.value)}/>
               </Col>
             </FormGroup>
             <Row form style={{marginTop:'5%', marginRight:'-15%'}} inline>
              <Col md={6}>
-               <FormGroup row style={{marginLeft: '15%'}}>
-                 <Label for="contact">Contact</Label>
+               <FormGroup row style={{marginLeft: '12%'}}>
+                 <Label for="contact" style={{marginTop:'1%'}}>Contact</Label>
                  <Col md={9}>
-                  <Input type="text" name="contact" id="contact" placeholder="Enter your number"/>
+                  <Input type="text" name="contact" id="contact" placeholder="Enter your number" onChange={event => setContact(event.target.value)}/>
                  </Col>
                </FormGroup>
              </Col>
              <Col md={6}>
-               <FormGroup row style={{marginRight: '-15%'}}>
+               <FormGroup row style={{marginRight: '-12%'}}>
                  <Label for="gender" style={{marginTop:'1%'}}>Gender</Label>
                  <Col md={7}>
-                   <Input type="select" name="gender" id="gender" style={{cursor:'pointer'}}>
+                   <Input type="select" name="gender" id="gender" style={{cursor:'pointer'}} onChange={event => setGender(event.target.value)}>
                     <option>Male</option>
                     <option>Female</option>
                     <option>Others</option>
@@ -110,11 +131,71 @@ const LoginForm = () => {
              </Col>
            </Row>
           </Form>
-          <Link to="/Shares"><Button style={{marginTop: '1%'}} color="info" outline>SIGN UP</Button></Link>
+          <Button style={{marginTop: '2%'}} color="info" outline onClick = {() => {
+            var dataValid=false;
+            var errors=[];
+
+            var conValid = false;
+            var con = /[1-9]+[0-9]+/;
+            if(con.test(contact) && contact.length === 10) {
+                conValid=true;
+            } else if(contact === ""){
+              errors.push("Contact is a mandatory field.");
+            } else {
+              errors.push("Invalid contact number.");
+            }
+
+            var emValid = false;
+            var em = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+            if(em.test(email)) {
+                emValid=true;
+            } else if(email === ""){
+              errors.push("Email is a mandatory field.");
+            } else {
+              errors.push("Invalid email id.");
+            }
+
+            var pwdValid = false;
+            var pwd = /^[A-Za-z]\w{7,14}$/;
+            if(pwd.test(password) && password.length >= 8 && password===confirmPassword) {
+                pwdValid=true;
+            } else if(password === ""){
+              errors.push("Password is a mandatory field.");
+            } else if (password !== confirmPassword) {
+              errors.push("Confirmed Password doesn't match Password");
+            } else {
+              errors.push("Password should be atleast 8 characters and contain atleast a number.");
+            }
+
+            dataValid = conValid && emValid && pwdValid;
+
+            if(dataValid) {
+                const data = {
+                    name : name,
+                    contact : contact,
+                    email : email,
+                    gender : gender,
+                    password : password
+                }
+                console.log(data);
+                axios.post('http://localhost:1337/login',data).then(res=>{
+                  console.log(res);
+                  console.log(res.data);
+                  window.location = "/Shares";
+                }).catch(error => {console.log(error)});
+            } else {
+              var ul = document.createElement('ul');
+              document.getElementById('errors').appendChild(ul);
+              errors.forEach(function (err) {
+                let li = document.createElement('li');
+                ul.appendChild(li);
+                li.innerHTML += err;
+              });
+            }
+          }}>SIGN UP</Button>
+          <p id="errors"></p>
         </TabPane>
-
       </TabContent>
-
     </div>
   );
 }

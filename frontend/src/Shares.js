@@ -110,7 +110,9 @@ const OrdersForm = (props) => {
         </Col>
       </FormGroup>
       <hr style={{borderTop: 'dashed 1px', color:'#BDBDBD', marginTop:'8%'}} />
-      <Button type="submit" color="info" outline style={{width:'100%', marginTop: '31%'}}>{props.tab}</Button>
+      <Button type="submit" color="info" outline style={{width:'100%', marginTop: '31%'}} onClick={()=>{
+        
+      }}>{props.tab}</Button>
       <p style={{color:'#A4A4A4', marginTop:'3%', fontSize:'12px'}}>100% SAFE AND SECURE</p>
     </Form>
   );
@@ -122,13 +124,15 @@ const BuySell = () => {
     if(activeTab !== tab) setActiveTab(tab);
   }
 
-  const HoverStyleBuy = {border:'white', outline: 'none', color:'#6E6E6E', width:"25%", marginLeft:'14%'}
+  const StyleTab = {border:'none', color:'#5dbcd2', borderBottom:'5px solid #5dbcd2'}
+
+  const HoverStyleBuy = {border:'white', outline: 'none', color:'#6E6E6E', width:"25%", marginLeft:'13%'}
   const [hoverStyleBuy, setHoverStyleBuy] = useState(0);
   const toggleHoverBuy = style => {
     if(hoverStyleBuy !== style) setHoverStyleBuy(style);
   }
 
-  const HoverStyleSell = {border:'white', outline: 'none', color:'#6E6E6E', width:"25%", marginLeft:'11%'}
+  const HoverStyleSell = {border:'white', outline: 'none', color:'#6E6E6E', width:"25%", marginLeft:'10%'}
   const [hoverStyleSell, setHoverStyleSell] = useState(0);
   const toggleHoverSell = style => {
     if(hoverStyleSell !== style) setHoverStyleSell(style);
@@ -137,13 +141,13 @@ const BuySell = () => {
   return(
     <div className="formS">
       <Nav tabs>
-        <NavItem style={{width:'25%', cursor : 'pointer', fontWeight:'bold'}} onMouseEnter={() => { toggleHoverBuy(!hoverStyleBuy); }} onMouseLeave={() => { toggleHoverBuy(!hoverStyleBuy); }}>
-          <NavLink className={classnames({ active: activeTab === '1' })} onClick={() => { toggle('1'); }} style={(activeTab === '1')?{border:'none', color:'#5dbcd2', borderBottom:'5px solid #5dbcd2'}:((hoverStyleBuy)?HoverStyleBuy:{color:'#6E6E6E'})} >
+        <NavItem style={{width:'25%', cursor:'pointer', fontWeight:'bold'}} onMouseEnter={() => { toggleHoverBuy(!hoverStyleBuy); }} onMouseLeave={() => { toggleHoverBuy(!hoverStyleBuy); }}>
+          <NavLink className={classnames({ active: activeTab === '1' })} onClick={() => { toggle('1'); }} style={(activeTab === '1')?StyleTab:((hoverStyleBuy)?HoverStyleBuy:{color:'#6E6E6E'})} >
             BUY
           </NavLink>
         </NavItem>
-        <NavItem style={{width:'25%', cursor : 'pointer', fontWeight:'bold'}} onMouseEnter={() => { toggleHoverSell(!hoverStyleSell); }} onMouseLeave={() => { toggleHoverSell(!hoverStyleSell); }}>
-          <NavLink className={classnames({ active: activeTab === '2' })} onClick={() => { toggle('2'); }} style={(activeTab === '2')?{border:'none', color:'#5dbcd2', borderBottom:'5px solid #5dbcd2'}:((hoverStyleSell)?HoverStyleSell:{color:'#6E6E6E'})} >
+        <NavItem style={{width:'25%', cursor:'pointer', fontWeight:'bold'}} onMouseEnter={() => { toggleHoverSell(!hoverStyleSell); }} onMouseLeave={() => { toggleHoverSell(!hoverStyleSell); }}>
+          <NavLink className={classnames({ active: activeTab === '2' })} onClick={() => { toggle('2'); }} style={(activeTab === '2')?StyleTab:((hoverStyleSell)?HoverStyleSell:{color:'#6E6E6E'})} >
             SELL
           </NavLink>
         </NavItem>
