@@ -110,6 +110,7 @@ const LoginForm = () => {
                 var emFound = false;
                 var pwCorrect = false;
                 var formValid = false;
+                var id;
 
                 for(var row = 0; row<data.length; row++) {
                   if(data[row].email === emailLogin) {
@@ -117,6 +118,7 @@ const LoginForm = () => {
                     console.log('Email found');
                     if(data[row].pwd === pwdLogin) {
                       pwCorrect = true;
+                      id = data[row].user_id;
                     } else {
                       errors.push("Incorrect email id or password");
                     }
@@ -131,7 +133,7 @@ const LoginForm = () => {
                 console.log(formValid);
 
                 if(formValid) {
-                  window.location = "/Shares";
+                  window.location = `/Shares?id=${id}`;
                 } else {
                   var ul = document.createElement('ul');
                   document.getElementById('errors').innerHTML="";

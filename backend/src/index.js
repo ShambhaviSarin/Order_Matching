@@ -20,6 +20,49 @@ app.use((req, res, next) => {
   next();
 });
 
+function Queue() {
+   this.elements = [];
+}
+
+Queue.prototype.enqueue = function (e) {
+   this.elements.push(e);
+};
+
+// remove an element from the front of the queue
+Queue.prototype.dequeue = function () {
+    return this.elements.shift();
+};
+
+// check if the queue is empty
+Queue.prototype.isEmpty = function () {
+    return this.elements.length == 0;
+};
+
+// get the element at the front of the queue
+Queue.prototype.peek = function () {
+    return !this.isEmpty() ? this.elements[0] : undefined;
+};
+
+Queue.prototype.print = function () {
+   var str = "";
+   for(var i = 0; i < this.elements.length; i++)
+       str += this.elements[i] +" ";
+   return str;
+};
+
+Queue.prototype.length = function() {
+    return this.elements.length;
+}
+
+let qb = new Queue();
+let qs = new Queue();
+
+function execute() {
+    console.log(qs.print());
+}
+
+setInterval(() => execute(), 1500);
+
 //create orders
 //Anytime we create or get data, it will take some time.
 //Async provides a method called await() which waits for the function to complete before it continues
@@ -78,6 +121,11 @@ app.post("/orders", async(req, res) => {
       [uid, qty, category, type, price, description, status]
     );
     res.json("Accepted"); //returns accepted status code
+    if(category === 0) {
+      qb.enqueue(newOrder.data);
+    } else if(category === 1) {
+      qs.enqueue(newOrder.data);
+    }
   } catch (err) {
       console.error(err.message);
     }
