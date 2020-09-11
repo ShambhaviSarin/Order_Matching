@@ -37,7 +37,13 @@ app.post("/login", async(req, res) => {
       "INSERT INTO users(full_name, contact, email, gender, pwd) VALUES ($1 , $2 , $3 , $4 , $5) RETURNING *",
       [full_name, contact, email, gender, password]
     );
-    res.json("Accepted"); //returns accepted status code
+
+    const user = await pool.query(
+      //returning * makes it easier to check in POSTMAN!
+      "SELECT user_id FROM USERS WHERE email = $1", [email]
+    );
+    console.log(user);
+    res.json(user); //returns accepted status code
     console.log(name);
   } catch (err) {
       console.error(err.message);

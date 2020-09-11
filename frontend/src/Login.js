@@ -213,7 +213,7 @@ const LoginForm = () => {
           <Button style={{marginTop: '2%'}} color="info" outline onClick = {() => {
             var dataValid=false;
             var errors=[];
-
+            document.getElementById('errors1').innerHTML="";
             var conValid = false;
             var con = /[1-9]+[0-9]+/;
             if(con.test(contact) && contact.length === 10) {
@@ -235,7 +235,7 @@ const LoginForm = () => {
             }
 
             var pwdValid = false;
-            var pwd = /^[A-Za-z]\w{7,14}$/;
+            var pwd = /^[A-Za-z0-9]\w{7,14}$/;
             if(pwd.test(password) && password.length >= 8 && password===confirmPassword) {
                 pwdValid=true;
             } else if(password === ""){
@@ -259,8 +259,10 @@ const LoginForm = () => {
                 console.log(data);
                 axios.post('http://localhost:1337/login',data).then(res=>{
                   console.log(res);
-                  console.log(res.data);
-                  window.location = "/Shares";
+                  //console.log(res.data);
+                  var id = res.data.rows[0].user_id;
+                  console.log(id);
+                  window.location = `/Shares?id=${id}`;
                 }).catch(error => {console.log(error)});
             } else {
               var ul = document.createElement('ul');

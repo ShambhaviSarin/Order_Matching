@@ -143,9 +143,14 @@ const OrdersForm = (props) => {
             if(rem%5 !== 0) {
               status=0;
             }
+
+            const search = window.location.search; // returns the URL query String
+            const params = new URLSearchParams(search);
+            const idFromURL = params.get('id');
+
             var order_type = (type==="Limit") ? 0 : 1;
             const data = {
-                uid : 28,
+                uid : idFromURL,
                 qty : qty,
                 category: cat,
                 type: order_type,
