@@ -58,6 +58,7 @@ app.get('/login', async(req, res) => {
 
 app.post("/orders", async(req, res) => {
   try {
+    console.log(req.body);
     var uid = req.body.uid;
     var qty= req.body.qty;
     var category = req.body.category;

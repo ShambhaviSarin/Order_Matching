@@ -76,6 +76,7 @@ const NavigationBar = () => {
 const OrdersForm = (props) => {
 
   const category = props.tab;
+  const id = props.id;
   const [qty, setQty] = useState('');
   const [type, setType] = useState('Limit');
   const [price, setPrice] = useState('500');
@@ -97,21 +98,24 @@ const OrdersForm = (props) => {
          </Input>
         </Col>
         <Col sm={6}>
-          <Input type="text" readOnly={(type === 'Market')?true:false} value={price} placeholder="  Enter limit" name="price" id="price" style={{width:'100%', height:'95%', fontSize:'12px',  background:'#cce7e8', color:'6E6E6E', border:'none', textAlign:'center'}}/>
+          <Input type="text" readOnly={(type === 'Market')?true:false} value={price} placeholder="  Enter limit" name="price" id="price" style={{width:'100%', height:'95%', fontSize:'12px',  background:'#cce7e8', color:'6E6E6E', border:'none', textAlign:'center'}} onChange={event => setPrice(event.target.value)}/>
         </Col>
       </FormGroup>
       <hr style={{borderTop: 'dashed 1px', color:'#BDBDBD', marginTop:'8%'}} />
-      <p id="errors"></p>
-      <Button type="submit" color="info" outline style={{width:'100%', marginTop: '31%'}} onClick={()=>{
+      <p id={props.id}></p>
+      <Button type="submit" color="info" outline style={{width:'100%', marginTop: '31%'}} onClick={(e)=>{
+        e.preventDefault();
+        //document.getElementById('errors2').innerHTML="";
         var dataValid=false;
         var errors=[];
 
         var qtyValid = false;
-        var result = (qty - Math.floor(qty)) === 0;
-        if(result) {
-            qtyValid=true;
-        } else if(qty === ""){
+        //var result = (qty - Math.floor(qty)) === 0;
+        var result=1;
+        if(qty === ""){
           errors.push("Quantity is a mandatory field.");
+        } else if(result) {
+            qtyValid=true;
         } else {
           errors.push("Quantity should be a whole number.");
         }
@@ -125,7 +129,9 @@ const OrdersForm = (props) => {
           errors.push("Invalid price.");
         }
 
+
         dataValid = qtyValid && priceValid;
+        console.log(dataValid);
 
         if(dataValid) {
             var cat = (category === "Buy") ? 0 : 1;
@@ -133,14 +139,11 @@ const OrdersForm = (props) => {
             //0->REJECTED
             //1->ACCEPTED
             //2->WAITING
-
             var rem = price%1;
             if(rem%5 !== 0) {
               status=0;
             }
-
             var order_type = (type==="Limit") ? 0 : 1;
-
             const data = {
                 uid : 28,
                 qty : qty,
@@ -157,7 +160,8 @@ const OrdersForm = (props) => {
             }).catch(error => {console.log(error)});
         } else {
           var ul = document.createElement('ul');
-          document.getElementById('errors').appendChild(ul);
+          document.getElementById(id).innerHTML="";
+          document.getElementById(id).appendChild(ul);
           errors.forEach(function (err) {
             let li = document.createElement('li');
             ul.appendChild(li);
@@ -208,11 +212,11 @@ const BuySell = () => {
       <TabContent activeTab={activeTab}>
 
         <TabPane tabId="1" style={{marginTop: '5%', fontSize:'15px'}}>
-          <OrdersForm tab={"BUY"}/>
+          <OrdersForm tab={"BUY"} id="errorsBuy"/>
         </TabPane>
 
         <TabPane tabId="2" style={{marginTop: '5%', fontSize:'15px'}}>
-          <OrdersForm tab={"SELL"}/>
+          <OrdersForm tab={"SELL"} id="errorsSell"/>
         </TabPane>
 
       </TabContent>
