@@ -32,7 +32,7 @@ app.post("/login", async(req, res) => {
     var email= req.body.email;
     var gender = req.body.gender;
     var password = req.body.password;
-    const newBooking = await pool.query(
+    const newUser = await pool.query(
       //returning * makes it easier to check in POSTMAN!
       "INSERT INTO users(full_name, contact, email, gender, pwd) VALUES ($1 , $2 , $3 , $4 , $5) RETURNING *",
       [full_name, contact, email, gender, password]
@@ -44,6 +44,18 @@ app.post("/login", async(req, res) => {
     }
 });
 
+app.get('/login', async(req, res) => {
+  try {
+    const users = await pool.query(
+      //returning * makes it easier to check in POSTMAN!
+      "SELECT * FROM USERS"
+    );
+    res.json(users); //returns json data
+  } catch (err) {
+      console.error(err.message);
+  }
+});
+
 app.post("/orders", async(req, res) => {
   try {
     var uid = req.body.uid;
@@ -53,7 +65,7 @@ app.post("/orders", async(req, res) => {
     var price = req.body.price;
     var description = req.body.description;
     var status=0;
-    const newBooking = await pool.query(
+    const newOrder = await pool.query(
       //returning * makes it easier to check in POSTMAN!
       "INSERT INTO orders(user_id, qty, category, order_type, price, description, status) VALUES ($1 , $2 , $3 , $4 , $5, $6, $7) RETURNING *",
       [uid, qty, category, type, price, description, status]

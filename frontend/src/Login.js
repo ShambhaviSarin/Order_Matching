@@ -33,6 +33,9 @@ const LoginForm = () => {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
 
+  const [emailLogin, setEmailLogin] = useState('');
+  const [pwdLogin, setPwdLogin] = useState('');
+
   const StyleTab = {border:'none', color:'#5dbcd2', borderBottom:'5px solid #5dbcd2'}
 
   const HoverStyleLogin = {border:'white', outline: 'none', color:'#6E6E6E', width:"50%", marginLeft:'25%'}
@@ -69,17 +72,93 @@ const LoginForm = () => {
              <FormGroup row>
                <Label for="email" sm={2}>Email</Label>
                <Col sm={10}>
-                 <Input type="email" name="email" id="emailLogin" placeholder="marss@ubs.com" />
+                 <Input type="email" name="email" id="emailLogin" placeholder="marss@ubs.com" onChange={event => setEmailLogin(event.target.value)}/>
                </Col>
              </FormGroup>
              <FormGroup row>
                <Label for="password" sm={2}>Password</Label>
                <Col sm={10}>
-                 <Input type="password" name="password" id="passwordLogin" placeholder="Enter your password" />
+                 <Input type="password" name="password" id="passwordLogin" placeholder="Enter your password" onChange={event => setPwdLogin(event.target.value)}/>
                </Col>
              </FormGroup>
           </Form>
-          <Button color="info" outline style={{marginTop:'2%', marginBottom:'2%'}} onClick>SIGN IN</Button>
+          <Button color="info" outline style={{marginTop:'2%', marginBottom:'2%'}} onClick={()=>{
+            var dataValid = false;
+            var errors=[];
+            var emLoginValid = false;
+            var pwdLoginValid = false;
+            if(emailLogin === ""){
+              errors.push("Email cannot be blank");
+            } else {
+              emLoginValid = true;
+            }
+
+            if ( pwdLogin === "") {
+              errors.push("Password cannot be blank");
+            } else {
+              pwdLoginValid = true;
+            }
+
+            dataValid = emLoginValid && pwdLoginValid;
+
+            if(dataValid) {
+              axios.get(`http://localhost:1337/login`).then(res => {
+                const data = res.data.rows;
+                console.log(data);
+                console.log(data[0].email);
+                console.log(emailLogin);
+                var emFound = false;
+                var pwCorrect = false;
+                var formValid = false;
+
+                for(var row = 0; row<data.length; row++) {
+                  if(data[row].email === emailLogin) {
+                    emFound = true;
+                    console.log('Email found');
+                    if(data[row].pwd === pwdLogin) {
+                      pwCorrect = true;
+                    } else {
+                      errors.push("Incorrect email id or password");
+                    }
+                    break;
+                  }
+                }
+                if(emFound === false) {
+                  errors.push("Incorrect email id or password");
+                }
+
+                formValid = emFound && pwCorrect;
+                console.log(formValid);
+
+                if(formValid) {
+                  window.location = "/Shares";
+                } else {
+                  var ul = document.createElement('ul');
+                  document.getElementById('errors').innerHTML="";
+                  document.getElementById('errors').appendChild(ul);
+                  errors.forEach(function (err) {
+                    let li = document.createElement('li');
+                    ul.appendChild(li);
+                    li.innerHTML += err;
+                  });
+                }
+
+              }).catch(err => {
+                  console.log(err);
+              });
+            } else {
+              var ul = document.createElement('ul');
+              document.getElementById('errors').innerHTML="";
+              document.getElementById('errors').appendChild(ul);
+              errors.forEach(function (err) {
+                let li = document.createElement('li');
+                ul.appendChild(li);
+                li.innerHTML += err;
+              });
+            }
+
+          }}>SIGN IN</Button>
+          <p id="errors" style={{textAlign: 'left', marginLeft:'25%', marginTop:'5%'}}></p>
         </TabPane>
 
         <TabPane tabId="2" style={{marginTop: '10%'}}>
@@ -185,7 +264,8 @@ const LoginForm = () => {
                 }).catch(error => {console.log(error)});
             } else {
               var ul = document.createElement('ul');
-              document.getElementById('errors').appendChild(ul);
+              document.getElementById('errors1').innerHTML="";
+              document.getElementById('errors1').appendChild(ul);
               errors.forEach(function (err) {
                 let li = document.createElement('li');
                 ul.appendChild(li);
@@ -193,7 +273,7 @@ const LoginForm = () => {
               });
             }
           }}>SIGN UP</Button>
-          <p id="errors"></p>
+          <p id="errors1" style={{textAlign: 'left', marginLeft:'20%', marginTop:'5%'}}></p>
         </TabPane>
       </TabContent>
     </div>
