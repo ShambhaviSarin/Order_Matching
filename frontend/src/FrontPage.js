@@ -23,9 +23,14 @@ const NavigationBar = () => {
 
 const FrontPage = () => {
     return(
-      <div style={{marginLeft: '10%', marginRight:'10%'}}>
-        <NavigationBar />
-        <hr style={{marginLeft: '-12%', marginRight:'-12%'}}/>
+       <div>
+        <div style={{marginLeft: '10%', marginRight:'10%'}}>
+          <NavigationBar />
+          <hr style={{marginLeft: '-12%', marginRight:'-12%'}}/>
+        </div>
+        <div>
+            <img src={require('./flogo.jpg')} alt="flogo" width="1550px" height="600px" />
+        </div>
       </div>
     );
 }
