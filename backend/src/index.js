@@ -46,7 +46,7 @@ Queue.prototype.peek = function () {
 Queue.prototype.print = function () {
    var str = "";
    for(var i = 0; i < this.elements.length; i++)
-       str += this.elements[i] +" ";
+       console.log(this.elements[i]);
    return str;
 };
 
@@ -57,11 +57,109 @@ Queue.prototype.length = function() {
 let qb = new Queue();
 let qs = new Queue();
 
-function execute() {
-    console.log(qs.print());
+//first element category cannot be -1
+//if -1 then pop
+function getMinPriceOrder(q) {
+  var minPos = -1;
+  console.log("min price entered");
+  while (minPos === -1) {
+    minPos = 0;
+    if(q.elements[minPos].category === -1) {
+      q.dequeue()
+      minPos = -1;
+      if(q.isEmpty()) {
+        return -1;
+      }
+    }
+  }
+  for(var i = 0; i < q.elements.length; i++) {
+    if(q.elements[i].category !== -1 && q.elements[i].price < q.elements[minPos].price) {
+      minPos = i;
+    }
+  }
+  return minPos;
 }
 
-setInterval(() => execute(), 1500);
+//reject order
+async function rejectOrder(oid) {
+  const rejOrder = await pool.query(
+    "UPDATE orders SET status = 0 WHERE order_id = $1 RETURNING *",[oid]
+  );
+}
+
+async function updateAcceptStatus(oid) {
+  const update = await pool.query(
+    "UPDATE orders SET status = 1 WHERE order_id = $1 RETURNING *",[oid]
+  );
+}
+
+//trade successfully
+async function acceptOrder(bid, sid, price, qty) {
+  const trade = await pool.query(
+    "INSERT INTO trades(buyer_id, seller_id, price, qty) VALUES ($1 , $2 , $3 , $4 ) RETURNING *",
+    [bid, sid, price, qty]
+  );
+}
+
+//execute market order
+function marketOrders(q, id, qty) {
+  if(q.isEmpty()) {
+    rejectOrder(id);
+  } else {
+    console.log("Queue not empty");
+    while(qty != 0) {
+      //execute(q.elements);
+      var pos = getMinPriceOrder(q);
+      //console.log("Pos received");
+      if(pos === -1) {
+        //console.log("Case 1");
+        rejectOrder(id);
+      } else if(q.elements[pos].qty >= qty) {
+        //console.log("Case 2");
+        //trade executes
+        acceptOrder(id, q.elements[pos].order_id, q.elements[pos].price, qty);
+        //console.log("Trade executed");
+        updateAcceptStatus(id);
+        //update qty
+        q.elements[pos].qty -= qty;
+        if(q.elements[pos].qty === 0) {
+          updateAcceptStatus(q.elements[pos].order_id);
+          q.elements[pos].category = -1;
+          if(pos === 0) {
+            q.dequeue();
+          }
+        }
+        qty=0;
+      } else {
+        //console.log("Case 3");
+        //execute partial order
+        acceptOrder(id, q.elements[pos].order_id, q.elements[pos].price, q.elements[pos].qty);
+        updateAcceptStatus(q.elements[pos].order_id);
+        //update qty
+        qty-=q.elements[pos].qty;
+        if(qty === 0) {
+          updateAcceptStatus(id);
+        }
+        q.elements[pos].qty = 0;
+        q.elements[pos].category = -1;
+        if(pos === 0) {
+          q.dequeue();
+        }
+      }
+    }
+  }
+}
+
+//limit order matching
+function execute(q) {
+    console.log(q.print());
+}
+
+//setInterval(() => execute(), 1500);
+
+function generate() {
+  console.log("generate");
+}
 
 //create orders
 //Anytime we create or get data, it will take some time.
@@ -114,17 +212,47 @@ app.post("/orders", async(req, res) => {
     var type = req.body.type;
     var price = req.body.price;
     var description = req.body.description;
-    var status=0;
+    var status = req.body.status;
     const newOrder = await pool.query(
       //returning * makes it easier to check in POSTMAN!
       "INSERT INTO orders(user_id, qty, category, order_type, price, description, status) VALUES ($1 , $2 , $3 , $4 , $5, $6, $7) RETURNING *",
       [uid, qty, category, type, price, description, status]
     );
     res.json("Accepted"); //returns accepted status code
-    if(category === 0) {
-      qb.enqueue(newOrder.data);
-    } else if(category === 1) {
-      qs.enqueue(newOrder.data);
+    //console.log(newOrder.data);
+
+    //get last order's id
+    const getOrderId = await pool.query(
+      //returning * makes it easier to check in POSTMAN!
+      "SELECT order_id FROM orders ORDER BY order_time DESC LIMIT 1"
+    );
+
+    var id = getOrderId.rows[0].order_id;
+    console.log(getOrderId.rows[0].order_id);
+
+    if(status === 2) {
+      //console.log("Entered");
+      if(category === 0) {
+        console.log("Buy order");
+        if(type === 1) {
+          console.log("Market order");
+          marketOrders(qs, id, qty);
+        } else {
+          console.log("Limit order");
+          qb.enqueue(newOrder.rows[0]);
+          execute(qb);
+        }
+      } else if(category === 1) {
+        console.log("Sell order");
+        if(type === 1) {
+          console.log("Market order");
+          marketOrders(qb, id, qty);
+        } else {
+          console.log("Limit order");
+          qs.enqueue(newOrder.rows[0]);
+          //execute(qs);
+        }
+      }
     }
   } catch (err) {
       console.error(err.message);

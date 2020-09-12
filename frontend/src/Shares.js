@@ -134,7 +134,7 @@ const OrdersForm = (props) => {
         console.log(dataValid);
 
         if(dataValid) {
-            var cat = (category === "Buy") ? 0 : 1;
+            var cat = (category === 'BUY') ? 0 : 1;
             var status=2;
             //0->REJECTED
             //1->ACCEPTED
@@ -148,7 +148,7 @@ const OrdersForm = (props) => {
             const params = new URLSearchParams(search);
             const idFromURL = params.get('id');
 
-            var order_type = (type==="Limit") ? 0 : 1;
+            var order_type = (type === 'Limit') ? 0 : 1;
             const data = {
                 uid : idFromURL,
                 qty : qty,

@@ -37,7 +37,7 @@ CREATE TABLE trades (
 	seller_id INT NOT NULL,
 	price INT NOT NULL,
   qty INT NOT NULL,
-  trade_time TIMESTAMP (3) NOT NULL,
+  trade_time TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP NOT NULL,
   CONSTRAINT fk_tradeBuy
     FOREIGN KEY(buyer_id)
 	     REFERENCES orders(order_id),
