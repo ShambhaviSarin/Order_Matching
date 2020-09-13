@@ -148,8 +148,8 @@ const OrdersForm = (props) => {
               tick=1;
             }
 
-            var minPrice = marketPrice - (0.1*marketPrice);
-            var maxPrice = marketPrice + (0.1*marketPrice);
+            var minPrice = price - (0.1*price);
+            var maxPrice = price + (0.1*price);
             var circuit = 0;
             if(order_type === 0) {
               if(price < minPrice || price > maxPrice) {
