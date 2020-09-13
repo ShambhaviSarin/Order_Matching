@@ -75,6 +75,7 @@ const NavigationBar = () => {
 
 const OrdersForm = (props) => {
 
+  //console.log(props.marketPrice);
   const category = props.tab;
   const id = props.id;
   const [qty, setQty] = useState('');
@@ -134,21 +135,33 @@ const OrdersForm = (props) => {
         console.log(dataValid);
 
         if(dataValid) {
+            var order_type = (type === 'Limit') ? 0 : 1;
             var cat = (category === 'BUY') ? 0 : 1;
             var status=2;
             //0->REJECTED
             //1->ACCEPTED
             //2->WAITING
+            var tick = 0;
             var rem = price%1;
-            if(rem%5 !== 0) {
+            if(order_type === 0 && rem%5 !== 0) {
               status=0;
+              tick=1;
+            }
+
+            var minPrice = marketPrice - (0.1*marketPrice);
+            var maxPrice = marketPrice + (0.1*marketPrice);
+            var circuit = 0;
+            if(order_type === 0) {
+              if(price < minPrice || price > maxPrice) {
+                status = 0;
+                circuit = 1;
+              }
             }
 
             const search = window.location.search; // returns the URL query String
             const params = new URLSearchParams(search);
             const idFromURL = params.get('id');
 
-            var order_type = (type === 'Limit') ? 0 : 1;
             const data = {
                 uid : idFromURL,
                 qty : qty,
@@ -156,12 +169,15 @@ const OrdersForm = (props) => {
                 type: order_type,
                 price: price,
                 description: 0,
-                status: status
+                status: status,
+                tick: tick,
+                circuit: circuit
             }
-            console.log(data);
+            //console.log(data);
             axios.post('http://localhost:1337/orders',data).then(res=>{
-              console.log(res);
+              //console.log(res);
               console.log(res.data);
+              document.getElementById(id).innerHTML=res.data;
             }).catch(error => {console.log(error)});
         } else {
           var ul = document.createElement('ul');
@@ -237,7 +253,7 @@ const Shares = (props) => {
         <Table style={{width:'100%'}} borderless>
           <tbody>
             <tr>
-              <td className="tabledata1"></td>
+              <td className="tabledata1">{props.marketPrice}</td>
               <td className="tabledata2"><BuySell/></td>
             </tr>
           </tbody>

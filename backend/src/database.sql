@@ -23,7 +23,7 @@ CREATE TABLE orders (
 	qty INT NOT NULL,
   category INT NOT NULL,
   order_type INT NOT NULL,
-  price INT NOT NULL,
+  price NUMERIC(5,2) NOT NULL,
 	description INT NOT NULL,
   status INT NOT NULL,
   CONSTRAINT fk_user

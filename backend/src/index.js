@@ -56,6 +56,8 @@ Queue.prototype.length = function() {
 
 let qb = new Queue();
 let qs = new Queue();
+var marketPrice = 500;
+var msg="Temporary";
 
 //first element category cannot be -1
 //if -1 then pop
@@ -101,24 +103,124 @@ async function acceptOrder(bid, sid, price, qty) {
   );
 }
 
+//execute buy limit order
+function buyLimitOrders(q, id, order) {
+  if(q.isEmpty()) {
+    qb.enqueue(order);
+    msg = "Order waiting! No sellers\n"
+  } else {
+    while(order.qty != 0) {
+      var pos = getMinPriceOrder(q);
+      if(pos === -1) {
+        qb.enqueue(order);
+        msg = "Order waiting! No sellers\n"
+        return;
+      } else if (q.elements[pos].price > order.price) {
+        qb.enqueue(order);
+        msg = "Order waiting! No sellers at this price\n"
+        return;
+      } else if(q.elements[pos].qty >= order.qty) {
+        //trade executes
+        acceptOrder(id, q.elements[pos].order_id, q.elements[pos].price, order.qty);
+        msg = "Order executed!"
+        marketPrice = q.elements[pos].price;
+        //console.log("Trade executed");
+        updateAcceptStatus(id);
+        //update qty
+        q.elements[pos].qty -= order.qty;
+        if(q.elements[pos].qty === 0) {
+          updateAcceptStatus(q.elements[pos].order_id);
+          q.elements[pos].category = -1;
+          if(pos === 0) {
+            q.dequeue();
+          }
+        }
+        order.qty=0;
+      } else {
+        //execute partial order
+        acceptOrder(id, q.elements[pos].order_id, q.elements[pos].price, q.elements[pos].qty);
+        msg = "Partial order executed!\n"
+        marketPrice = q.elements[pos].price;
+        updateAcceptStatus(q.elements[pos].order_id);
+        //update qty
+        order.qty-=q.elements[pos].qty;
+        q.elements[pos].qty = 0;
+        q.elements[pos].category = -1;
+        if(pos === 0) {
+          q.dequeue();
+        }
+      }
+    }
+  }
+}
+
+//execute sell limit order
+function sellLimitOrders(q, id, order) {
+  if(q.isEmpty()) {
+    qs.enqueue(order);
+    msg = "Order waiting! No buyers\n"
+  } else {
+    while(order.qty != 0) {
+      var pos = getMinPriceOrder(q);
+      if(pos === -1) {
+        qs.enqueue(order);
+        msg = "Order waiting! No buyers\n"
+        return;
+      } else if (q.elements[pos].price < order.price) {
+        msg = "Order waiting! No buyers at this price.\n"
+        qs.enqueue(order);
+        return;
+      } else if(q.elements[pos].qty >= order.qty) {
+        //trade executes
+        acceptOrder(q.elements[pos].order_id, id, q.elements[pos].price, order.qty);
+        marketPrice = q.elements[pos].price;
+        msg = "Order executed!"
+        //console.log("Trade executed");
+        updateAcceptStatus(id);
+        //update qty
+        q.elements[pos].qty -= order.qty;
+        if(q.elements[pos].qty === 0) {
+          updateAcceptStatus(q.elements[pos].order_id);
+          q.elements[pos].category = -1;
+          if(pos === 0) {
+            q.dequeue();
+          }
+        }
+        order.qty=0;
+      } else {
+        //execute partial order
+        acceptOrder(q.elements[pos].order_id, id, q.elements[pos].price, q.elements[pos].qty);
+        msg = "Partial order executed\n"
+        marketPrice = q.elements[pos].price;
+        updateAcceptStatus(q.elements[pos].order_id);
+        //update qty
+        order.qty-=q.elements[pos].qty;
+        q.elements[pos].qty = 0;
+        q.elements[pos].category = -1;
+        if(pos === 0) {
+          q.dequeue();
+        }
+      }
+    }
+  }
+}
+
 //execute market order
 function marketOrders(q, id, qty) {
   if(q.isEmpty()) {
     rejectOrder(id);
+    msg += "Order rejected!\n";
   } else {
-    console.log("Queue not empty");
     while(qty != 0) {
-      //execute(q.elements);
       var pos = getMinPriceOrder(q);
-      //console.log("Pos received");
       if(pos === -1) {
-        //console.log("Case 1");
         rejectOrder(id);
+        msg += "Order rejected!\n";
       } else if(q.elements[pos].qty >= qty) {
-        //console.log("Case 2");
         //trade executes
         acceptOrder(id, q.elements[pos].order_id, q.elements[pos].price, qty);
-        //console.log("Trade executed");
+        msg += "Order executed!\n";
+        marketPrice = q.elements[pos].price;
         updateAcceptStatus(id);
         //update qty
         q.elements[pos].qty -= qty;
@@ -131,15 +233,13 @@ function marketOrders(q, id, qty) {
         }
         qty=0;
       } else {
-        //console.log("Case 3");
         //execute partial order
         acceptOrder(id, q.elements[pos].order_id, q.elements[pos].price, q.elements[pos].qty);
+        msg += "Partial order executed!\n";
+        marketPrice = q.elements[pos].price;
         updateAcceptStatus(q.elements[pos].order_id);
         //update qty
         qty-=q.elements[pos].qty;
-        if(qty === 0) {
-          updateAcceptStatus(id);
-        }
         q.elements[pos].qty = 0;
         q.elements[pos].category = -1;
         if(pos === 0) {
@@ -150,16 +250,95 @@ function marketOrders(q, id, qty) {
   }
 }
 
-//limit order matching
+//execute every 24 hours! Remove expired limit orders
 function execute(q) {
     console.log(q.print());
 }
 
-//setInterval(() => execute(), 1500);
+//random orders generate
+async function generate() {
+  try {
+    //user_id
+    const userId = await pool.query(
+      "SELECT user_id FROM users"
+    );
+    var len = userId.rows.length;
+    var u = Math.floor(Math.random() * len);
+    var randomUID = userId.rows[u].user_id;
+    console.log(randomUID);
+    //qty
+    var randomQty = Math.floor(Math.random() * 1000 ) + 1;
+    //var randomQty=1;
+    //category
+    var randomCat = Math.floor(Math.random() * 2);
+    //var randomCat = 1;
+    //type
+    var randomType = Math.floor(Math.random() * 2);
+    //var randomType = 1;
+    //price
+    //var randomPrice = 1;
+    var minPrice = marketPrice - (0.12*marketPrice);
+    var maxPrice = marketPrice + (0.12*marketPrice);
+    var randomPrice = Math.round(((Math.random() * maxPrice)+minPrice)*100)/100;
+    //description
+    var d = 0;
+    //status
+    var randomStatus = 2;
+    var rem = randomPrice%1;
+    if(randomType === 0 && rem%5 !== 0) {
+      randomStatus = 0;
+    }
 
-function generate() {
-  console.log("generate");
+    var min_Price = marketPrice - (0.1*marketPrice);
+    var max_Price = marketPrice + (0.1*marketPrice);
+    if(randomType === 0) {
+      if(randomPrice < min_Price || randomPrice > max_Price) {
+        randomStatus = 0;
+      }
+    }
+
+    //process
+    msg="";
+    const newOrder = await pool.query(
+      "INSERT INTO orders(user_id, qty, category, order_type, price, description, status) VALUES ($1 , $2 , $3 , $4 , $5, $6, $7) RETURNING *",
+      [randomUID, randomQty, randomCat, randomType, randomPrice, d, randomStatus]
+    );
+
+    //get last order's id
+    const getOrder = await pool.query(
+      "SELECT order_id, order_time FROM orders ORDER BY order_time DESC LIMIT 1"
+    );
+
+    var id = getOrder.rows[0].order_id;
+    var time = getOrder.rows[0].order_time;
+
+    if(randomStatus === 2) {
+      if(randomCat === 0) {
+        //console.log("Buy order");
+        if(randomType === 1) {
+          //console.log("Market order");
+          marketOrders(qs, id, randomQty);
+        } else {
+          //console.log("Limit order");
+          buyLimitOrders(qs, id, newOrder.rows[0]);
+        }
+      } else if(randomCat === 1) {
+        //console.log("Sell order");
+        if(randomType === 1) {
+          //console.log("Market order");
+          marketOrders(qb, id, randomQty);
+        } else {
+          //console.log("Limit order");
+          sellLimitOrders(qb, id, newOrder.rows[0]);
+        }
+      }
+    }
+  } catch (err) {
+    console.error(err.message);
+  }
 }
+
+setInterval(() => generate(), 1000);
 
 //create orders
 //Anytime we create or get data, it will take some time.
@@ -213,25 +392,27 @@ app.post("/orders", async(req, res) => {
     var price = req.body.price;
     var description = req.body.description;
     var status = req.body.status;
+    msg="";
     const newOrder = await pool.query(
       //returning * makes it easier to check in POSTMAN!
       "INSERT INTO orders(user_id, qty, category, order_type, price, description, status) VALUES ($1 , $2 , $3 , $4 , $5, $6, $7) RETURNING *",
       [uid, qty, category, type, price, description, status]
     );
-    res.json("Accepted"); //returns accepted status code
     //console.log(newOrder.data);
 
     //get last order's id
-    const getOrderId = await pool.query(
+    const getOrder = await pool.query(
       //returning * makes it easier to check in POSTMAN!
-      "SELECT order_id FROM orders ORDER BY order_time DESC LIMIT 1"
+      "SELECT order_id, order_time FROM orders ORDER BY order_time DESC LIMIT 1"
     );
 
-    var id = getOrderId.rows[0].order_id;
-    console.log(getOrderId.rows[0].order_id);
+    var id = getOrder.rows[0].order_id;
+    var time = getOrder.rows[0].order_time;
+    //console.log(getOrder.rows[0].order_id);
+
+    //console.log(generate());
 
     if(status === 2) {
-      //console.log("Entered");
       if(category === 0) {
         console.log("Buy order");
         if(type === 1) {
@@ -239,8 +420,8 @@ app.post("/orders", async(req, res) => {
           marketOrders(qs, id, qty);
         } else {
           console.log("Limit order");
-          qb.enqueue(newOrder.rows[0]);
-          execute(qb);
+          buyLimitOrders(qs, id, newOrder.rows[0]);
+          //execute(qb);
         }
       } else if(category === 1) {
         console.log("Sell order");
@@ -249,11 +430,17 @@ app.post("/orders", async(req, res) => {
           marketOrders(qb, id, qty);
         } else {
           console.log("Limit order");
-          qs.enqueue(newOrder.rows[0]);
+          sellLimitOrders(qb, id, newOrder.rows[0]);
           //execute(qs);
         }
       }
+    } else if(status === 0 && req.body.tick === 1) {
+      msg = "Order rejected, tick size check!"
+    } else if(status === 0 && req.body.circuit === 1) {
+      msg = "Order rejected, circuit size check!"
     }
+
+    res.json(msg); //returns accepted status code
   } catch (err) {
       console.error(err.message);
     }
