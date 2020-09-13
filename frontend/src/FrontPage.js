@@ -1,6 +1,5 @@
 import React from 'react';
 import 'bootstrap/dist/css/bootstrap.css';
-import './FrontPage.css';
 import { Link} from 'react-router-dom';
 import { Navbar, NavbarBrand, Nav, NavItem, NavLink, NavbarText, Button } from 'reactstrap';
 import { UndrawReport } from 'react-undraw-illustrations';
