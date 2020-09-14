@@ -2,7 +2,6 @@ import React from 'react';
 import 'bootstrap/dist/css/bootstrap.css';
 import { Link} from 'react-router-dom';
 import { Navbar, NavbarBrand, Nav, NavItem, NavLink, NavbarText, Button } from 'reactstrap';
-import { UndrawReport } from 'react-undraw-illustrations';
 
 const NavigationBar = () => {
   return(
@@ -91,10 +90,7 @@ const FrontPage = () => {
                     <span>Investing in your future is now </span> <br /> Smarter. <br />
                     Simpler.<br /> Safer.<br/> 
              </div>
-             <UndrawReport
-                    primaryColor='#7c7cdd'
-                    height='520px'
-             />
+              <img src={require('./investing.svg')} alt="flogo" width="600px" height="600px" />
         </section>
         <Footer />
       </div>
