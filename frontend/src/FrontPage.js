@@ -14,9 +14,20 @@ const NavigationBar = () => {
           </NavItem>
         </Nav>
         <NavbarText>
-        <Nav>
-          <Link to="/Login"><Button outline color="info">Login/Register</Button></Link>
-        </Nav>
+          <Nav className="ml-auto" navbar>
+            <NavItem>
+              <NavLink className="nav-link-icon" to="/Login" tag={Link}>
+                <i className="ni ni-key-25" />
+                <span className="nav-link-inner--text">Login</span>
+              </NavLink>
+            </NavItem>
+            <NavItem>
+              <NavLink className="nav-link-icon" to="/Register" tag={Link}>
+                <i className="ni ni-circle-08" />
+                <span className="nav-link-inner--text">Register</span>
+              </NavLink>
+            </NavItem>
+          </Nav>
         </NavbarText>
       </Navbar>
   );
@@ -27,7 +38,7 @@ const FrontPage = () => {
        <div>
         <div style={{marginLeft: '5%', marginRight:'5%'}}>
           <NavigationBar />
-          <hr style={{marginLeft: '-2%', marginRight:'-2%', marginBottom:'-10%'}}/>
+          <hr style={{marginLeft: '-2%', marginRight:'-2%', marginBottom:'-12%', marginTop:'0%'}}/>
         </div>
         <section id="main">
           <div className="main-text" style={{ marginTop: "10%" }}>

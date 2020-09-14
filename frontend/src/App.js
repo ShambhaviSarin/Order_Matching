@@ -3,6 +3,7 @@ import './App.css';
 import FrontPage from './FrontPage';
 import Shares from './Shares';
 import Login from './Login';
+import Register from './Register';
 import { BrowserRouter as Router, Route, Switch, withRouter} from 'react-router-dom';
 
 const App = () => {

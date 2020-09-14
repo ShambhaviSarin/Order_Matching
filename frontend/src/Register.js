@@ -275,16 +275,17 @@ const LoginForm = () => {
   );
 }
 
-const Page = () => {
-    return(
-      <Col lg="5" md="7">
+const Reg = () => {
+  return (
+    <>
+      <Col lg="6" md="8">
         <Card className="bg-secondary shadow border-0">
           <CardHeader className="bg-transparent pb-5">
-            <div className="text-muted text-center mt-2 mb-3">
-              <small>Sign in with</small>
+            <div className="text-muted text-center mt-2 mb-4">
+              <small>Sign up with</small>
             </div>
-            <div className="btn-wrapper text-center">
-              <Button className="btn-neutral btn-icon" color="default" href="#pablo" onClick={e => e.preventDefault()}>
+            <div className="text-center">
+              <Button className="btn-neutral btn-icon mr-4" color="default" href="#pablo" onClick={e => e.preventDefault()}>
                 <span className="btn-inner--icon">
                   <img alt="..." src={require("./assets/img/icons/common/github.svg")}/>
                 </span>
@@ -300,11 +301,21 @@ const Page = () => {
           </CardHeader>
           <CardBody className="px-lg-5 py-lg-5">
             <div className="text-center text-muted mb-4">
-              <small>Or sign in with credentials</small>
+              <small>Or sign up with credentials</small>
             </div>
             <Form role="form">
-              <FormGroup className="mb-3">
-                <InputGroup className="input-group-alternative">
+              <FormGroup>
+                <InputGroup className="input-group-alternative mb-3">
+                  <InputGroupAddon addonType="prepend">
+                    <InputGroupText>
+                      <i className="ni ni-hat-3" />
+                    </InputGroupText>
+                  </InputGroupAddon>
+                  <Input placeholder="Name" type="text" />
+                </InputGroup>
+              </FormGroup>
+              <FormGroup>
+                <InputGroup className="input-group-alternative mb-3">
                   <InputGroupAddon addonType="prepend">
                     <InputGroupText>
                       <i className="ni ni-email-83" />
@@ -323,32 +334,35 @@ const Page = () => {
                   <Input placeholder="Password" type="password" autoComplete="new-password"/>
                 </InputGroup>
               </FormGroup>
-              <div className="custom-control custom-control-alternative custom-checkbox">
-                <input className="custom-control-input" id=" customCheckLogin" type="checkbox"/>
-                <label className="custom-control-label" htmlFor=" customCheckLogin">
-                  <span className="text-muted">Remember me</span>
-                </label>
+              <div className="text-muted font-italic">
+                <small>
+                  password strength:{" "}
+                  <span className="text-success font-weight-700">strong</span>
+                </small>
               </div>
+              <Row className="my-4">
+                <Col xs="12">
+                  <div className="custom-control custom-control-alternative custom-checkbox">
+                    <input className="custom-control-input" id="customCheckRegister" type="checkbox"/>
+                    <label className="custom-control-label" htmlFor="customCheckRegister">
+                      <span className="text-muted">I agree with the{" "}
+                        <a href="#pablo" onClick={e => e.preventDefault()}>Privacy Policy</a>
+                      </span>
+                    </label>
+                  </div>
+                </Col>
+              </Row>
               <div className="text-center">
-                <Button className="my-4" color="primary" type="button">Sign in</Button>
+                <Button className="mt-4" color="primary" type="button">
+                  Create account
+                </Button>
               </div>
             </Form>
           </CardBody>
         </Card>
-        <Row className="mt-3">
-          <Col xs="6">
-            <a className="text-light" href="#pablo" onClick={e => e.preventDefault()}>
-              <small>Forgot password?</small>
-            </a>
-          </Col>
-          <Col className="text-right" xs="6">
-            <a className="text-light" href="#pablo" onClick={e => e.preventDefault()}>
-              <small>Create new account</small>
-            </a>
-          </Col>
-        </Row>
       </Col>
-    );
+    </>
+  );
 }
 
 const NavigationBar = () => {
@@ -372,9 +386,9 @@ const NavigationBar = () => {
             </div>
             <Nav className="ml-auto" navbar>
               <NavItem>
-                <NavLink className="nav-link-icon" to="/Register" tag={Link}>
-                  <i className="ni ni-circle-08" />
-                  <span className="nav-link-inner--text">Register</span>
+                <NavLink className="nav-link-icon" to="/Login" tag={Link}>
+                  <i className="ni ni-key-25" />
+                  <span className="nav-link-inner--text">Login</span>
                 </NavLink>
               </NavItem>
               <NavItem>
@@ -390,7 +404,7 @@ const NavigationBar = () => {
   );
 }
 
-const Login = () => {
+const Register = () => {
   return(
     <>
     <div className="main-content" style={{background:'#172b4d'}}>
@@ -405,7 +419,7 @@ const Login = () => {
       {/* Page content */}
       <Container className="mt--8 pb-5">
         <Row className="justify-content-center">
-          <Page/>
+          <Reg/>
         </Row>
       </Container>
     <PageFooter />
@@ -414,4 +428,13 @@ const Login = () => {
 );
 }
 
-export default Login;
+/*
+<NavItem>
+  <NavLink className="nav-link-icon" to="/admin/user-profile" tag={Link}>
+    <i className="ni ni-single-02" />
+    <span className="nav-link-inner--text">Profile</span>
+  </NavLink>
+</NavItem>
+}*/
+
+export default Register;
