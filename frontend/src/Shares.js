@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import 'bootstrap/dist/css/bootstrap.css';
 import {Collapse,Navbar,NavbarToggler,NavbarBrand,Nav,NavItem,NavLink,UncontrolledDropdown,
   DropdownToggle,DropdownMenu,DropdownItem,NavbarText,Table,Button,TabContent,TabPane,Col,
@@ -81,6 +81,19 @@ const OrdersForm = (props) => {
   const [qty, setQty] = useState('');
   const [type, setType] = useState('Limit');
   const [price, setPrice] = useState('500');
+
+  useEffect(() => {
+  const interval = setInterval(() => {
+    axios.get(`http://localhost:1337/trades`).then(res => {
+      const data = res.data;
+      console.log(data);
+      setPrice(data);
+    }).catch(err => {
+        console.log(err);
+    });
+  }, 1000);
+    return () => clearInterval(interval);
+  }, []);
 
   return(
     <Form style={{marginTop:'10%', marginLeft:'5%', marginRight:'5%', fontSize:'15px'}}>

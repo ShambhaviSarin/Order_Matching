@@ -35,7 +35,7 @@ CREATE TABLE trades (
 	trade_id serial PRIMARY KEY,
 	buyer_id INT NOT NULL,
 	seller_id INT NOT NULL,
-	price INT NOT NULL,
+	price NUMERIC(5,2) NOT NULL,
   qty INT NOT NULL,
   trade_time TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP NOT NULL,
   CONSTRAINT fk_tradeBuy

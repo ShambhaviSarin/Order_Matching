@@ -1,3 +1,5 @@
+import React from 'react';
+
 const Footer = () => {
     return (
         <div className="main-footer" style={{ background:"#7c7cdd"}}>
@@ -52,6 +54,8 @@ const Footer = () => {
         </div>
     );
 }
+
+export default Footer;
 
 /*<div>
  <div style={{marginLeft: '5%', marginRight:'5%'}}>

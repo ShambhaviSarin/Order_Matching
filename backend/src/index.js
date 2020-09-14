@@ -44,10 +44,8 @@ Queue.prototype.peek = function () {
 };
 
 Queue.prototype.print = function () {
-   var str = "";
    for(var i = 0; i < this.elements.length; i++)
        console.log(this.elements[i]);
-   return str;
 };
 
 Queue.prototype.length = function() {
@@ -63,22 +61,33 @@ var msg="Temporary";
 //if -1 then pop
 function getMinPriceOrder(q) {
   var minPos = -1;
-  console.log("min price entered");
+  //console.log("min price entered");
   while (minPos === -1) {
     minPos = 0;
+    //console.log("Error here!");
+    //console.log("MinPos "+minPos);
+    //console.log(q.elements[minPos]);
+    if(q.isEmpty()) {
+      return -1;
+    }
     if(q.elements[minPos].category === -1) {
+      //console.log("In");
       q.dequeue()
       minPos = -1;
       if(q.isEmpty()) {
         return -1;
       }
     }
+    //console.log("H");
   }
+  //console.log("MinPosLB "+minPos);
   for(var i = 0; i < q.elements.length; i++) {
     if(q.elements[i].category !== -1 && q.elements[i].price < q.elements[minPos].price) {
       minPos = i;
     }
+    //console.log("Here!");
   }
+  //console.log("MinPosL "+minPos);
   return minPos;
 }
 
@@ -97,6 +106,7 @@ async function updateAcceptStatus(oid) {
 
 //trade successfully
 async function acceptOrder(bid, sid, price, qty) {
+  marketPrice=price;
   const trade = await pool.query(
     "INSERT INTO trades(buyer_id, seller_id, price, qty) VALUES ($1 , $2 , $3 , $4 ) RETURNING *",
     [bid, sid, price, qty]
@@ -105,12 +115,14 @@ async function acceptOrder(bid, sid, price, qty) {
 
 //execute buy limit order
 function buyLimitOrders(q, id, order) {
+  //console.log("BUY LIMIT ORDER"+order);
   if(q.isEmpty()) {
     qb.enqueue(order);
     msg = "Order waiting! No sellers\n"
   } else {
     while(order.qty != 0) {
       var pos = getMinPriceOrder(q);
+      console.log("Pos"+pos);
       if(pos === -1) {
         qb.enqueue(order);
         msg = "Order waiting! No sellers\n"
@@ -122,8 +134,9 @@ function buyLimitOrders(q, id, order) {
       } else if(q.elements[pos].qty >= order.qty) {
         //trade executes
         acceptOrder(id, q.elements[pos].order_id, q.elements[pos].price, order.qty);
+        console.log(q.elements[pos]);
         msg = "Order executed!"
-        marketPrice = q.elements[pos].price;
+        //marketPrice = q.elements[pos].price;
         //console.log("Trade executed");
         updateAcceptStatus(id);
         //update qty
@@ -139,8 +152,9 @@ function buyLimitOrders(q, id, order) {
       } else {
         //execute partial order
         acceptOrder(id, q.elements[pos].order_id, q.elements[pos].price, q.elements[pos].qty);
+        console.log(q.elements[pos]);
         msg = "Partial order executed!\n"
-        marketPrice = q.elements[pos].price;
+        //marketPrice = q.elements[pos].price;
         updateAcceptStatus(q.elements[pos].order_id);
         //update qty
         order.qty-=q.elements[pos].qty;
@@ -156,12 +170,14 @@ function buyLimitOrders(q, id, order) {
 
 //execute sell limit order
 function sellLimitOrders(q, id, order) {
+  //console.log("SELL LIMIT ORDER"+order);
   if(q.isEmpty()) {
     qs.enqueue(order);
     msg = "Order waiting! No buyers\n"
   } else {
     while(order.qty != 0) {
       var pos = getMinPriceOrder(q);
+      //console.log("Pos"+pos);
       if(pos === -1) {
         qs.enqueue(order);
         msg = "Order waiting! No buyers\n"
@@ -173,7 +189,8 @@ function sellLimitOrders(q, id, order) {
       } else if(q.elements[pos].qty >= order.qty) {
         //trade executes
         acceptOrder(q.elements[pos].order_id, id, q.elements[pos].price, order.qty);
-        marketPrice = q.elements[pos].price;
+        console.log(q.elements[pos]);
+        //marketPrice = q.elements[pos].price;
         msg = "Order executed!"
         //console.log("Trade executed");
         updateAcceptStatus(id);
@@ -190,8 +207,9 @@ function sellLimitOrders(q, id, order) {
       } else {
         //execute partial order
         acceptOrder(q.elements[pos].order_id, id, q.elements[pos].price, q.elements[pos].qty);
+        console.log(q.elements[pos]);
         msg = "Partial order executed\n"
-        marketPrice = q.elements[pos].price;
+        //marketPrice = q.elements[pos].price;
         updateAcceptStatus(q.elements[pos].order_id);
         //update qty
         order.qty-=q.elements[pos].qty;
@@ -211,32 +229,43 @@ function marketOrders(q, id, qty) {
     rejectOrder(id);
     msg += "Order rejected!\n";
   } else {
-    while(qty != 0) {
+    while(qty !== 0) {
       var pos = getMinPriceOrder(q);
+      //console.log("Pos"+pos);
       if(pos === -1) {
         rejectOrder(id);
         msg += "Order rejected!\n";
+        return;
       } else if(q.elements[pos].qty >= qty) {
+        //console.log("ge");
         //trade executes
         acceptOrder(id, q.elements[pos].order_id, q.elements[pos].price, qty);
+        console.log(q.elements[pos]);
+        //console.log("accepted");
         msg += "Order executed!\n";
-        marketPrice = q.elements[pos].price;
+        //marketPrice = q.elements[pos].price;
         updateAcceptStatus(id);
+        //console.log("sa");
         //update qty
         q.elements[pos].qty -= qty;
         if(q.elements[pos].qty === 0) {
           updateAcceptStatus(q.elements[pos].order_id);
+          //console.log("sb");
           q.elements[pos].category = -1;
           if(pos === 0) {
             q.dequeue();
           }
         }
+        //console.log("done");
         qty=0;
+        return;
       } else {
+        //console.log("l");
         //execute partial order
         acceptOrder(id, q.elements[pos].order_id, q.elements[pos].price, q.elements[pos].qty);
+        console.log(q.elements[pos]);
         msg += "Partial order executed!\n";
-        marketPrice = q.elements[pos].price;
+        //marketPrice = q.elements[pos].price;
         updateAcceptStatus(q.elements[pos].order_id);
         //update qty
         qty-=q.elements[pos].qty;
@@ -255,6 +284,10 @@ function execute(q) {
     console.log(q.print());
 }
 
+function random(min, max) {
+  return min + Math.random() * (max - min);
+}
+
 //random orders generate
 async function generate() {
   try {
@@ -265,21 +298,18 @@ async function generate() {
     var len = userId.rows.length;
     var u = Math.floor(Math.random() * len);
     var randomUID = userId.rows[u].user_id;
-    console.log(randomUID);
+    //console.log(randomUID);
     //qty
     var randomQty = Math.floor(Math.random() * 1000 ) + 1;
-    //var randomQty=1;
     //category
-    var randomCat = Math.floor(Math.random() * 2);
-    //var randomCat = 1;
+    var randomCat = Math.round(Math.random());
     //type
-    var randomType = Math.floor(Math.random() * 2);
-    //var randomType = 1;
+    var randomType = Math.round(Math.random())+1;
+    console.log(randomType);
     //price
-    //var randomPrice = 1;
-    var minPrice = marketPrice - (0.12*marketPrice);
-    var maxPrice = marketPrice + (0.12*marketPrice);
-    var randomPrice = Math.round(((Math.random() * maxPrice)+minPrice)*100)/100;
+    var minPrice = parseFloat(marketPrice - (0.12*marketPrice)).toFixed(2);
+    var maxPrice = parseFloat(marketPrice + (0.12*marketPrice)).toFixed(2);
+    var randomPrice = parseFloat(random(minPrice, maxPrice)).toFixed(2);
     //description
     var d = 0;
     //status
@@ -298,47 +328,63 @@ async function generate() {
     }
 
     //process
-    msg="";
-    const newOrder = await pool.query(
+    const randomOrder = await pool.query(
       "INSERT INTO orders(user_id, qty, category, order_type, price, description, status) VALUES ($1 , $2 , $3 , $4 , $5, $6, $7) RETURNING *",
-      [randomUID, randomQty, randomCat, randomType, randomPrice, d, randomStatus]
+      [randomUID, randomQty, randomCat, randomType-1, randomPrice, d, randomStatus]
     );
 
     //get last order's id
-    const getOrder = await pool.query(
+    const getRandomOrder = await pool.query(
       "SELECT order_id, order_time FROM orders ORDER BY order_time DESC LIMIT 1"
     );
 
-    var id = getOrder.rows[0].order_id;
-    var time = getOrder.rows[0].order_time;
+    var id = getRandomOrder.rows[0].order_id;
+    var time = getRandomOrder.rows[0].order_time;
+    //randomType+=2;
+    msg="";
 
     if(randomStatus === 2) {
       if(randomCat === 0) {
-        //console.log("Buy order");
+        console.log("Buy order");
         if(randomType === 1) {
-          //console.log("Market order");
+          console.log("Market order");
+          console.log(randomPrice);
           marketOrders(qs, id, randomQty);
-        } else {
-          //console.log("Limit order");
-          buyLimitOrders(qs, id, newOrder.rows[0]);
+          console.log(randomPrice);
+          //console.log(randomOrder.rows[0]);
+        } else if(randomType === 2){
+          console.log("Limit order");
+          console.log(randomPrice);
+          buyLimitOrders(qs, id, randomOrder.rows[0]);
+          console.log(randomPrice);
+          //console.log(randomOrder.rows[0]);
         }
       } else if(randomCat === 1) {
-        //console.log("Sell order");
+        console.log("Sell order");
         if(randomType === 1) {
-          //console.log("Market order");
+          console.log("Market order");
+          console.log(randomPrice);
           marketOrders(qb, id, randomQty);
-        } else {
-          //console.log("Limit order");
-          sellLimitOrders(qb, id, newOrder.rows[0]);
+          console.log(randomPrice);
+          //console.log(randomOrder.rows[0]);
+        } else if (randomType === 2) {
+          console.log("Limit order");
+          console.log(randomPrice);
+          sellLimitOrders(qb, id, randomOrder.rows[0]);
+          console.log(randomPrice);
+          //console.log(randomOrder.rows[0]);
         }
       }
     }
+    console.log(msg);
   } catch (err) {
     console.error(err.message);
   }
 }
 
 setInterval(() => generate(), 1000);
+
+//setInterval(() => execute(qs), 1000)
 
 //create orders
 //Anytime we create or get data, it will take some time.
@@ -368,6 +414,14 @@ app.post("/login", async(req, res) => {
   } catch (err) {
       console.error(err.message);
     }
+});
+
+app.get('/trades', async(req, res) => {
+  try {
+    res.json(marketPrice); //returns json data
+  } catch (err) {
+      console.error(err.message);
+  }
 });
 
 app.get('/login', async(req, res) => {
