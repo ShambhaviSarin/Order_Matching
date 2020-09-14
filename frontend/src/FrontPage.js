@@ -46,7 +46,7 @@ const FullScreenSlider = () => {
       <ScrollToTopOnMount />
       <SectionsContainer className="container" {...options}>
         <Section className="custom-section" verticalAlign="true" data-percentage="100">
-          <img src={require('./growth.svg')} alt="logo" />
+          <img src={require('./investing.svg')} alt="logo" />
         </Section>
         <Section data-percentage="100">Page 2</Section>
         <Section>Page 3</Section>
