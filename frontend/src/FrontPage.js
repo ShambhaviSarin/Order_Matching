@@ -11,11 +11,7 @@ const NavigationBar = () => {
         <NavbarBrand href="/"><img src={require('./logo.png')} alt="logo" height="50"/></NavbarBrand>
           <Nav className="mr-auto" navbar>
             <NavItem>
-              <NavLink target="_blank" href="https://github.com/ShambhaviSarin/Order_Matching">GitHub</NavLink>
             </NavItem>
-            <a href="#sectionOne">Section One</a>
-            <a href="#sectionTwo">Section Two</a>
-            <a href="#sectionThree">Section Three</a>
           </Nav>
           <NavbarText>
           <Nav>
@@ -27,29 +23,43 @@ const NavigationBar = () => {
   );
 }
 
-
-const FrontPage = () => {
+const FullScreenSlider = () => {
   let options = {
       sectionClassName:     'section',
       anchors:              ['sectionOne', 'sectionTwo', 'sectionThree'],
       scrollBar:            false,
       navigation:           true,
       verticalAlign:        false,
-      sectionPaddingTop:    '25%',
-      sectionPaddingBottom: '25%',
+      sectionPaddingTop:    '0%',
+      sectionPaddingBottom: '0%',
       arrowNavigation:      true
     };
-  return (
+  return(
     <div>
-      <NavigationBar />
+      <Header>
+        <a href="/" style={{marginTop:'100px'}}><img src={require('./logo.png')} alt="logo" height="50"/></a>
+        <a target="_blank" href="https://github.com/ShambhaviSarin/Order_Matching">GitHub</a>
+        <a href="#sectionOne">Section One</a>
+        <a href="#sectionTwo">Section Two</a>
+        <a href="#sectionThree">Section Three</a>
+      </Header>
       <ScrollToTopOnMount />
       <SectionsContainer className="container" {...options}>
-        <Section className="custom-section" verticalAlign="true">
+        <Section className="custom-section" verticalAlign="true" data-percentage="100">
           <img src={require('./growth.svg')} alt="logo" />
         </Section>
-        <Section>Page 2</Section>
+        <Section data-percentage="100">Page 2</Section>
         <Section>Page 3</Section>
       </SectionsContainer>
+    </div>
+  );
+}
+
+
+const FrontPage = () => {
+  return (
+    <div>
+      <FullScreenSlider />
     </div>
   );
 }
