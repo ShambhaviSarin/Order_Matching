@@ -4,6 +4,7 @@ import { Link} from 'react-router-dom';
 import Footer from './footer';
 import { Navbar, NavbarBrand, Nav, NavItem, NavLink, NavbarText, Button } from 'reactstrap';
 import New_elements from "./new_elements.jsx";
+import Animation from "./Animation.jsx";
 
 const NavigationBar = () => {
   return(
@@ -41,12 +42,7 @@ const FrontPage = () => {
           <NavigationBar />
           <hr style={{marginLeft: '-2%', marginRight:'-2%', marginBottom:'-12%', marginTop:'0%'}}/>
         </div>
-        <section id="main">
-          <div className="main-text" style={{ marginTop: "10%" }}>
-            <span>Investing in your future is now </span> <br /> Smarter. <br />Simpler.<br /> Safer.<br/>
-          </div>
-          <img src={require('./investing.svg')} alt="flogo" width="600px" height="600px" />
-        </section>
+        <Animation/>
         <New_elements/>
         <Footer />
       </div>

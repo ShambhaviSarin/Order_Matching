@@ -61,12 +61,11 @@ a.thumbnail.active {
 
 .col-md-3,.col-sm-6,.col-md-8,.col-md-6,.col-md-12 {
     width: 100%;
-  }{
-  position: relative;
-  min-height: 1px;
-  padding-right: 1px;
-  padding-left: 1px;
-}
+    position: relative;
+    min-height: 1px;
+    padding-right: 1px;
+    padding-left: 1px;
+  }
 
 
 @media (min-width: 992px) {

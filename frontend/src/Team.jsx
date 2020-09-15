@@ -1,54 +1,38 @@
 import React, { Component } from "react";
 import './random.css';
-import { Row, Col } from 'reactstrap';
 
-
-const Pictures = (props) =>{
-  return(
-    <div>
-      <div className="thumbnail">
-        {" "}
-        <img src={props.img} alt="..." className="team-img" />
-        <div className="caption">
-          <h4>{props.name}</h4>
-          <p>{props.job}</p>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-const Team = () =>{
+export class Team extends Component {
+  render() {
     return (
       <div id="team" className="text-center" style={{background:'#f4f0ec'}}>
         <div className="container">
-        <br/><br/><br/>
+        <br/><br/>
           <div className="col-md-8 col-md-offset-2 section-title">
             <h1>Meet the Team</h1>
             <p>
-              Our team of developers
+              Building smarter applications for smart users, by:
             </p>
           </div>
-          <div class="container">
-                <div class="row">
-                  <div class="col-sm">
-                        <Pictures img = './team/01.jpg' name="Shambhavi Sarin" job="Developer"/>
+          <div id="row" style={{align:'center'}}>
+            {this.props.data
+              ? this.props.data.map((d, i) => (
+                  <div  key={`${d.name}-${i}`} className="col-md-3 col-sm-6 team" style={{marginLeft:'0%',marginLeft:'5%'}}>
+                    <div className="thumbnail" >
+                      {" "}
+                      <img src={d.img} alt="..." className="team-img"/>
+                      <div className="caption">
+                        <h4>{d.name}</h4>
+                        <p>{d.job}</p>
+                      </div>
+                    </div>
                   </div>
-                  <div class="col-sm">
-                        <Pictures img = './team/01.jpg' name="Shambhavi Sarin" job="Developer"/>
-                  </div>
-                  <div class="col-sm">
-                          <Pictures img = './team/01.jpg' name="Shambhavi Sarin" job="Developer"/>
-                  </div>
-            </div>
+                ))
+              : "loading"}
+          </div>
         </div>
-
-          
-        </div>
-        <br/><br/><br/>
+        <br/><br/><br/><br/>
       </div>
     );
-
+  }
 }
-
 export default Team;

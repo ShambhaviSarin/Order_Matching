@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import Team from './Team';
 import Contact from './contact';
-import './random.css';
 
 const New_elements = () => {
   const team = [{
@@ -17,8 +16,7 @@ const New_elements = () => {
               "img": "img/team/03.jpg",
               "name": "Jane Doe",
               "job": "Senior Designer"
-          },
-          {
+          },{
               "img": "img/team/04.jpg",
               "name": "Karen Doe",
               "job": "Project Manager"
@@ -29,6 +27,18 @@ const New_elements = () => {
               "job": "Project Manager"
           }
       ]
+  const team2 = [
+          {
+              "img": "img/team/04.jpg",
+              "name": "Karen Doe",
+              "job": "Project Manager"
+          },
+          {
+              "img": "img/team/05.jpg",
+              "name": "Barren Doe",
+              "job": "Project Manager"
+          }
+  ]
   const contact =[{
         "address": "4321 California St, San Francisco, CA 12345 ",
         "phone": "+1 123 456 1234",
@@ -46,5 +56,4 @@ const New_elements = () => {
     </div>
   )
 }
-
 export default New_elements;
