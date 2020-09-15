@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import './style.css';
-import './random.css';
 
 export class Contact extends Component {
   render() {
