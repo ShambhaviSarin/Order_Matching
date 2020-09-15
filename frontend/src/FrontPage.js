@@ -7,7 +7,7 @@ import { Navbar, NavbarBrand, Nav, NavItem, NavLink, NavbarText, Button } from '
 const NavigationBar = () => {
   return(
     <Navbar color="#7c7cdd" light expand="md" style={{marginTop:'1%'}}>
-      <NavbarBrand href="/"><img src={require('./logo.png')} alt="logo" height="50"/></NavbarBrand>
+      <NavbarBrand href="/"><img src={require('./purple_logo.png')} alt="logo" height="50"/></NavbarBrand>
         <Nav className="mr-auto" navbar>
           <NavItem>
             <NavLink target="_blank" href="https://github.com/ShambhaviSarin/Order_Matching">GitHub</NavLink>
