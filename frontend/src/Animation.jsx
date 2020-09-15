@@ -7,7 +7,7 @@ const Animation = () => {
         <>
             <section id="header" className="d-flex align-items-center">
                 <div className="container-fluid nav_bg">
-                    <div className="row" style={{ marginTop: '15%', marginBottom:'5%'}}>
+                    <div className="row" style={{ marginTop: '15%', marginBottom:'12%', marginLeft:'5%'}}>
                         <div className="col-10 mx-auto">
                             <div className="row">
                                 <div className="col-md-6 pt-lg-50 order-lg-1">
