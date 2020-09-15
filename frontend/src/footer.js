@@ -6,7 +6,23 @@ const Footer = () => {
         <div className="footer-middle">
         <div className="container">
             <font color= "white">
-            <div className="row"><br/><br/><br/>
+            <div className="row" ><br/><br/><br/>
+            <div className="col-md-3 col-sm-6">
+            <h2 style={{ marginTop: '15%'}}><font color= "white"><img src={require('./purple_logo.png')} alt="logo" height="50"/></font></h2>
+                  <ul className="list-unstyled">
+                    <li>2 North Avenue,Maker Maxity,</li>
+                    <li>Bandra-Kurla Complex,</li>
+                    <li>Bandra (E),</li>
+                    <li>Mumbai 400 051, India.</li>
+                    <br/>
+                    <li><img src={require('./facebook.svg')} alt="fb" width="25" height="25" style={{marginRight:'5%'}}/>
+                    <img src={require('./twitter.svg')} alt="twee" width="25" height="25" style={{marginRight:'5%'}}/>
+                    <img src={require('./youtube.svg')} alt="yt" width="25" height="25" style={{marginRight:'5%'}}/>
+                    <img src={require('./insta.svg')} alt="in" width="25" height="25" style={{marginRight:'5%'}}/>
+                    <img src={require('./linkedin.svg')} alt="lin" width="25" height="25" style={{marginRight:'5%'}}/></li>
+                </ul>
+            </div>
+
             <div className="col-md-3 col-sm-6">
                 <h2 style={{ marginTop: '20%' }}><font color= "white">Forex Trading</font></h2>
                 <ul className="list-unstyled">
@@ -23,16 +39,6 @@ const Footer = () => {
                     <li>Market Data</li>
                     <li>Expert Views</li>
                     <li>NASDAQ</li>
-                </ul>
-            </div>
-            <div className="col-md-3 col-sm-6">
-                <h2 style={{ marginTop: '20%' }}><font color= "white">Education</font></h2>
-                <ul className="list-unstyled">
-                    <li>Trading for beginners</li>
-                    <li>Economic indicators</li>
-                    <li>Videos</li>
-                    <li>Ebook</li>
-                    <li>Order types</li>
                 </ul>
             </div>
             <div className="col-md-3 col-sm-6">
