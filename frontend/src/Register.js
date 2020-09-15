@@ -171,7 +171,7 @@ const Reg = () => {
                     errors.push("Password should be atleast 8 characters and contain atleast a number.");
                   }
 
-                  dataValid = conValid && emValid && pwdValid;
+                  dataValid = conValid&&emValid&&pwdValid&&policy;
 
                   if(dataValid) {
                       const data = {

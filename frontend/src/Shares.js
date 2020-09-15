@@ -2,10 +2,10 @@ import React, { useState, useEffect } from 'react';
 import 'bootstrap/dist/css/bootstrap.css';
 import {Collapse,Navbar,NavbarToggler,NavbarBrand,Nav,NavItem,NavLink,UncontrolledDropdown,
   DropdownToggle,DropdownMenu,DropdownItem,NavbarText,Table,Button,TabContent,TabPane,Col,
-  Form,FormGroup,Input,Label,Card} from 'reactstrap';
+  UncontrolledCollapse,Form,FormGroup,Input,Label,Card} from 'reactstrap';
 import { Link} from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faList, faCog, faSignOutAlt } from '@fortawesome/free-solid-svg-icons'
+import { faList, faCog, faSignOutAlt, faCaretRight } from '@fortawesome/free-solid-svg-icons'
 import { faUserCircle } from '@fortawesome/free-regular-svg-icons';
 import axios from "axios";
 import classnames from 'classnames';
@@ -81,6 +81,8 @@ const OrdersForm = (props) => {
   const [qty, setQty] = useState('');
   const [type, setType] = useState('Limit');
   const [price, setPrice] = useState('500');
+  const [description, setDescription] = useState(0);
+  const [mindis, setMinDis] = useState(0);
 
   useEffect(() => {
   const interval = setInterval(() => {
@@ -116,6 +118,18 @@ const OrdersForm = (props) => {
         </Col>
       </FormGroup>
       <hr style={{borderTop: 'dashed 1px', color:'#BDBDBD', marginTop:'8%'}} />
+      <p id="toggler" style={{textAlign:'left', align:'left', marginTop:'-5%'}}>
+        <small style={{fontWeight:'bold', color:'#172b4d', cursor:'pointer'}}>
+          <FontAwesomeIcon icon={faCaretRight}/>
+          <Label style={{marginLeft:'1%', cursor:'pointer'}}>Advanced Options</Label>
+        </small>
+      </p>
+      <UncontrolledCollapse toggler="#toggler">
+        <Input type="radio" name="radio2" value="None" checked={true} onChange={event => setDescription(0)}/>No condition
+        <Input type="radio" name="radio2" value="AllOrNone" onChange={event => setDescription(1)} />All or none
+        <Input type="radio" name="radio2" value="MinimumFill" onChange={event => setDescription(2)} />Minimum fill
+        <Input type="radio" name="radio2" value="DisclosedQty" onChange={event => setDescription(3)} />Disclosed quantity
+      </UncontrolledCollapse>
       <p id={props.id}></p>
       <Button type="submit" color="info" outline style={{width:'100%', marginTop: '31%'}} onClick={(e)=>{
         e.preventDefault();
@@ -175,14 +189,27 @@ const OrdersForm = (props) => {
             const params = new URLSearchParams(search);
             const idFromURL = params.get('id');
 
+            var left = 0;
+            if(description === 3) {
+              left = qty;
+            }
+
+            var minq = 1;
+            if(description === 2) {
+              minq = 0;
+            }
+
             const data = {
                 uid : idFromURL,
                 qty : qty,
                 category: cat,
                 type: order_type,
                 price: price,
-                description: 0,
+                description: description,
                 status: status,
+                left: left,
+                mindis: mindis,
+                minq : minq,
                 tick: tick,
                 circuit: circuit
             }
