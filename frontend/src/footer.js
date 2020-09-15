@@ -2,53 +2,58 @@ import React from 'react';
 
 const Footer = () => {
     return (
-        <div className="main-footer" style={{ background:"#7c7cdd"}}>
+        <div className="main-footer" style={{ background:"#242050"}}>
         <div className="footer-middle">
         <div className="container">
-            <div className="row">
+            <font color= "white">
+            <div className="row"><br/><br/><br/>
             <div className="col-md-3 col-sm-6">
-                <h4 style={{ marginTop: '20%' }}>header</h4>
+                <h2 style={{ marginTop: '20%' }}><font color= "white">Forex Trading</font></h2>
                 <ul className="list-unstyled">
-                    <li>hello</li>
-                    <li>heya</li>
-                    <li>hola</li>
-                    <li>bonjour</li>
+                    <li>What is Forex?</li>
+                    <li>EUR/USD</li>
+                    <li>USD/JPY</li>
+                    <li>GBP/USD</li>
                 </ul>
             </div>
             <div className="col-md-3 col-sm-6">
-                <h4 style={{ marginTop: '20%' }}>header</h4>
+                <h2 style={{ marginTop: '20%' }}><font color= "white">Stock Market</font></h2>
                 <ul className="list-unstyled">
-                    <li>hello</li>
-                    <li>heya</li>
-                    <li>hola</li>
-                    <li>bonjour</li>
+                    <li>IPOs/FPOs</li>
+                    <li>Market Data</li>
+                    <li>Expert Views</li>
+                    <li>NASDAQ</li>
                 </ul>
             </div>
             <div className="col-md-3 col-sm-6">
-                <h4 style={{ marginTop: '20%' }}>header</h4>
+                <h2 style={{ marginTop: '20%' }}><font color= "white">Education</font></h2>
                 <ul className="list-unstyled">
-                    <li>hello</li>
-                    <li>heya</li>
-                    <li>hola</li>
-                    <li>bonjour</li>
+                    <li>Trading for beginners</li>
+                    <li>Economic indicators</li>
+                    <li>Videos</li>
+                    <li>Ebook</li>
+                    <li>Order types</li>
                 </ul>
             </div>
             <div className="col-md-3 col-sm-6">
-            <h4 style={{ marginTop: '20%' }}>header</h4>
-                <ul className="list-unstyled">
-                    <li>hello</li>
-                    <li>heya</li>
-                    <li>hola</li>
-                    <li>bonjour</li>
+            <h2 style={{ marginTop: '20%' }}><font color= "white">About</font></h2>
+                  <ul className="list-unstyled">
+                    <li>Why Choose Us?</li>
+                    <li>Trader Benefits</li>
+                    <li>Partners</li>
+                    <li>Awards</li>
+                    <li>FAQ</li>
                 </ul>
             </div>
           </div>
+          <hr/>
         {/*footer bottom*/}
            <div className="footer-bottom">
            <p className="text-xs-centre">
             &copy;{new Date().getFullYear()} M.A.R.S.S. App - All Rights Reserved
            </p>
            </div>
+           </font>
         </div>
         </div>
         </div>

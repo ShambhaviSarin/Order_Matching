@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import Team from './Team';
 import Contact from './contact';
-import './new_elements.css';
+import './random.css';
 
 const New_elements = () => {
   const team = [{
@@ -22,14 +22,27 @@ const New_elements = () => {
               "img": "img/team/04.jpg",
               "name": "Karen Doe",
               "job": "Project Manager"
+          },
+          {
+              "img": "img/team/05.jpg",
+              "name": "Barren Doe",
+              "job": "Project Manager"
           }
       ]
-
+  const contact =[{
+        "address": "4321 California St, San Francisco, CA 12345 ",
+        "phone": "+1 123 456 1234",
+        "email": "info@company.com",
+        "facebook": "fb.com",
+        "twitter": "twitter.com",
+        "youtube": "youtube.com"
+    }
+  ]
 
   return (
     <div>
       <Team data={team} />
-
+      <Contact data={contact}/>
     </div>
   )
 }

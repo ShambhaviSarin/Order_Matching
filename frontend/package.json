@@ -12,7 +12,7 @@
     "@testing-library/react": "^9.5.0",
     "@testing-library/user-event": "^7.2.1",
     "axios": "^0.20.0",
-    "bootstrap": "^4.5.2",
+    "bootstrap": "^5.0.0-alpha1",
     "fullpage.js": "^3.0.9",
     "node-sass": "^4.14.1",
     "querystring": "^0.2.0",
