@@ -3,6 +3,7 @@ import 'bootstrap/dist/css/bootstrap.css';
 import { Link} from 'react-router-dom';
 import Footer from './footer';
 import { Navbar, NavbarBrand, Nav, NavItem, NavLink, NavbarText, Button } from 'reactstrap';
+import New_elements from "./new_elements.jsx";
 
 const NavigationBar = () => {
   return(
@@ -46,6 +47,7 @@ const FrontPage = () => {
           </div>
           <img src={require('./investing.svg')} alt="flogo" width="600px" height="600px" />
         </section>
+        <New_elements/>
         <Footer />
       </div>
     );
