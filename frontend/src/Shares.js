@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import 'bootstrap/dist/css/bootstrap.css';
 import {Collapse,Navbar,NavbarToggler,NavbarBrand,Nav,NavItem,NavLink,UncontrolledDropdown,
-  DropdownToggle,DropdownMenu,DropdownItem,NavbarText,Table,Button,TabContent,TabPane,Col,
+  DropdownToggle,DropdownMenu,DropdownItem,NavbarText,Table,Button,TabContent,TabPane,Row,Col,
   UncontrolledCollapse,Form,FormGroup,Input,Label,Card} from 'reactstrap';
 import { Link} from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -78,11 +78,13 @@ const OrdersForm = (props) => {
   //console.log(props.marketPrice);
   const category = props.tab;
   const id = props.id;
-  const [qty, setQty] = useState('');
+  const [qty, setQty] = useState(0);
   const [type, setType] = useState('Limit');
   const [price, setPrice] = useState('500');
   const [description, setDescription] = useState(0);
   const [mindis, setMinDis] = useState(0);
+  const [hidden, setHidden] = useState(1);
+  //((description === 2) || (description === 3))?false:true
 
   useEffect(() => {
   const interval = setInterval(() => {
@@ -124,14 +126,21 @@ const OrdersForm = (props) => {
           <Label style={{marginLeft:'1%', cursor:'pointer'}}>Advanced Options</Label>
         </small>
       </p>
-      <UncontrolledCollapse toggler="#toggler">
-        <Input type="radio" name="radio2" value="None" checked={true} onChange={event => setDescription(0)}/>No condition
-        <Input type="radio" name="radio2" value="AllOrNone" onChange={event => setDescription(1)} />All or none
-        <Input type="radio" name="radio2" value="MinimumFill" onChange={event => setDescription(2)} />Minimum fill
-        <Input type="radio" name="radio2" value="DisclosedQty" onChange={event => setDescription(3)} />Disclosed quantity
+      <UncontrolledCollapse toggler="#toggler" className="text-muted">
+        <Row>
+          <Col><Input type="radio" name="radio2" value="None" checked={true} onChange={event => {setDescription(0); setHidden(1)}} />No condition</Col>
+          <Col><Input type="radio" name="radio2" value="AllOrNone" onChange={event => {setDescription(1); setHidden(1)}} />All or none</Col>
+        </Row>
+        <Row>
+          <Col><Input type="radio" name="radio2" value="MinimumFill" onChange={event => {setDescription(2); setHidden(0)}} />Minimum fill</Col>
+          <Col><Input type="radio" name="radio2" value="DisclosedQty" onChange={event => {setDescription(3); setHidden(0)}} />Disclosed quantity</Col>
+        </Row>
+        <Row>
+          <Col><Input type="text" hidden={hidden} name="mindis" id="mindis" placeholder="  Enter minimum/disclosed quantity" style={{marginTop:'3%', width:'100%', height:'95%', fontSize:'12px', background:'#cce7e8', color:'6E6E6E', border:'none',textAlign:'center'}} onChange={event => setMinDis(event.target.value)}/></Col>
+        </Row>
       </UncontrolledCollapse>
       <p id={props.id}></p>
-      <Button type="submit" color="info" outline style={{width:'100%', marginTop: '31%'}} onClick={(e)=>{
+      <Button type="submit" color="info" outline style={{width:'100%', marginTop: '3%'}} onClick={(e)=>{
         e.preventDefault();
         //document.getElementById('errors2').innerHTML="";
         var dataValid=false;
@@ -213,7 +222,7 @@ const OrdersForm = (props) => {
                 tick: tick,
                 circuit: circuit
             }
-            //console.log(data);
+            console.log(data);
             axios.post('http://localhost:1337/orders',data).then(res=>{
               //console.log(res);
               console.log(res.data);

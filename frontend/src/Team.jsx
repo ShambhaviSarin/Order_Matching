@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import './random.css';
+import {Row} from 'reactstrap';
 
 export class Team extends Component {
   render() {
@@ -13,11 +14,11 @@ export class Team extends Component {
               Building smarter applications for smart users, by:
             </p>
           </div>
-          <div id="row" style={{align:'center'}}>
+          <div id="row" style={{marginLeft:'-10%'}}>
             {this.props.data
               ? this.props.data.map((d, i) => (
-                  <div  key={`${d.name}-${i}`} className="col-md-3 col-sm-6 team" style={{marginLeft:'0%',marginLeft:'5%'}}>
-                    <div className="thumbnail" >
+                  <div  key={`${d.name}-${i}`} className="col-md-3 col-sm-6 team" style={{marginRight:'-11%',marginLeft:'5%'}}>
+                    <div className="thumbnail">
                       {" "}
                       <img src={d.img} alt="..." className="team-img"/>
                       <div className="caption">

@@ -51,7 +51,7 @@ const New_elements = () => {
 
   return (
     <div>
-      <Team data={team} />
+      <Team data={team} style={{textAlign:'center'}}/>
       <Contact data={contact}/>
     </div>
   )
