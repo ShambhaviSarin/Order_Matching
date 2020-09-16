@@ -42,8 +42,8 @@ const New_elements = () => {
 
   return (
     <div>
+      <CardUi/>
       <Team data={team} style={{textAlign:'center'}}/>
-      <CardUi className="whole"/>
       <Contact data={contact}/>
     </div>
   )

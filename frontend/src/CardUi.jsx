@@ -5,7 +5,7 @@ import './Card-style.css';
 
 const News = props => {
     return (
-      <div className="whole"><br/><br/><br/><br/><br/>
+      <div><br/><br/><br/><br/><br/>
         <div className="card text-centre" style={{marginLeft:'20%'}}>
             <div className="overflow">
                 <img src={props.imgsrc} alt="image" className='card-img-top' />

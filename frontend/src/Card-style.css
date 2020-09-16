@@ -1,5 +1,5 @@
-.{
-  background: radial-gradient(#e5e5e5,#ffff,#e5e5e5);
+.body{
+  background: radial-gradient(#ffff,#e5e5e5,#ffff);
 }
 
 .card{

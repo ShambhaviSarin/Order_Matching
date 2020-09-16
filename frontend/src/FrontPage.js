@@ -37,8 +37,8 @@ const NavigationBar = () => {
 
 const FrontPage = () => {
     return(
-       <div style={{background:'white'}} >
-        <div style={{marginLeft: '5%', marginRight:'5%',background:'white'}}>
+       <div >
+        <div style={{marginLeft: '5%', marginRight:'5%'}}>
           <NavigationBar />
           <hr style={{marginLeft: '-2%', marginRight:'-2%', marginBottom:'-12%', marginTop:'0%'}}/>
         </div>
