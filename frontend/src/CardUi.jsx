@@ -8,11 +8,7 @@ const News = props => {
       <div ><br/><br/><br/><br/><br/>
         <div className="card text-centre" style={{marginLeft:'20%',width:'20rem'}}>
             <div className="overflow">
-<<<<<<< HEAD
-                <img src={props.imgsrc} alt="image" className='card-img-top'/>
-=======
                 <img src={props.imgsrc} alt="image" className='card-img-top'  style={{maxHeight:'200px'}}/>
->>>>>>> 440f53c36da83307fd72b22efb13147a1728c959
             </div>
                 <div className="text-dark" style={{padding:'3rem 0rem'}} >
                     <h1 className="card-title" style={{textAlign:'center'}}>{props.title}</h1>

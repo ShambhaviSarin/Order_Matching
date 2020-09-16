@@ -10,6 +10,7 @@ import { faUserCircle } from '@fortawesome/free-regular-svg-icons';
 import { faGithub } from '@fortawesome/free-brands-svg-icons';
 import axios from "axios";
 import classnames from 'classnames';
+import FooterPage from './FooterPage';
 // javascipt plugin for creating charts
 import Chart from "chart.js";
 // react plugin used to create charts
@@ -107,37 +108,6 @@ const NavigationBar = (props) => {
   );
 }
 
-const FooterPage = () => {
-  return (
-    <footer className="footer" style={{marginLeft:'7%', marginRight:'7%'}}>
-      <Row className="align-items-center justify-content-xl-between">
-        <Col xl="6">
-          <div className="copyright text-center text-xl-left text-muted">
-            © 2020{" "}
-            <a className="font-weight-bold ml-1" rel="noopener noreferrer" href="/">
-              M.A.R.S.S
-            </a>
-          </div>
-        </Col>
-        <Col xl="6">
-          <Nav className="nav-footer justify-content-center justify-content-xl-end">
-            <NavItem>
-              <NavLink href="/" rel="noopener noreferrer">
-                M.A.R.S.S
-              </NavLink>
-            </NavItem>
-            <NavItem>
-              <NavLink rel="noopener noreferrer" href="#pablo">
-                About Us
-              </NavLink>
-            </NavItem>
-          </Nav>
-        </Col>
-      </Row>
-    </footer>
-  );
-}
-
 const UserHeader = (props) => {
   return (
     <>
@@ -183,7 +153,7 @@ const Vieew = (props) => {
                   </Col>
                   <Col className="text-right" xs="4" >
                     <Button color="primary" href="#pablo" onClick={e => e.preventDefault()} size="sm">
-                      Settings
+                      Change password
                     </Button>
                   </Col>
                 </Row>

@@ -2,13 +2,16 @@ import React, { useState, useEffect, useLayoutEffect } from 'react';
 import 'bootstrap/dist/css/bootstrap.css';
 import {Collapse,Navbar,NavbarToggler,NavbarBrand,Nav,NavItem,NavLink,UncontrolledDropdown,
   DropdownToggle,DropdownMenu,DropdownItem,NavbarText,Table,Button,TabContent,TabPane,Row,Col,
-  UncontrolledCollapse,Form,FormGroup,Input,Label,Card,Container,CardHeader,CardBody, Media} from 'reactstrap';
+  UncontrolledCollapse,Form,FormGroup,Input,Label,Card,Container,CardHeader,CardBody, Media,
+Badge, Progress, CardFooter, Pagination, PaginationItem, PaginationLink, UncontrolledTooltip} from 'reactstrap';
 import { Link} from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faList, faCog, faSignOutAlt, faCaretRight, faCaretDown } from '@fortawesome/free-solid-svg-icons'
 import { faUserCircle } from '@fortawesome/free-regular-svg-icons';
 import axios from "axios";
 import classnames from 'classnames';
+import FooterPage from './FooterPage';
+import Header from './Header';
 // javascipt plugin for creating charts
 import Chart from "chart.js";
 // react plugin used to create charts
@@ -112,9 +115,115 @@ const NavigationBar = () => {
     );
 }
 
+const OrderTable = () => {
+  return(
+    <>
+      <Container className="mt--7" fluid>
+        <Row className="mt-5">
+          <div className="col">
+            <Card className="bg-default shadow" style={{backgroundColor:'#172b4d'}}>
+              <CardHeader className="bg-transparent border-0">
+                <h3 className="text-white mb-0">Your orders</h3>
+              </CardHeader>
+              <Table className="align-items-center bg-transparent border-0" responsive style={{backgroundColor:'#172b4d', color:'white', overflow:'hidden', marginBottom:'-1%'}}>
+                <thead className="thead-dark">
+                  <tr>
+                    <th scope="col">Order Id</th>
+                    <th scope="col">User Id</th>
+                    <th scope="col">Price</th>
+                    <th scope="col">Qty</th>
+                    <th scope="col">Time</th>
+                    <th scope="col">Category</th>
+                    <th scope="col">Type</th>
+                    <th scope="col">Extra condition</th>
+                    <th scope="col">Conditional quantity</th>
+                    <th scope="col">Status</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr scope="row">
+                    <td></td>
+                    <td>$2,500 USD</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td>
+                      <Badge color="" className="badge-dot mr-4">
+                        <i className="bg-warning" />
+                        pending
+                      </Badge></td>
+                  </tr>
+                  </tbody>
+                </Table>
+                <CardFooter className="py-4" style={{backgroundColor:'#172b4d', marginTop:'-1%'}}>
+                  <nav aria-label="...">
+                    <Pagination
+                      className="pagination justify-content-end mb-0"
+                      listClassName="justify-content-end mb-0"
+                    >
+                      <PaginationItem className="disabled">
+                        <PaginationLink
+                          href="#pablo"
+                          onClick={e => e.preventDefault()}
+                          tabIndex="-1"
+                        >
+                          <i className="fas fa-angle-left" />
+                          <span className="sr-only">Previous</span>
+                        </PaginationLink>
+                      </PaginationItem>
+                      <PaginationItem className="active">
+                        <PaginationLink
+                          href="#pablo"
+                          onClick={e => e.preventDefault()}
+                        >
+                          1
+                        </PaginationLink>
+                      </PaginationItem>
+                      <PaginationItem>
+                        <PaginationLink
+                          href="#pablo"
+                          onClick={e => e.preventDefault()}
+                        >
+                          2 <span className="sr-only">(current)</span>
+                        </PaginationLink>
+                      </PaginationItem>
+                      <PaginationItem>
+                        <PaginationLink
+                          href="#pablo"
+                          onClick={e => e.preventDefault()}
+                        >
+                          3
+                        </PaginationLink>
+                      </PaginationItem>
+                      <PaginationItem>
+                        <PaginationLink
+                          href="#pablo"
+                          onClick={e => e.preventDefault()}
+                        >
+                          <i className="fas fa-angle-right" />
+                          <span className="sr-only">Next</span>
+                        </PaginationLink>
+                      </PaginationItem>
+                    </Pagination>
+                  </nav>
+                </CardFooter>
+              </Card>
+          </div>
+        </Row>
+      </Container>
+    </>
+  );
+}
+
 const Vieew = () => {
   return(
-    <div></div>
+    <div>
+      <OrderTable />
+    </div>
   );
 }
 
@@ -125,8 +234,17 @@ const Orders = (props) => {
         <hr style={{marginLeft: '-12%', marginRight:'-12%', marginTop:'-0.2%'}}/>
         <br/><br/><br/><br/>
         <Vieew/>
+        <FooterPage />
       </div>
     );
 }
 
 export default Orders;
+
+/*
+
+
+);
+
+
+*/
