@@ -37,13 +37,13 @@ const NavigationBar = () => {
 
 const FrontPage = () => {
     return(
-       <div>
+       <div >
         <div style={{marginLeft: '5%', marginRight:'5%'}}>
           <NavigationBar />
           <hr style={{marginLeft: '-2%', marginRight:'-2%', marginBottom:'-12%', marginTop:'0%'}}/>
         </div>
         <Animation/>
-        <New_elements/>
+        <New_elements style={{background:'white'}}/>
         <Footer />
       </div>
     );
