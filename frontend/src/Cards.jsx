@@ -11,7 +11,7 @@ class Cards extends Component{
             <div className="col-md-4">
                 <Ca imgsrc={img1} title="The Economic Times" content="This zero-debt firm powers its way up the ladder; BUY calls galore" link="https://economictimes.indiatimes.com/markets/stocks/news/this-zero-debt-firm-powers-its-way-up-the-ladder-buy-calls-galore/articleshow/78102405.cms"/>
             </div>
-            <div className="col-md-4">
+            <div className="col-md-4" >
                 <Ca imgsrc={img2} title="Financial Express" content="Stock selection: Value investing is essential in today’s market" link="https://www.financialexpress.com/market/stock-selection-value-investing-is-essential-in-todays-market/2083176/"/>
             </div>
             <div className="col-md-4">

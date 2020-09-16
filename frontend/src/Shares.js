@@ -57,6 +57,10 @@ const NavigationBar = () => {
       window.location = `/Profile?id=${id}`;
     }
 
+    const dashClick = () => {
+      window.location = `/Shares?id=${id}`;
+    }
+
     return(
       <Navbar color="link" light expand="md" style={{marginTop:'0.8%'}}>
         <NavbarBrand href="/"><img src={require('./purple_logo.png')} alt="logo" height="50"/></NavbarBrand>
@@ -84,13 +88,13 @@ const NavigationBar = () => {
                   <DropdownItem className="noti-title" header tag="div">
                     <h6 className="text-overflow m-0">Welcome!</h6>
                   </DropdownItem>
+                  <DropdownItem onClick = {() => dashClick()}>
+                    <i className="ni ni-tv-2 text" />
+                    <span>Dashboard</span>
+                  </DropdownItem>
                   <DropdownItem onClick = {() => profileClick()}>
                     <i className="ni ni-single-02" />
                     <span>My profile</span>
-                  </DropdownItem>
-                  <DropdownItem to="/" tag={Link}>
-                    <i className="ni ni-settings-gear-65" />
-                    <span>Settings</span>
                   </DropdownItem>
                   <DropdownItem onClick = {() => orderClick()}>
                     <i className="ni ni-calendar-grid-58" />

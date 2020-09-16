@@ -19,6 +19,19 @@ import {chartOptions,parseOptions,chartExample1,chartExample2} from "./charts.js
 const NavigationBar = () => {
     const [isOpen, setIsOpen] = useState(false);
     const toggle = () => setIsOpen(!isOpen);
+    const [id, setId] = useState(-1);
+    const search = window.location.search; // returns the URL query String
+    const params = new URLSearchParams(search);
+    const idFromURL = params.get('id');
+    setId(idFromURL);
+
+    const profileClick = () => {
+      window.location = `/Profile?id=${id}`;
+    }
+
+    const dashClick = () => {
+      window.location = `/Admin?id=${id}`;
+    }
 
     return(
       <Navbar color="link" light expand="md" style={{marginTop:'0.8%'}}>
@@ -47,17 +60,13 @@ const NavigationBar = () => {
                   <DropdownItem className="noti-title" header tag="div">
                     <h6 className="text-overflow m-0">Welcome!</h6>
                   </DropdownItem>
-                  <DropdownItem to="/admin/user-profile" tag={Link}>
+                  <DropdownItem onClick = {() => dashClick()}>
+                    <i className="ni ni-tv-2 text" />
+                    <span>Dashboard</span>
+                  </DropdownItem>
+                  <DropdownItem onClick = {() => profileClick()}>
                     <i className="ni ni-single-02" />
                     <span>My profile</span>
-                  </DropdownItem>
-                  <DropdownItem to="/admin/user-profile" tag={Link}>
-                    <i className="ni ni-settings-gear-65" />
-                    <span>Settings</span>
-                  </DropdownItem>
-                  <DropdownItem to="/admin/user-profile" tag={Link}>
-                    <i className="ni ni-calendar-grid-58" />
-                    <span>Orders</span>
                   </DropdownItem>
                   <DropdownItem divider />
                   <DropdownItem href="/">
