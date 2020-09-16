@@ -11,8 +11,8 @@ const Animation = () => {
                         <div className="col-10 mx-auto">
                             <div className="row">
                                 <div className="col-md-6 pt-lg-50 order-lg-1">
-                                    <h2 style={{ marginLeft: '-30%' }}> Investing in your future is now</h2>
-                                    <h3 className="mt-3" style={{ marginLeft: '-30%' }}>Smarter.<br />Simpler.<br /> Safer.</h3>
+                                    <h2 style={{ marginLeft: '-20%' }}> Investing in your future is now</h2>
+                                    <h3 className="mt-3" style={{ marginLeft: '-20%' }}>Smarter.<br />Simpler.<br /> Safer.</h3>
                                 </div>
                                 <div className="col-lg-6  pt-lg-50  order-lg-2 header-img">
                                 <img src={web} className="img-fluid animated" alt="home img"/>

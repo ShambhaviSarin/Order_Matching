@@ -9,13 +9,13 @@ class Cards extends Component{
     <div className="container-fluid d-flex justify-content-center">
         <div className="row">
             <div className="col-md-4">
-                <Ca imgsrc={img1} title="The Economic Times" content="This zero-debt firm powers its way up the ladder; BUY calls galore" link="https://economictimes.indiatimes.com/markets/stocks/news/this-zero-debt-firm-powers-its-way-up-the-ladder-buy-calls-galore/articleshow/78102405.cms"/>
+                <Ca imgsrc={img1} title="The Economic Times" content="This zero-debt firm powers its way up the ladder; BUY calls galore" link="https://economictimes.indiatimes.com/markets/stocks/news/this-zero-debt-firm-powers-its-way-up-the-ladder-buy-calls-galore/articleshow/78102405.cms" />
             </div>
             <div className="col-md-4" >
                 <Ca imgsrc={img2} title="Financial Express" content="Stock selection: Value investing is essential in today’s market" link="https://www.financialexpress.com/market/stock-selection-value-investing-is-essential-in-todays-market/2083176/"/>
             </div>
             <div className="col-md-4">
-                <Ca imgsrc={img3} title="THE WALL STREET JOURNAL" content="Stock Markets Rebound" link="https://www.wsj.com/articles/why-did-stock-markets-rebound-from-covid-in-record-time-here-are-five-reasons-11600182704"/>
+                <Ca imgsrc={img3} title="THE WALL STREET" content="Why Did Stock Markets Rebound From Covid with Time?" link="https://www.wsj.com/articles/why-did-stock-markets-rebound-from-covid-in-record-time-here-are-five-reasons-11600182704"/>
             </div>
         </div>
     </div>
