@@ -440,7 +440,7 @@ function execute() {
   }
 }
 
-setInterval(() => execute(qs), 1000)
+//setInterval(() => execute(qs), 1000)
 
 function random(min, max) {
   return min + Math.random() * (max - min);
@@ -545,7 +545,7 @@ async function generate() {
   }
 }
 
-//setInterval(() => generate(), 1000);
+setInterval(() => generate(), 1000);
 
 //create orders
 //Anytime we create or get data, it will take some time.

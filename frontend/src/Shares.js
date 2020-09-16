@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import 'bootstrap/dist/css/bootstrap.css';
 import {Collapse,Navbar,NavbarToggler,NavbarBrand,Nav,NavItem,NavLink,UncontrolledDropdown,
   DropdownToggle,DropdownMenu,DropdownItem,NavbarText,Table,Button,TabContent,TabPane,Row,Col,
-  UncontrolledCollapse,Form,FormGroup,Input,Label,Card} from 'reactstrap';
+  UncontrolledCollapse,Form,FormGroup,Input,Label,Card,Container,CardHeader,CardBody} from 'reactstrap';
 import { Link} from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faList, faCog, faSignOutAlt, faCaretRight } from '@fortawesome/free-solid-svg-icons'
@@ -10,6 +10,7 @@ import { faUserCircle } from '@fortawesome/free-regular-svg-icons';
 import axios from "axios";
 import classnames from 'classnames';
 import './Shares.css';
+//import { Line, Bar } from "react-chartjs-2";
 
 const NavigationBar = () => {
     const [isOpen, setIsOpen] = useState(false);
@@ -245,6 +246,16 @@ const OrdersForm = (props) => {
 }
 
 const BuySell = () => {
+  return(
+    <div>
+
+
+
+    </div>
+  );
+}
+
+const Vieew = () => {
   const [activeTab, setActiveTab] = useState('1');
   const toggle = tab => {
     if(activeTab !== tab) setActiveTab(tab);
@@ -252,45 +263,105 @@ const BuySell = () => {
 
   const StyleTab = {border:'none', color:'#5dbcd2', borderBottom:'5px solid #5dbcd2'}
 
-  const HoverStyleBuy = {border:'white', outline: 'none', color:'#6E6E6E', width:"25%", marginLeft:'13%'}
+  const HoverStyleBuy = {border:'white', outline: 'none', color:'#6E6E6E'}
   const [hoverStyleBuy, setHoverStyleBuy] = useState(0);
   const toggleHoverBuy = style => {
     if(hoverStyleBuy !== style) setHoverStyleBuy(style);
   }
 
-  const HoverStyleSell = {border:'white', outline: 'none', color:'#6E6E6E', width:"25%", marginLeft:'10%'}
+  const HoverStyleSell = {border:'white', outline: 'none', color:'#6E6E6E'}
   const [hoverStyleSell, setHoverStyleSell] = useState(0);
   const toggleHoverSell = style => {
     if(hoverStyleSell !== style) setHoverStyleSell(style);
   }
 
-  return(
-    <div className="formS">
-      <Nav tabs>
-        <NavItem style={{width:'25%', cursor:'pointer', fontWeight:'bold'}} onMouseEnter={() => { toggleHoverBuy(!hoverStyleBuy); }} onMouseLeave={() => { toggleHoverBuy(!hoverStyleBuy); }}>
-          <NavLink className={classnames({ active: activeTab === '1' })} onClick={() => { toggle('1'); }} style={(activeTab === '1')?StyleTab:((hoverStyleBuy)?HoverStyleBuy:{color:'#6E6E6E'})} >
-            BUY
-          </NavLink>
-        </NavItem>
-        <NavItem style={{width:'25%', cursor:'pointer', fontWeight:'bold'}} onMouseEnter={() => { toggleHoverSell(!hoverStyleSell); }} onMouseLeave={() => { toggleHoverSell(!hoverStyleSell); }}>
-          <NavLink className={classnames({ active: activeTab === '2' })} onClick={() => { toggle('2'); }} style={(activeTab === '2')?StyleTab:((hoverStyleSell)?HoverStyleSell:{color:'#6E6E6E'})} >
-            SELL
-          </NavLink>
-        </NavItem>
-      </Nav>
+  return (
+    <>
+      {/* Page content */}
+      <Container className="mt--7" fluid>
+        <Row>
+          <Col className="mb-5 mb-xl-0" xl="8">
+            <Card className="bg-gradient-default shadow">
+              <CardHeader className="bg-transparent">
+                <Row className="align-items-center">
+                  <div className="col">
+                    <h6 className="text-uppercase text-light ls-1 mb-1">
+                      Overview
+                    </h6>
+                    <h2 className="text-white mb-0">Microsoft Corporation (MSFT)</h2>
+                  </div>
+                  <div className="col">
+                    <Nav className="justify-content-end" pills>
+                      <NavItem>
+                        <NavLink>
+                          <span className="d-none d-md-block">Month</span>
+                          <span className="d-md-none">M</span>
+                        </NavLink>
+                      </NavItem>
+                      <NavItem>
+                        <NavLink>
+                          <span className="d-none d-md-block">Week</span>
+                          <span className="d-md-none">W</span>
+                        </NavLink>
+                      </NavItem>
+                    </Nav>
+                  </div>
+                </Row>
+              </CardHeader>
+              <CardBody>
+                {/* Chart */}
+                <div className="chart">
+                  Line
+                </div>
+              </CardBody>
+            </Card>
+          </Col>
+          <Col xl="4">
+            <Card className="shadow">
+              <CardHeader className="bg-transparent">
+                <Row className="align-items-center">
+                  <div className="col">
+                    <h6 className="text-uppercase text-muted ls-1 mb-1">
+                      Place your order
+                    </h6>
+                    <h2 className="mb-0" style={{marginRight:'-8%', marginLeft:'-8%'}}>
+                      <Nav tabs borderless>
+                        <NavItem style={{cursor:'pointer', fontWeight:'bold', width:'50%', textAlign:'center'}} onMouseEnter={() => { toggleHoverBuy(!hoverStyleBuy); }} onMouseLeave={() => { toggleHoverBuy(!hoverStyleBuy); }}>
+                          <NavLink className={classnames({ active: activeTab === '1' })} onClick={() => { toggle('1'); }} style={(activeTab === '1')?StyleTab:((hoverStyleBuy)?HoverStyleBuy:{color:'#6E6E6E'})} >
+                            BUY
+                          </NavLink>
+                        </NavItem>
+                        <NavItem style={{cursor:'pointer', fontWeight:'bold', width:'50%', textAlign:'center', marginRight:'-25%'}} onMouseEnter={() => { toggleHoverSell(!hoverStyleSell); }} onMouseLeave={() => { toggleHoverSell(!hoverStyleSell); }}>
+                          <NavLink className={classnames({ active: activeTab === '2' })} onClick={() => { toggle('2'); }} style={(activeTab === '2')?StyleTab:((hoverStyleSell)?HoverStyleSell:{color:'#6E6E6E'})} >
+                            SELL
+                          </NavLink>
+                        </NavItem>
+                      </Nav>
+                    </h2>
+                  </div>
+                </Row>
+              </CardHeader>
+              <CardBody>
+                {/* Chart */}
+                <div className="chart">
+                  <TabContent activeTab={activeTab}>
 
-      <TabContent activeTab={activeTab}>
+                    <TabPane tabId="1" style={{marginTop: '5%', fontSize:'15px'}}>
+                      <OrdersForm tab={"BUY"} id="errorsBuy"/>
+                    </TabPane>
 
-        <TabPane tabId="1" style={{marginTop: '5%', fontSize:'15px'}}>
-          <OrdersForm tab={"BUY"} id="errorsBuy"/>
-        </TabPane>
+                    <TabPane tabId="2" style={{marginTop: '5%', fontSize:'15px'}}>
+                      <OrdersForm tab={"SELL"} id="errorsSell"/>
+                    </TabPane>
 
-        <TabPane tabId="2" style={{marginTop: '5%', fontSize:'15px'}}>
-          <OrdersForm tab={"SELL"} id="errorsSell"/>
-        </TabPane>
-
-      </TabContent>
-    </div>
+                  </TabContent>
+                </div>
+              </CardBody>
+            </Card>
+          </Col>
+        </Row>
+      </Container>
+    </>
   );
 }
 
@@ -299,16 +370,22 @@ const Shares = (props) => {
       <div style={{marginLeft: '10%', marginRight:'10%'}}>
         <NavigationBar />
         <hr style={{marginLeft: '-12%', marginRight:'-12%', marginTop:'-0.2%'}}/>
-        <Table style={{width:'100%'}} borderless>
-          <tbody>
-            <tr>
-              <td className="tabledata1">{props.marketPrice}</td>
-              <td className="tabledata2"><BuySell/></td>
-            </tr>
-          </tbody>
-        </Table>
+        <Vieew />
       </div>
     );
 }
 
 export default Shares;
+
+
+
+/*
+<Table style={{width:'100%'}} borderless>
+  <tbody>
+    <tr>
+      <td className="tabledata1">{props.marketPrice}</td>
+      <td className="tabledata2"><BuySell/></td>
+    </tr>
+  </tbody>
+</Table>
+*/
