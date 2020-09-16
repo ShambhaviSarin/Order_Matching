@@ -8,7 +8,7 @@ const Footer = () => {
             <font color= "white">
             <div className="row" ><br/><br/><br/>
             <div className="col-md-3 col-sm-6">
-            <h2 style={{ marginTop: '15%'}}><font color= "white"><img src={require('./purple_logo.png')} alt="logo" height="50"/></font></h2>
+            <h2 style={{ marginTop: '15%'}}><font color= "white"><img src={require('./white_logo.png')} alt="logo" height="50"/></font></h2>
                   <ul className="list-unstyled">
                     <li>2 North Avenue,Maker Maxity,</li>
                     <li>Bandra-Kurla Complex,</li>

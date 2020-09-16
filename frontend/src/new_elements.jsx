@@ -2,7 +2,6 @@ import React, { Component } from 'react'
 import Team from './Team';
 import Contact from './contact';
 import CardUi from "./Cards";
-import './Card-style.css';
 import "../node_modules/bootstrap/dist/css/bootstrap.min.css";
 import "../node_modules/bootstrap/dist/js/bootstrap.bundle";
 const New_elements = () => {
@@ -27,7 +26,7 @@ const New_elements = () => {
           {
               "img": "img/team/05.jpg",
               "name": "Barren Doe",
-              "job": "Project Manager"
+              "job": "Proect Manager"
           }
       ]
   const contact =[{
