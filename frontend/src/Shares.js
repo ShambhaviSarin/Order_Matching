@@ -19,13 +19,15 @@ import {chartOptions,parseOptions,chartExample1,chartExample2} from "./charts.js
 
 const NavigationBar = () => {
     const [isOpen, setIsOpen] = useState(false);
-    const [name, setName] = useState('Jessica Jones');
     const toggle = () => setIsOpen(!isOpen);
+    const [name, setName] = useState('Jessica Jones');
+    const [id, setId] = useState(-1);
 
     useEffect(() => {
       const search = window.location.search; // returns the URL query String
       const params = new URLSearchParams(search);
       const idFromURL = params.get('id');
+      setId(idFromURL);
       console.log("Id " + idFromURL);
 
       axios.get(`http://localhost:1337/login`).then(res => {
@@ -47,6 +49,13 @@ const NavigationBar = () => {
       });
     }, []);
 
+    const orderClick = () => {
+      window.location = `/Orders?id=${id}`;
+    }
+
+    const profileClick = () => {
+      window.location = `/Profile?id=${id}`;
+    }
 
     return(
       <Navbar color="link" light expand="md" style={{marginTop:'0.8%'}}>
@@ -75,15 +84,15 @@ const NavigationBar = () => {
                   <DropdownItem className="noti-title" header tag="div">
                     <h6 className="text-overflow m-0">Welcome!</h6>
                   </DropdownItem>
-                  <DropdownItem to="/admin/user-profile" tag={Link}>
+                  <DropdownItem onClick = {() => profileClick()}>
                     <i className="ni ni-single-02" />
                     <span>My profile</span>
                   </DropdownItem>
-                  <DropdownItem to="/admin/user-profile" tag={Link}>
+                  <DropdownItem to="/" tag={Link}>
                     <i className="ni ni-settings-gear-65" />
                     <span>Settings</span>
                   </DropdownItem>
-                  <DropdownItem to="/admin/user-profile" tag={Link}>
+                  <DropdownItem onClick = {() => orderClick()}>
                     <i className="ni ni-calendar-grid-58" />
                     <span>Orders</span>
                   </DropdownItem>
@@ -163,7 +172,7 @@ const OrdersForm = (props) => {
           <Label style={{marginLeft:'1%', cursor:'pointer'}}>Advanced Options</Label>
         </small>
       </p>
-      <UncontrolledCollapse toggler="#toggler" className="text-muted" style={{marginLeft:'5%'}}>
+      <UncontrolledCollapse toggler="#toggler" className="text-muted" style={{marginLeft:'7%'}}>
         <Row style={{marginBottom:'3%'}}>
           <Col><Input type="radio" name="radio2" value="None" checked={true} onChange={event => {setDescription(0); setHidden(1)}} />No condition</Col>
           <Col><Input type="radio" name="radio2" value="AllOrNone" onChange={event => {setDescription(1); setHidden(1)}} />All or none</Col>

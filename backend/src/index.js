@@ -577,6 +577,29 @@ app.post("/login", async(req, res) => {
     }
 });
 
+app.get('/tradeData', async(req, res) => {
+  try {
+    const trades = await pool.query(
+      "SELECT * FROM trades"
+    );
+    res.json(trades); //returns json data
+  } catch (err) {
+      console.error(err.message);
+  }
+});
+
+app.get('/orderData', async(req, res) => {
+  try {
+    const id = req.body.id;
+    const orders = await pool.query(
+      "SELECT * FROM orders WHERE user_id = $1", [id]
+    );
+    res.json(orders); //returns json data
+  } catch (err) {
+      console.error(err.message);
+  }
+});
+
 app.get('/trades', async(req, res) => {
   try {
     res.json(marketPrice); //returns json data

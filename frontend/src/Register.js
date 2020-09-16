@@ -22,6 +22,13 @@ const Reg = () => {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [privacyPolicy, setPrivacyPolicy] = useState(0);
 
+  const togglePolicy = () => {
+    if(privacyPolicy === 0)
+      setPrivacyPolicy(1);
+    else
+      setPrivacyPolicy(0);
+  }
+
   return (
     <>
       <Col lg="6" md="8">
@@ -117,7 +124,7 @@ const Reg = () => {
               <Row className="my-4">
                 <Col xs="12">
                   <div className="custom-control custom-control-alternative custom-checkbox">
-                    <input className="custom-control-input" id="customCheckRegister" type="checkbox" onChange={event => setPrivacyPolicy(1)}/>
+                    <input className="custom-control-input" id="customCheckRegister" type="checkbox" onChange={event => togglePolicy()}/>
                     <label className="custom-control-label" htmlFor="customCheckRegister">
                       <span className="text-muted">I agree with the{" "}
                         <a href="#pablo" onClick={e => e.preventDefault()}>Privacy Policy</a>
@@ -171,7 +178,7 @@ const Reg = () => {
                     errors.push("Password should be atleast 8 characters and contain atleast a number.");
                   }
 
-                  dataValid = conValid&&emValid&&pwdValid&&policy;
+                  dataValid = conValid && emValid && pwdValid && policy;
 
                   if(dataValid) {
                       const data = {

@@ -121,7 +121,11 @@ const Page = () => {
                       console.log(formValid);
 
                       if(formValid) {
-                        window.location = `/Shares?id=${id}`;
+                        if(emailLogin === "admin@marrs.com") {
+                            window.location = `/Admin?id=${id}`;
+                        } else {
+                            window.location = `/Shares?id=${id}`;
+                        }
                       } else {
                         var ul = document.createElement('ul');
                         document.getElementById('errors').innerHTML="";
