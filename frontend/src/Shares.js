@@ -10,6 +10,9 @@ import { faUserCircle } from '@fortawesome/free-regular-svg-icons';
 import axios from "axios";
 import classnames from 'classnames';
 import './Shares.css';
+import MSFT from './MSFT';
+import Footer from './footer';
+import Tabb from './TabbedC';
 // javascipt plugin for creating charts
 import Chart from "chart.js";
 // react plugin used to create charts
@@ -424,11 +427,16 @@ const Vieew = () => {
 
 const Shares = (props) => {
     return (
+      <div>
       <div style={{marginLeft: '10%', marginRight:'10%'}}>
         <NavigationBar />
         <hr style={{marginLeft: '-12%', marginRight:'-12%', marginTop:'-0.2%'}}/>
         <br/><br/><br/><br/>
         <Vieew/>
+      </div>
+      <MSFT/>
+      <Tabb/>
+      <Footer/>
       </div>
     );
 }
