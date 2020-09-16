@@ -1,7 +1,10 @@
 import React, { Component } from 'react'
 import Team from './Team';
 import Contact from './contact';
-
+import CardUi from "./Cards";
+import './Card-style.css';
+import "../node_modules/bootstrap/dist/css/bootstrap.min.css";
+import "../node_modules/bootstrap/dist/js/bootstrap.bundle";
 const New_elements = () => {
   const team = [{
               "img": "img/team/01.jpg",
@@ -27,18 +30,6 @@ const New_elements = () => {
               "job": "Project Manager"
           }
       ]
-  const team2 = [
-          {
-              "img": "img/team/04.jpg",
-              "name": "Karen Doe",
-              "job": "Project Manager"
-          },
-          {
-              "img": "img/team/05.jpg",
-              "name": "Barren Doe",
-              "job": "Project Manager"
-          }
-  ]
   const contact =[{
         "address": "4321 California St, San Francisco, CA 12345 ",
         "phone": "+1 123 456 1234",
@@ -52,6 +43,7 @@ const New_elements = () => {
   return (
     <div>
       <Team data={team} style={{textAlign:'center'}}/>
+      <CardUi className="whole"/>
       <Contact data={contact}/>
     </div>
   )
