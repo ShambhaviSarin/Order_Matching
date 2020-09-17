@@ -298,14 +298,9 @@ const OrdersForm = (props) => {
   );
 }
 
-const Vieew = () => {
-  const [activeTab, setActiveTab] = useState('1');
-  const [activeNav, setActiveNav] = useState(1);
-  const [chartData, setChartData] = useState('data1');
+const BuySell = () => {
 
-  if (window.Chart) {
-    parseOptions(Chart, chartOptions());
-  }
+  const [activeTab, setActiveTab] = useState('1');
 
   const toggle = tab => {
     if(activeTab !== tab) setActiveTab(tab);
@@ -323,6 +318,65 @@ const Vieew = () => {
   const [hoverStyleSell, setHoverStyleSell] = useState(0);
   const toggleHoverSell = style => {
     if(hoverStyleSell !== style) setHoverStyleSell(style);
+  }
+
+  return(
+    <div className="navbar-vertical fixed-left">
+      <Row>
+        <Col xl="11">
+          <Card className="shadow">
+            <CardHeader className="bg-transparent" style={{border:'white'}}>
+              <Row className="align-items-center">
+                <div className="col">
+                  <h6 className="text-uppercase text-muted ls-1 mb-1" style={{textAlign:'center', marginBottom:'4%'}}>
+                    Place your order
+                  </h6>
+                  <h2 className="mb-0" style={{marginRight:'-8%', marginLeft:'-8%', marginBottom:'-10%', background:'white'}}>
+                    <Nav tabs borderless>
+                      <NavItem style={{cursor:'pointer', fontWeight:'bold', width:'50%', textAlign:'center'}} onMouseEnter={() => { toggleHoverBuy(!hoverStyleBuy); }} onMouseLeave={() => { toggleHoverBuy(!hoverStyleBuy); }}>
+                        <NavLink className={classnames({ active: activeTab === '1' })} onClick={() => { toggle('1'); }} style={(activeTab === '1')?StyleTab:((hoverStyleBuy)?HoverStyleBuy:{color:'#6E6E6E'})} >
+                          BUY
+                        </NavLink>
+                      </NavItem>
+                      <NavItem style={{cursor:'pointer', fontWeight:'bold', width:'50%', textAlign:'center', marginRight:'-25%'}} onMouseEnter={() => { toggleHoverSell(!hoverStyleSell); }} onMouseLeave={() => { toggleHoverSell(!hoverStyleSell); }}>
+                        <NavLink className={classnames({ active: activeTab === '2' })} onClick={() => { toggle('2'); }} style={(activeTab === '2')?StyleTab:((hoverStyleSell)?HoverStyleSell:{color:'#6E6E6E'})} >
+                          SELL
+                        </NavLink>
+                      </NavItem>
+                    </Nav>
+                  </h2>
+                </div>
+              </Row>
+            </CardHeader>
+            <CardBody>
+              {/* Chart */}
+              <div>
+                <TabContent activeTab={activeTab}>
+
+                  <TabPane tabId="1" style={{marginTop: '5%', fontSize:'15px'}}>
+                    <OrdersForm tab={"BUY"} id="errorsBuy"/>
+                  </TabPane>
+
+                  <TabPane tabId="2" style={{marginTop: '5%', fontSize:'15px'}}>
+                    <OrdersForm tab={"SELL"} id="errorsSell"/>
+                  </TabPane>
+
+                </TabContent>
+              </div>
+            </CardBody>
+          </Card>
+        </Col>
+      </Row>
+    </div>
+  );
+}
+
+const Vieew = () => {
+  const [chartData, setChartData] = useState('data1');
+  const [activeNav, setActiveNav] = useState(1);
+
+  if (window.Chart) {
+    parseOptions(Chart, chartOptions());
   }
 
   const toggleNavs = (e, index) => {
@@ -377,49 +431,6 @@ const Vieew = () => {
               </CardBody>
             </Card>
           </Col>
-          <Col xl="4">
-            <Card className="shadow">
-              <CardHeader className="bg-transparent" style={{border:'white'}}>
-                <Row className="align-items-center">
-                  <div className="col">
-                    <h6 className="text-uppercase text-muted ls-1 mb-1" style={{textAlign:'center', marginBottom:'4%'}}>
-                      Place your order
-                    </h6>
-                    <h2 className="mb-0" style={{marginRight:'-8%', marginLeft:'-8%', marginBottom:'-10%', background:'white'}}>
-                      <Nav tabs borderless>
-                        <NavItem style={{cursor:'pointer', fontWeight:'bold', width:'50%', textAlign:'center'}} onMouseEnter={() => { toggleHoverBuy(!hoverStyleBuy); }} onMouseLeave={() => { toggleHoverBuy(!hoverStyleBuy); }}>
-                          <NavLink className={classnames({ active: activeTab === '1' })} onClick={() => { toggle('1'); }} style={(activeTab === '1')?StyleTab:((hoverStyleBuy)?HoverStyleBuy:{color:'#6E6E6E'})} >
-                            BUY
-                          </NavLink>
-                        </NavItem>
-                        <NavItem style={{cursor:'pointer', fontWeight:'bold', width:'50%', textAlign:'center', marginRight:'-25%'}} onMouseEnter={() => { toggleHoverSell(!hoverStyleSell); }} onMouseLeave={() => { toggleHoverSell(!hoverStyleSell); }}>
-                          <NavLink className={classnames({ active: activeTab === '2' })} onClick={() => { toggle('2'); }} style={(activeTab === '2')?StyleTab:((hoverStyleSell)?HoverStyleSell:{color:'#6E6E6E'})} >
-                            SELL
-                          </NavLink>
-                        </NavItem>
-                      </Nav>
-                    </h2>
-                  </div>
-                </Row>
-              </CardHeader>
-              <CardBody>
-                {/* Chart */}
-                <div>
-                  <TabContent activeTab={activeTab}>
-
-                    <TabPane tabId="1" style={{marginTop: '5%', fontSize:'15px'}}>
-                      <OrdersForm tab={"BUY"} id="errorsBuy"/>
-                    </TabPane>
-
-                    <TabPane tabId="2" style={{marginTop: '5%', fontSize:'15px'}}>
-                      <OrdersForm tab={"SELL"} id="errorsSell"/>
-                    </TabPane>
-
-                  </TabContent>
-                </div>
-              </CardBody>
-            </Card>
-          </Col>
         </Row>
       </Container>
     </>
@@ -429,15 +440,18 @@ const Vieew = () => {
 const Shares = (props) => {
     return (
       <div>
-      <div style={{marginLeft: '10%', marginRight:'10%'}}>
-        <NavigationBar />
-        <hr style={{marginLeft: '-12%', marginRight:'-12%', marginTop:'-0.2%'}}/>
-        <br/><br/><br/><br/>
-        <Vieew/>
-      </div>
-      <MSFT/>
-      <Tabs/>
-      <Footer/>
+        <div style={{marginLeft: '10%', marginRight:'10%'}}>
+          <NavigationBar />
+          <hr style={{marginLeft: '-12%', marginRight:'-12%', marginTop:'-0.2%'}}/>
+          <br/><br/><br/><br/>
+        </div>
+        <div style={{marginLeft:'70%', position:'fixed'}}><BuySell /></div>
+        <div style={{marginTop:'7%', marginLeft:'5%'}}>
+          <Vieew/>
+        </div>
+        <MSFT/>
+        <Tabs/>
+        <Footer/>
       </div>
     );
 }
@@ -447,6 +461,11 @@ export default Shares;
 
 
 /*
+
+<Col xl="4">
+
+</Col>
+
 <Table style={{width:'100%'}} borderless>
   <tbody>
     <tr>
