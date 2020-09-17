@@ -54,12 +54,6 @@ const NavigationBar = (props) => {
             </div>
             <Nav className="ml-auto" navbar>
               <NavItem>
-                <NavLink className="nav-link-icon" to="/Register" tag={Link}>
-                  <i className="ni ni-circle-08" />
-                  <span className="nav-link-inner--text">Register</span>
-                </NavLink>
-              </NavItem>
-              <NavItem>
                 <NavLink className="nav-link-icon" target="_blank" href="https://github.com/ShambhaviSarin/Order_Matching">
                   <FontAwesomeIcon icon={faGithub}/><span className="nav-link-inner--text">Github</span>
                 </NavLink>

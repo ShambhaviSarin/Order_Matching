@@ -588,12 +588,38 @@ app.get('/tradeData', async(req, res) => {
   }
 });
 
-app.get('/orderData', async(req, res) => {
+app.get('/rejectedOrders', async(req, res) => {
+  try {
+    var status=0;
+    const rejOrders = await pool.query(
+      "SELECT * FROM orders where status = $1", [status]
+    );
+    res.json(rejOrders); //returns json data
+  } catch (err) {
+      console.error(err.message);
+  }
+});
+
+app.get('/waitingOrders', async(req, res) => {
+  try {
+    var status=2;
+    const waitOrders = await pool.query(
+      "SELECT * FROM orders where status = $1", [status]
+    );
+    res.json(waitOrders); //returns json data
+  } catch (err) {
+      console.error(err.message);
+  }
+});
+
+app.post('/orderData', async(req, res) => {
   try {
     const id = req.body.id;
+    console.log(id);
     const orders = await pool.query(
       "SELECT * FROM orders WHERE user_id = $1", [id]
     );
+    console.log("Orders" + orders);
     res.json(orders); //returns json data
   } catch (err) {
       console.error(err.message);

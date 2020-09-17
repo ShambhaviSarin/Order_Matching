@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useLayoutEffect, Fragment } from 'react';
+import React, { useState, useEffect, useLayoutEffect } from 'react';
 import 'bootstrap/dist/css/bootstrap.css';
 import {Collapse,Navbar,NavbarToggler,NavbarBrand,Nav,NavItem,NavLink,UncontrolledDropdown,
   DropdownToggle,DropdownMenu,DropdownItem,NavbarText,Table,Button,TabContent,TabPane,Row,Col,
@@ -6,12 +6,13 @@ import {Collapse,Navbar,NavbarToggler,NavbarBrand,Nav,NavItem,NavLink,Uncontroll
 Badge, Progress, CardFooter, Pagination, PaginationItem, PaginationLink, UncontrolledTooltip} from 'reactstrap';
 import { Link} from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faAngleLeft, faAngleRight } from '@fortawesome/free-solid-svg-icons'
+import { faAngleLeft, faAngleRight  } from '@fortawesome/free-solid-svg-icons'
 import { faUserCircle } from '@fortawesome/free-regular-svg-icons';
+import { faGithub } from '@fortawesome/free-brands-svg-icons';
 import axios from "axios";
 import classnames from 'classnames';
 import FooterPage from './FooterPage';
-import Header from './Header';
+import Sidebar from './Sidebar';
 // javascipt plugin for creating charts
 import Chart from "chart.js";
 // react plugin used to create charts
@@ -22,102 +23,75 @@ import {chartOptions,parseOptions,chartExample1,chartExample2} from "./charts.js
 const NavigationBar = () => {
     const [isOpen, setIsOpen] = useState(false);
     const toggle = () => setIsOpen(!isOpen);
-    const [name, setName] = useState('Jessica Jones');
-    const [id, setId] = useState(-1);
-
-    useEffect(() => {
-      const search = window.location.search; // returns the URL query String
-      const params = new URLSearchParams(search);
-      const idFromURL = params.get('id');
-      setId(idFromURL);
-      console.log("Id " + idFromURL);
-      axios.get(`http://localhost:1337/login`).then(res => {
-        const data = res.data.rows;
-        console.log(data);
-        for(var row = 0; row<data.length; row++) {
-          console.log("Entered");
-          if(data[row].user_id == idFromURL) {
-            console.log("Yes");
-            console.log(data[row].full_name);
-            setName(data[row].full_name);
-            document.getElementById('name').value = data[row].full_name;
-            console.log(name);
-            break;
-          }
-        }
-      }).catch(err => {
-          console.log(err);
-      });
-    }, []);
-
-    const orderClick = () => {
-      window.location = `/Orders?id=${id}`;
-    }
+    const search = window.location.search; // returns the URL query String
+    const params = new URLSearchParams(search);
+    const idFromURL = params.get('id');
+    const [id, setId] = useState(idFromURL);
+    //setId(idFromURL);
 
     const profileClick = () => {
       window.location = `/Profile?id=${id}`;
     }
 
     const dashClick = () => {
-      window.location = `/Shares?id=${id}`;
+      window.location = `/Admin?id=${id}`;
     }
 
     return(
-      <Navbar color="link" light expand="md" style={{marginTop:'0.8%'}}>
-        <NavbarBrand href="/"><img src={require('./purple_logo.png')} alt="logo" height="50"/></NavbarBrand>
-        <NavbarToggler onClick={toggle} />
-        <Collapse isOpen={isOpen} navbar>
-          <Nav className="mr-auto" navbar>
-            <NavItem>
-              <NavLink target="_blank" href="https://github.com/ShambhaviSarin/Order_Matching">GitHub</NavLink>
-            </NavItem>
-          </Nav>
-          <NavbarText style={{marginRight:'-4%'}}>
-            <Nav className="align-items-center d-none d-md-flex" navbar>
-              <UncontrolledDropdown nav>
-                <DropdownToggle className="pr-0" nav>
-                  <Media className="align-items-center">
-                    <span className="avatar avatar-sm rounded-circle">
-                      <img alt="..." src={require("./assets/img/theme/team-4-800x800.jpg")}/>
-                    </span>
-                    <Media className="ml-2 d-none d-lg-block">
-                      <span className="mb-0 text-sm font-weight-bold" id="name">{name}</span>
+      <>
+        <Navbar className="navbar-top navbar-horizontal navbar-light" expand="md">
+          <Container className="px-4">
+            <button className="navbar-toggler" id="navbar-collapse-main">
+              <span className="navbar-toggler-icon" />
+            </button>
+            <UncontrolledCollapse navbar toggler="#navbar-collapse-main">
+              <Nav className="ml-auto" navbar>
+                <NavItem>
+                  <NavLink className="nav-link-icon" target="_blank" href="https://github.com/ShambhaviSarin/Order_Matching">
+                    <FontAwesomeIcon icon={faGithub}/><span className="nav-link-inner--text">Github</span>
+                  </NavLink>
+                </NavItem>
+              </Nav>
+              <Nav className="align-items-center d-none d-md-flex" navbar>
+                <UncontrolledDropdown nav>
+                  <DropdownToggle className="pr-0" nav>
+                    <Media className="align-items-center">
+                      <span className="avatar avatar-sm rounded-circle">
+                        <img alt="..." src={require("./assets/img/theme/team-4-800x800.jpg")}/>
+                      </span>
+                      <Media className="ml-2 d-none d-lg-block">
+                        <span className="mb-0 text-sm font-weight-bold" id="name">Admin</span>
+                      </Media>
                     </Media>
-                  </Media>
-                </DropdownToggle>
-                <DropdownMenu className="dropdown-menu-arrow" right>
-                  <DropdownItem className="noti-title" header tag="div">
-                    <h6 className="text-overflow m-0">Welcome!</h6>
-                  </DropdownItem>
-                  <DropdownItem onClick = {() => dashClick()}>
-                    <i className="ni ni-tv-2 text" />
-                    <span>Dashboard</span>
-                  </DropdownItem>
-                  <DropdownItem onClick = {() => profileClick()}>
-                    <i className="ni ni-single-02" />
-                    <span>My profile</span>
-                  </DropdownItem>
-                  <DropdownItem onClick = {() => orderClick()}>
-                    <i className="ni ni-calendar-grid-58" />
-                    <span>Orders</span>
-                  </DropdownItem>
-                  <DropdownItem divider />
-                  <DropdownItem href="/">
-                    <i className="ni ni-user-run" />
-                    <span>Logout</span>
-                  </DropdownItem>
-                </DropdownMenu>
-              </UncontrolledDropdown>
-            </Nav>
-          </NavbarText>
-        </Collapse>
-      </Navbar>
+                  </DropdownToggle>
+                  <DropdownMenu className="dropdown-menu-arrow" right>
+                    <DropdownItem className="noti-title" header tag="div">
+                      <h6 className="text-overflow m-0">Welcome!</h6>
+                    </DropdownItem>
+                    <DropdownItem onClick = {() => dashClick()}>
+                      <i className="ni ni-tv-2 text" />
+                      <span>Dashboard</span>
+                    </DropdownItem>
+                    <DropdownItem onClick = {() => profileClick()}>
+                      <i className="ni ni-single-02" />
+                      <span>My profile</span>
+                    </DropdownItem>
+                    <DropdownItem divider />
+                    <DropdownItem href="/">
+                      <i className="ni ni-user-run" />
+                      <span>Logout</span>
+                    </DropdownItem>
+                  </DropdownMenu>
+                </UncontrolledDropdown>
+              </Nav>
+            </UncontrolledCollapse>
+          </Container>
+        </Navbar>
+      </>
     );
 }
 
-
-
-const OrderTable = (props) => {
+const WaitingOrdersTable = (props) => {
 
   const [data, setData] = useState([]);
   const [items, setItems] = useState([]);
@@ -126,24 +100,6 @@ const OrderTable = (props) => {
   const search = window.location.search; // returns the URL query String
   const params = new URLSearchParams(search);
   const idFromURL = params.get('id');
-
-  const accepted = () => {
-    return(
-      <Badge color="" className="badge-dot mr-4">
-        <i className="bg-success" />
-        accepted
-      </Badge>
-    );
-  }
-
-  const rejected = () => {
-    return(
-      <Badge color="" className="badge-dot mr-4">
-        <i className="bg-danger" />
-        rejected
-      </Badge>
-    );
-  }
 
   const waiting = () => {
     return(
@@ -167,7 +123,7 @@ const OrderTable = (props) => {
             <td>{(row.category)?"Sell":"Buy"}</td>
             <td>{(row.order_type)?"Market":"Limit"}</td>
             <td>{(row.description === 0)?"None":(row.description === 1)?"All or none":(row.description === 2)?"Minimum Fill":"Disclosed quantity"}</td>
-            <td>{(row.status === 2)?waiting():(row.status === 1)?accepted():rejected()}</td>
+            <td>{waiting()}</td>
             <td>{((row.description === 2)||(row.description === 3))?row.mindis:"Nil"}</td>
           </tr>
         );
@@ -176,16 +132,14 @@ const OrderTable = (props) => {
   }
 
   useEffect(() => {
-    const d = {
-        id : idFromURL
-    }
-    console.log(data);
-    axios.post('http://localhost:1337/orderData',d).then(res=>{
-      const data = res.data.rows;
-      console.log(res.data.rows);
-      setData(data);
-      //setItems(data.slice(0,pageSize));
-    }).catch(error => {console.log(error)});
+
+    axios.get(`http://localhost:1337/waitingOrders`).then(res => {
+      const wd = res.data.rows;
+      console.log(wd);
+      setData(wd);
+    }).catch(err => {
+        console.log(err);
+    });
   }, []);
 
   const [active, setActive] = useState(1);
@@ -228,7 +182,7 @@ const OrderTable = (props) => {
           <div className="col">
             <Card className="bg-gradient-default shadow">
               <CardHeader className="bg-transparent border-0">
-                <h3 className="text-white mb-0">Your orders</h3>
+                <h3 className="text-white mb-0">Rejected orders</h3>
               </CardHeader>
               <Table className="align-items-center bg-transparent border-0" responsive style={{color:'white', overflow:'hidden', marginBottom:'-1%', borderTop:'1px solid #5272e4'}}>
                 <thead style={{borderTop:'1px solid #5272e4'}}>
@@ -299,25 +253,26 @@ const OrderTable = (props) => {
 const Vieew = () => {
   return(
     <div>
-      <OrderTable />
+      <WaitingOrdersTable />
     </div>
   );
 }
 
-const Orders = (props) => {
+const Admin2 = (props) => {
     return (
-      <div style={{marginLeft: '10%', marginRight:'10%'}}>
-        <NavigationBar />
-        <hr style={{marginLeft: '-12%', marginRight:'-12%', marginTop:'-0.2%'}}/>
-        <br/><br/><br/><br/>
-        <Vieew />
-        <FooterPage />
+      <div>
+        <div>
+          <Sidebar />
+        </div>
+        <div style={{marginLeft:'13%'}}>
+          <NavigationBar/>
+        </div>
+        <div style={{marginLeft: '20%', marginRight:'5%'}}>
+          <br/><br/><br/><br/>
+          <Vieew/>
+        </div>
       </div>
     );
 }
 
-export default Orders;
-
-/*
-
-*/
+export default Admin2;

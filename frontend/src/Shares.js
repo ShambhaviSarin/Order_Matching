@@ -12,7 +12,7 @@ import classnames from 'classnames';
 import './Shares.css';
 import MSFT from './MSFT';
 import Footer from './footer';
-import Tabb from './TabbedC';
+//import Tabb from './TabbedC';
 // javascipt plugin for creating charts
 import Chart from "chart.js";
 // react plugin used to create charts
@@ -435,7 +435,6 @@ const Shares = (props) => {
         <Vieew/>
       </div>
       <MSFT/>
-      <Tabb/>
       <Footer/>
       </div>
     );

@@ -1239,8 +1239,8 @@ pre {
     background-color: #e3ecf6; }
 
 .table .thead-dark th {
-  color: #f8f9fe;
-  background-color: #172b4d;
+  color: #5e72e4;
+  background-color: #18264d;
   border-color: #1f3a68; }
 
 .table .thead-light th {
@@ -1249,8 +1249,8 @@ pre {
   border-color: #e9ecef; }
 
 .table-dark {
-  color: #f8f9fe;
-  background-color: #172b4d; }
+  color: #5e72e4;
+  background-color: #18264d; }
   .table-dark th,
   .table-dark td,
   .table-dark thead th {
