@@ -16,7 +16,7 @@ const News = props => {
                     <font color="black"><h3 style={{textAlign:'center'}}>
                     {props.content}</h3></font>
                     </p>
-                    <a href={props.link} className="btn btn-outline-success" style={{marginLeft:'33%'}} >Go to this link</a>
+                    <a href={props.link} className="btn btn-outline-success" style={{marginLeft:'33%',color:'#7c7cdd',borderColor:'#7c7cdd'}} >Go to this link</a>
                 </div>
         </div>
         <br/><br/><br/><br/><br/>

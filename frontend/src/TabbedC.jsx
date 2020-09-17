@@ -12,14 +12,14 @@ const Tabs = (props) => {
 
   return (
     <div><div style={{marginTop:'4%',marginLeft:'10%',marginBottom:'-2%',fontSize:'3rem'}}><font color="#240250">Company Financials</font></div><br/><br/>
-    <div className="card text-centre text-dark" style={{marginLeft:'10%',width:'78rem', height:'25rem', marginBottom:'10%'}}>
+    <div className="card text-centre text-dark" style={{marginLeft:'10%',width:'78rem', height:'48rem', marginBottom:'10%'}}>
       <Nav tabs style={{marginTop:'1%',marginLeft:'1%',marginRight:'1%'}}>
         <NavItem>
           <NavLink
             className={classnames({ active: activeTab === '1' })}
             onClick={() => { toggle('1'); }}
           >
-            Quaterly Results
+            Annual Income Statement
           </NavLink>
         </NavItem>
         <NavItem>
@@ -27,7 +27,7 @@ const Tabs = (props) => {
             className={classnames({ active: activeTab === '2' })}
             onClick={() => { toggle('2'); }}
           >
-            Profit and Loss
+            Quarterly Income Statement
           </NavLink>
         </NavItem>
         <NavItem>
@@ -47,33 +47,33 @@ const Tabs = (props) => {
           </NavLink>
         </NavItem>
         </Nav>
-      <TabContent activeTab={activeTab} style={{marginLeft:'1%',marginRight:'1%',marginTop:'5%'}}>
+      <TabContent activeTab={activeTab} style={{marginLeft:'4%',marginRight:'1%',marginTop:'3%'}}>
         <TabPane tabId="1">
           <Row>
             <Col sm="12">
-              <h4>Tab 1 Contents KSFHDASLKZSHFDHA KHFLSDXMORKCMWELIRHUSEBYDRFHOIAS;JMDAESOFKJSELDFVNFKCNGDLKJGESDESCFSDKFGODRJGOIRTHJBNGLFVMDFOPGJPRTGJRTHBs<br/><br/></h4>
+              <img src={require('./assets/annualis.png')} alt="fb" width="1150px" height="600px" style={{align:'centre'}}/>
             </Col>
           </Row>
         </TabPane>
         <TabPane tabId="2">
         <Row>
           <Col sm="12">
-            <h4>Tab 2 Contents KSFHDASLKZSHFDHA KHFLSDXMORKCMWELIRHUSEBYDRFHOIAS;JMDAESOFKJSELDFVNFKCNGDLKJGESDESCFSDKFGODRJGOIRTHJBNGLFVMDFOPGJPRTGJRTHBs<br/><br/></h4>
-          </Col>
+              <img src={require('./assets/quarterlyIs.PNG')} alt="fb" width="1150px" height="600px" style={{align:'centre'}}/>
+            </Col>
         </Row>
         </TabPane>
         <TabPane tabId="3">
         <Row>
           <Col sm="12">
-            <h4>Tab 3 Contents KSFHDASLKZSHFDHA KHFLSDXMORKCMWELIRHUSEBYDRFHOIAS;JMDAESOFKJSELDFVNFKCNGDLKJGESDESCFSDKFGODRJGOIRTHJBNGLFVMDFOPGJPRTGJRTHBs<br/><br/></h4>
-          </Col>
+              <img src={require('./assets/balancesheet.PNG')} alt="fb" width="1150px" height="600px" style={{align:'centre'}}/>
+            </Col>
         </Row>
         </TabPane>
         <TabPane tabId="4">
         <Row>
           <Col sm="12">
-            <h4>Tab 4 Contents KSFHDASLKZSHFDHA KHFLSDXMORKCMWELIRHUSEBYDRFHOIAS;JMDAESOFKJSELDFVNFKCNGDLKJGESDESCFSDKFGODRJGOIRTHJBNGLFVMDFOPGJPRTGJRTHBs<br/><br/></h4>
-          </Col>
+                <img src={require('./assets/cashflow.PNG')} alt="fb" width="1150px" height="600px" style={{align:'centre'}}/>
+                  </Col>
         </Row>
         </TabPane>
       </TabContent>

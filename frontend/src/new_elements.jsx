@@ -7,26 +7,21 @@ import "../node_modules/bootstrap/dist/js/bootstrap.bundle";
 const New_elements = () => {
   const team = [{
               "img": "img/team/01.jpg",
-              "name": "John Doe",
-              "job": "Director"
+              "name": "Shambhavi Sarin"
           },
           {
               "img": "img/team/02.jpg",
-              "name": "Mike Doe",
-              "job": "Senior Designer"
+              "name": "Akhya Bajpai"
           }, {
               "img": "img/team/03.jpg",
-              "name": "Jane Doe",
-              "job": "Senior Designer"
+              "name": "Shantanu Das"
           },{
               "img": "img/team/04.jpg",
-              "name": "Karen Doe",
-              "job": "Project Manager"
+              "name": "Malaika Bedi"
           },
           {
               "img": "img/team/05.jpg",
-              "name": "Barren Doe",
-              "job": "Proect Manager"
+              "name": "Richa"
           }
       ]
   const contact =[{
