@@ -10,3 +10,24 @@
   padding: 10px;
   box-shadow: 5px 10px 18px #E6E6E6;
 }
+
+.slider-horizontal {
+  .rangeslider-horizontal,
+  .rangeslider__fill,
+  .rangeslider__handle {
+    border-radius: 0;
+  }
+  .rangeslider-horizontal {
+    height: 10px;
+  }
+  .rangeslider__fill {
+    background-color: #1E88E5;
+  }
+  .rangeslider__handle {
+    width: 10px;
+    height: 30px;
+    &:after {
+      display: none;
+    }
+  }
+}
