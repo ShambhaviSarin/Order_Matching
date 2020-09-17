@@ -40,7 +40,7 @@ const About = (props) => {
     </div>
     <div style={{marginTop:'-5%',marginLeft:'10%',marginBottom:'-2%',fontSize:'2rem'}}><font color="#240250">About the Company</font></div><br/><br/>
     <div className="text-centre text-dark" style={{marginLeft:'10%',width:'50rem', height:'30rem', marginBottom:'10%'}}>
-    <p style={{marginLeft:'1%',marginTop:'1%',marginRight:'1%0',marginBottom:'1%'}}>About Microsoft Corporation
+    <p style={{marginLeft:'0%',marginTop:'3%',marginRight:'1%0',marginBottom:'1%'}}>About Microsoft Corporation
       Microsoft Corporation is a technology company. The Company develops, licenses, and supports a range of software products, services and devices.
       The Company's segments include Productivity and Business Processes, Intelligent Cloud and More Personal Computing. The Company's products include
       operating systems; cross-device productivity applications; server applications; business solution applications; desktop and server management tools;
@@ -48,7 +48,7 @@ const About = (props) => {
       and sells devices, including personal computers (PCs), tablets, gaming and entertainment consoles, phones, other intelligent devices,
       and related accessories, that integrate with its cloud-based offerings. It offers an array of services, including cloud-based solutions that provide
       customers with software, services, platforms, and content, and it provides solution support and consulting services.</p>
-    <p style={{marginLeft:'1%',marginTop:'1%',marginRight:'1%0',marginBottom:'1%'}}>
+    <p style={{marginLeft:'0%',marginTop:'2%',marginRight:'0%',marginBottom:'2%'}}>
     <h5 className="card-title" style={{textAlign:'left',marginTop:'5%'}}><font color="#240250">
         <div id="HASH" class="blue-msg">
         <span id="time-HASH" class="smalltext">INDUSTRY</span>
