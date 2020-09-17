@@ -656,6 +656,17 @@ app.post("/login", async(req, res) => {
     }
 });
 
+app.get('/totalOrders', async(req, res) => {
+  try {
+    const trades = await pool.query(
+      "SELECT * FROM orders"
+    );
+    res.json(trades); //returns json data
+  } catch (err) {
+      console.error(err.message);
+  }
+});
+
 app.get('/tradeData', async(req, res) => {
   try {
     const trades = await pool.query(
@@ -686,6 +697,42 @@ app.get('/waitingOrders', async(req, res) => {
       "SELECT * FROM orders where status = $1", [status]
     );
     res.json(waitOrders); //returns json data
+  } catch (err) {
+      console.error(err.message);
+  }
+});
+
+app.post('/investments', async(req, res) => {
+  try {
+    const id = req.body.id;
+    const orders = await pool.query(
+      "SELECT SUM(price) FROM orders WHERE status = 1 AND user_id = $1 AND category = 0", [id]
+    );
+    res.json(orders); //returns json data
+  } catch (err) {
+      console.error(err.message);
+  }
+});
+
+app.post('/benefits', async(req, res) => {
+  try {
+    const id = req.body.id;
+    const orders = await pool.query(
+      "SELECT SUM(price) FROM orders WHERE status = 1 AND user_id = $1 AND category = 1", [id]
+    );
+    res.json(orders); //returns json data
+  } catch (err) {
+      console.error(err.message);
+  }
+});
+
+app.post('/userTrades', async(req, res) => {
+  try {
+    const id = req.body.id;
+    const orders = await pool.query(
+      "SELECT * FROM orders WHERE status = 1 AND user_id = $1", [id]
+    );
+    res.json(orders); //returns json data
   } catch (err) {
       console.error(err.message);
   }
