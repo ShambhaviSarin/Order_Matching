@@ -6,7 +6,7 @@ import img3 from './assets/image3.jpg';
 class Cards extends Component{
   render(){
     return(
-    <div className="container-fluid d-flex justify-content-center" style={{background:'#f9f9f9'}}>
+    <div className="container-fluid d-flex justify-content-center" style={{background:'#e0e0f8'}}>
         <div className="row">
             <div className="col-md-4">
                 <Ca imgsrc={img1} title="The Economic Times" content="This zero-debt firm powers its way up the ladder; BUY calls galore" link="https://economictimes.indiatimes.com/markets/stocks/news/this-zero-debt-firm-powers-its-way-up-the-ladder-buy-calls-galore/articleshow/78102405.cms" />
