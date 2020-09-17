@@ -1,0 +1,56 @@
+.Animation {
+  text-align: center;
+}
+
+
+
+
+#header {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+    margin-top: 70px;
+}
+#header h2 {
+        margin-top: 70px;
+        font-size: 40px;
+        font-weight: 700;
+        font-family: "Poppins", sans-serif;
+        text-align: left;
+        color: #525f7f;
+        line-height: 1.5;
+    }
+
+    #header h3 {
+        color: #525f7f;
+        font-size: 40px;
+        line-height: 1.5;
+        font-family: "Poppins", sans-serif;
+    }
+
+.header-img {
+    text-align: right;
+}
+
+#header .animated {
+    animation: up-down 2s ease-in-out infinite alternate-reverse both;
+}
+
+@-webkit-keyframes up-down {
+    0% {
+        transform: translateY(10px);
+    }
+
+    100% {
+        transform: translateY(-10px);
+    }
+}
+
+@keyframes up-down {
+    0% {
+        transform: translateY(10px);
+    }
+
+    100% {
+        transform: translateY(-10px);
+    }
+}

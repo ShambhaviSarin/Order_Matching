@@ -25,6 +25,7 @@ CREATE TABLE orders (
   order_type INT NOT NULL,
   price NUMERIC(5,2) NOT NULL,
 	description INT NOT NULL,
+	mindis INT NOT NULL,
   status INT NOT NULL,
   CONSTRAINT fk_user
     FOREIGN KEY(user_id)

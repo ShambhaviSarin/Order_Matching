@@ -20,6 +20,8 @@ app.use((req, res, next) => {
   next();
 });
 
+//QUEUE---------------------------------------------------------------------------------------------------------------------
+
 function Queue() {
    this.elements = [];
 }
@@ -52,44 +54,12 @@ Queue.prototype.length = function() {
     return this.elements.length;
 }
 
+//INITIALISATION---------------------------------------------------------------------------------------------------------------------
+
 let qb = new Queue();
 let qs = new Queue();
 var marketPrice = 500;
 var msg="Temporary";
-
-//first element category cannot be -1
-//if -1 then pop
-function getMinPriceOrder(q) {
-  var minPos = -1;
-  //console.log("min price entered");
-  while (minPos === -1) {
-    minPos = 0;
-    //console.log("Error here!");
-    //console.log("MinPos "+minPos);
-    //console.log(q.elements[minPos]);
-    if(q.isEmpty()) {
-      return -1;
-    }
-    if(q.elements[minPos].category === -1) {
-      //console.log("In");
-      q.dequeue()
-      minPos = -1;
-      if(q.isEmpty()) {
-        return -1;
-      }
-    }
-    //console.log("H");
-  }
-  //console.log("MinPosLB "+minPos);
-  for(var i = 0; i < q.elements.length; i++) {
-    if(q.elements[i].category !== -1 && q.elements[i].price < q.elements[minPos].price) {
-      minPos = i;
-    }
-    //console.log("Here!");
-  }
-  //console.log("MinPosL "+minPos);
-  return minPos;
-}
 
 //reject order
 async function rejectOrder(oid) {
@@ -113,166 +83,345 @@ async function acceptOrder(bid, sid, price, qty) {
   );
 }
 
-//execute buy limit order
-function buyLimitOrders(q, id, order) {
-  //console.log("BUY LIMIT ORDER"+order);
+//CASE 1 AND 4---------------------------------------------------------------------------------------------------------------------
+
+function getMinPriceOrder(q, qty, minq) {
+  var minPos = -1;
   if(q.isEmpty()) {
-    qb.enqueue(order);
-    msg = "Order waiting! No sellers\n"
-  } else {
-    while(order.qty != 0) {
-      var pos = getMinPriceOrder(q);
-      console.log("Pos"+pos);
-      if(pos === -1) {
-        qb.enqueue(order);
+    return -1;
+  }
+  for(var i = 0; i < q.elements.length; i++) {
+    if(q.elements[i].category !== -1) {
+      if(q.elements[i].description === 0 || (q.elements[i].description === 1 && qty >= q.elements[i].qty) ||
+      (q.elements[i].description === 2 && (qty >= q.elements[i].mindis || minq === 1)) || (q.elements[i].description === 3)) {
+        if(minPos === -1 || q.elements[i].price < q.elements[minPos].price)
+          minPos = i;
+      }
+    }
+  }
+  return minPos;
+}
+
+//execute buy limit order none condition
+function orders(q, id, order) {
+  console.log(order.order_time);
+  if(q.isEmpty()) {
+    if(order.order_type === 1) {
+      rejectOrder(id);
+      msg += "Order rejected!\n";
+    } else {
+      qb.enqueue(order);
+      if(order.category === 0)
         msg = "Order waiting! No sellers\n"
+      else
+        msg = "Order waiting! No buyers\n"
+    }
+  } else {
+    while(order.qty !== 0) {
+      var pos = getMinPriceOrder(q,order.qty,order.minq);
+      console.log("pos"+pos);
+      if(pos === -1) {
+        if(order.order_type === 1) {
+          rejectOrder(id);
+          msg += "Order rejected!\n";
+        } else {
+          qb.enqueue(order);
+          if(order.category === 0)
+            msg = "Order waiting! No sellers\n"
+          else
+            msg = "Order waiting! No buyers\n"
+        }
         return;
-      } else if (q.elements[pos].price > order.price) {
+      } else if (order.order_type === 0 && order.category === 0 && q.elements[pos].price > order.price) {
         qb.enqueue(order);
         msg = "Order waiting! No sellers at this price\n"
         return;
+      } else if (order.order_type === 0 && order.category === 1 && q.elements[pos].price < order.price) {
+        qb.enqueue(order);
+        msg = "Order waiting! No buyers at this price\n"
+        return;
       } else if(q.elements[pos].qty >= order.qty) {
         //trade executes
-        acceptOrder(id, q.elements[pos].order_id, q.elements[pos].price, order.qty);
-        console.log(q.elements[pos]);
-        msg = "Order executed!"
-        //marketPrice = q.elements[pos].price;
-        //console.log("Trade executed");
-        updateAcceptStatus(id);
+        if(order.category === 0) {
+          acceptOrder(id, q.elements[pos].order_id, q.elements[pos].price, order.qty);
+        } else {
+          acceptOrder(q.elements[pos].order_id, id, q.elements[pos].price, order.qty);
+        }
+        if(order.description === 3) {
+          order.left -= order.mindis;
+        }
+        if(order.left <= 0 || order.description !== 3){
+          msg = "Order executed!"
+          updateAcceptStatus(id);
+        } else {
+          order.qty = (order.left >= order.mindis)?order.mindis:order.left;
+          msg = "Disclosed qty executed!"
+        }
+        console.log(msg);
         //update qty
         q.elements[pos].qty -= order.qty;
-        if(q.elements[pos].qty === 0) {
-          updateAcceptStatus(q.elements[pos].order_id);
-          q.elements[pos].category = -1;
-          if(pos === 0) {
-            q.dequeue();
+        if(q.elements[pos].qty === 0 ) {
+          if(q.elements[pos].description === 3) {
+            q.elements[pos].left -= q.elements[pos].mindis;
           }
+          if(q.elements[pos].left <= 0 || order.description !==3){
+            updateAcceptStatus(q.elements[pos].order_id);
+            q.elements[pos].category = -1;
+            if(pos === 0) {
+              q.dequeue();
+            }
+          } else {
+            q.elements[pos].qty = (q.elements[pos].left >= q.elements[pos].mindis) ? q.elements[pos].mindis : q.elements[pos].left;
+          }
+        } else if (q.elements[pos].description === 2) {
+          q.elements[pos].minq = 1;
         }
+        console.log("exe done");
         order.qty=0;
       } else {
         //execute partial order
-        acceptOrder(id, q.elements[pos].order_id, q.elements[pos].price, q.elements[pos].qty);
-        console.log(q.elements[pos]);
+        if(order.category === 0) {
+          acceptOrder(id, q.elements[pos].order_id, q.elements[pos].price, order.qty);
+        } else {
+          acceptOrder(q.elements[pos].order_id, id, q.elements[pos].price, order.qty);
+        }
         msg = "Partial order executed!\n"
-        //marketPrice = q.elements[pos].price;
-        updateAcceptStatus(q.elements[pos].order_id);
+        console.log(msg);
         //update qty
         order.qty-=q.elements[pos].qty;
         q.elements[pos].qty = 0;
-        q.elements[pos].category = -1;
-        if(pos === 0) {
-          q.dequeue();
+        if(q.elements[pos].description === 3) {
+          q.elements[pos].left -= q.elements[pos].mindis;
         }
-      }
-    }
-  }
-}
-
-//execute sell limit order
-function sellLimitOrders(q, id, order) {
-  //console.log("SELL LIMIT ORDER"+order);
-  if(q.isEmpty()) {
-    qs.enqueue(order);
-    msg = "Order waiting! No buyers\n"
-  } else {
-    while(order.qty != 0) {
-      var pos = getMinPriceOrder(q);
-      //console.log("Pos"+pos);
-      if(pos === -1) {
-        qs.enqueue(order);
-        msg = "Order waiting! No buyers\n"
-        return;
-      } else if (q.elements[pos].price < order.price) {
-        msg = "Order waiting! No buyers at this price.\n"
-        qs.enqueue(order);
-        return;
-      } else if(q.elements[pos].qty >= order.qty) {
-        //trade executes
-        acceptOrder(q.elements[pos].order_id, id, q.elements[pos].price, order.qty);
-        console.log(q.elements[pos]);
-        //marketPrice = q.elements[pos].price;
-        msg = "Order executed!"
-        //console.log("Trade executed");
-        updateAcceptStatus(id);
-        //update qty
-        q.elements[pos].qty -= order.qty;
-        if(q.elements[pos].qty === 0) {
+        if(q.elements[pos].left <= 0 || order.description !=3){
           updateAcceptStatus(q.elements[pos].order_id);
           q.elements[pos].category = -1;
           if(pos === 0) {
             q.dequeue();
           }
+        } else {
+          q.elements[pos].qty = (q.elements[pos].left >= q.elements[pos].mindis) ? q.elements[pos].mindis : q.elements[pos].left;
         }
-        order.qty=0;
-      } else {
-        //execute partial order
-        acceptOrder(q.elements[pos].order_id, id, q.elements[pos].price, q.elements[pos].qty);
-        console.log(q.elements[pos]);
-        msg = "Partial order executed\n"
-        //marketPrice = q.elements[pos].price;
-        updateAcceptStatus(q.elements[pos].order_id);
-        //update qty
-        order.qty-=q.elements[pos].qty;
-        q.elements[pos].qty = 0;
-        q.elements[pos].category = -1;
-        if(pos === 0) {
-          q.dequeue();
-        }
+        console.log("par done");
       }
     }
   }
 }
 
-//execute market order
-function marketOrders(q, id, qty) {
+//CASE 2-------------------------------------------------------------------------------------------
+
+function getAllPrice(q, qty, minq) {
+  var minPos = -1;
   if(q.isEmpty()) {
-    rejectOrder(id);
-    msg += "Order rejected!\n";
+    return -1;
+  }
+  for(var i = 0; i < q.elements.length; i++) {
+    if(q.elements[i].category !== -1 && q.elements[i].qty === qty) {
+      if(q.elements[i].description === 0 || (q.elements[i].description === 1 && qty >= q.elements[i].qty) ||
+      (q.elements[i].description === 2 && (qty >= q.elements[i].mindis || minq === 1)) || q.elements[i].description === 3) {
+        if(minPos === -1 || q.elements[i].price < q.elements[minPos].price)
+          minPos = i;
+      }
+    }
+  }
+  return minPos;
+}
+
+//execute buy limit order all or none condition
+function allOrders(q, id, order) {
+  if(q.isEmpty()) {
+    if(order.order_type === 1) {
+      rejectOrder(id);
+      msg += "Order rejected!\n";
+    } else {
+      qb.enqueue(order);
+      if(order.category === 0)
+        msg = "Order waiting! No sellers\n"
+      else
+        msg = "Order waiting! No buyers\n"
+    }
   } else {
-    while(qty !== 0) {
-      var pos = getMinPriceOrder(q);
-      //console.log("Pos"+pos);
-      if(pos === -1) {
+    var pos = getAllPrice(q, order.qty, order.minq);
+    if(pos === -1) {
+      if(order.order_type === 1) {
         rejectOrder(id);
         msg += "Order rejected!\n";
-        return;
-      } else if(q.elements[pos].qty >= qty) {
-        //console.log("ge");
-        //trade executes
-        acceptOrder(id, q.elements[pos].order_id, q.elements[pos].price, qty);
-        console.log(q.elements[pos]);
-        //console.log("accepted");
-        msg += "Order executed!\n";
-        //marketPrice = q.elements[pos].price;
-        updateAcceptStatus(id);
-        //console.log("sa");
-        //update qty
-        q.elements[pos].qty -= qty;
-        if(q.elements[pos].qty === 0) {
+      } else {
+        qb.enqueue(order);
+        if(order.category === 0)
+          msg = "Order waiting! No sellers\n"
+        else
+          msg = "Order waiting! No buyers\n"
+      }
+      return;
+    } else if (order.type === 0 && order.category === 0 && q.elements[pos].price > order.price) {
+      qb.enqueue(order);
+      msg = "Order waiting! No sellers at this price\n"
+      return;
+    } else if (order.type === 0 && order.category === 1 && q.elements[pos].price < order.price) {
+      qb.enqueue(order);
+      msg = "Order waiting! No buyers at this price\n"
+      return;
+    } else if(q.elements[pos].qty >= order.qty) {
+      //trade executes
+      if(order.category === 0) {
+        acceptOrder(id, q.elements[pos].order_id, q.elements[pos].price, order.qty);
+      } else {
+        acceptOrder(q.elements[pos].order_id, id, q.elements[pos].price, order.qty);
+      }
+      msg = "Order executed!";
+      updateAcceptStatus(id);
+      q.elements[pos].qty -= order.qty;
+      if(q.elements[pos].qty === 0 ) {
+        if(q.elements[pos].description === 3) {
+          order.left -= order.mindis;
+        }
+        if(q.elements[pos].left <= 0 || order.description !== 3){
           updateAcceptStatus(q.elements[pos].order_id);
-          //console.log("sb");
           q.elements[pos].category = -1;
           if(pos === 0) {
             q.dequeue();
           }
+        } else {
+          q.elements[pos].qty = (q.elements[pos].left >= q.elements[pos].mindis) ? q.elements[pos].mindis : q.elements[pos].left;
         }
-        //console.log("done");
-        qty=0;
-        return;
+      } else if (q.elements[pos].description === 2) {
+        q.elements[pos].minq = 1;
+      }
+      order.qty=0;
+    } else {
+      if(order.order_type === 1) {
+        rejectOrder(id);
+        msg += "Order rejected!\n";
       } else {
-        //console.log("l");
-        //execute partial order
-        acceptOrder(id, q.elements[pos].order_id, q.elements[pos].price, q.elements[pos].qty);
-        console.log(q.elements[pos]);
-        msg += "Partial order executed!\n";
-        //marketPrice = q.elements[pos].price;
-        updateAcceptStatus(q.elements[pos].order_id);
+        qb.enqueue(order);
+        if(order.category === 0)
+          msg = "Order waiting! No sellers\n"
+        else
+          msg = "Order waiting! No buyers\n"
+      }
+    }
+  }
+}
+
+//CASE 3---------------------------------------------------------------------------------------------------------------------
+
+function getMinPrice(q, qty, minq, minQty) {
+  var minPos = -1;
+  if(q.isEmpty()) {
+    return -1;
+  }
+  for(var i = 0; i < q.elements.length; i++) {
+    if(q.elements[i].category !== -1 && q.elements[i].qty >= minQty) {
+      if(q.elements[i].description === 0 || (q.elements[i].description === 1 && qty >= q.elements[i].qty) ||
+      (q.elements[i].description === 2 && (qty >= q.elements[i].mindis || minq === 1)) || q.elements[i].description === 3) {
+        if(minPos === -1 || q.elements[i].price < q.elements[minPos].price)
+          minPos = i;
+      }
+    }
+  }
+  return minPos;
+}
+
+//execute buy limit order min fill condition
+function minOrders(q, id, order) {
+  if(q.isEmpty()) {
+    if(order.order_type === 1) {
+      rejectOrder(id);
+      msg += "Order rejected!\n";
+    } else {
+      qb.enqueue(order);
+      if(order.category === 0)
+        msg = "Order waiting! No sellers\n"
+      else
+        msg = "Order waiting! No buyers\n"
+    }
+  } else {
+    while(order.qty != 0) {
+      var pos = getMinPriceOrder(q,order.qty,order.minq, order.mindis);
+      if(pos === -1) {
+        if(order.order_type === 1) {
+          rejectOrder(id);
+          msg += "Order rejected!\n";
+        } else {
+          qb.enqueue(order);
+          if(order.category === 0)
+            msg = "Order waiting! No sellers\n"
+          else
+            msg = "Order waiting! No buyers\n"
+        }
+        return;
+      } else if (order.type === 0 && order.category === 0 && q.elements[pos].price > order.price) {
+        qb.enqueue(order);
+        msg = "Order waiting! No sellers at this price\n"
+        return;
+      } else if (order.type === 0 && order.category === 1 && q.elements[pos].price < order.price) {
+        qb.enqueue(order);
+        msg = "Order waiting! No buyers at this price\n"
+        return;
+      } else if(q.elements[pos].qty >= order.qty) {
+        //trade executes
+        if(order.category === 0) {
+          acceptOrder(id, q.elements[pos].order_id, q.elements[pos].price, order.qty);
+        } else {
+          acceptOrder(q.elements[pos].order_id, id, q.elements[pos].price, order.qty);
+        }
+        msg = "Order executed!"
+        updateAcceptStatus(id);
         //update qty
-        qty-=q.elements[pos].qty;
+        q.elements[pos].qty -= order.qty;
+        if(q.elements[pos].qty === 0 ) {
+          if(q.elements[pos].description === 3) {
+            order.left -= order.mindis;
+          }
+          if(q.elements[pos].left <= 0 || order.description !== 3){
+            updateAcceptStatus(q.elements[pos].order_id);
+            q.elements[pos].category = -1;
+            if(pos === 0) {
+              q.dequeue();
+            }
+          } else {
+            q.elements[pos].qty = (q.elements[pos].left >= q.elements[pos].mindis) ? q.elements[pos].mindis : q.elements[pos].left;
+          }
+        } else if (q.elements[pos].description === 2) {
+          q.elements[pos].minq = 1;
+        }
+        order.qty=0;
+      } else if((q.elements[pos].qty >= mindis && minq === 0)|| minq === 1){
+        //execute partial order
+        if(order.category === 0) {
+          acceptOrder(id, q.elements[pos].order_id, q.elements[pos].price, order.qty);
+        } else {
+          acceptOrder(q.elements[pos].order_id, id, q.elements[pos].price, order.qty);
+        }
+        msg = "Partial order executed!\n"
+        //updateAcceptStatus(q.elements[pos].order_id);
+        //update qty
+        order.qty-=q.elements[pos].qty;
         q.elements[pos].qty = 0;
-        q.elements[pos].category = -1;
-        if(pos === 0) {
-          q.dequeue();
+        if(q.elements[pos].description === 3) {
+          order.left -= order.mindis;
+        }
+        if(q.elements[pos].left <= 0 || order.description !== 3){
+          updateAcceptStatus(q.elements[pos].order_id);
+          q.elements[pos].category = -1;
+          if(pos === 0) {
+            q.dequeue();
+          }
+        } else {
+          q.elements[pos].qty = (q.elements[pos].left >= q.elements[pos].mindis) ? q.elements[pos].mindis : q.elements[pos].left;
+        }
+        order.minq = 1;
+      } else {
+        if(order.order_type === 1) {
+          rejectOrder(id);
+          msg += "Order rejected!\n";
+        } else {
+          qb.enqueue(order);
+          if(order.category === 0)
+            msg = "Order waiting! No sellers\n"
+          else
+            msg = "Order waiting! No buyers\n"
         }
       }
     }
@@ -280,9 +429,18 @@ function marketOrders(q, id, qty) {
 }
 
 //execute every 24 hours! Remove expired limit orders
-function execute(q) {
-    console.log(q.print());
+function execute() {
+  var ts = new Date();
+  //console.log(ts);
+  for(var i=0; i < qb.elements.length; i++) {
+    if(qb.elements[i].category !== -1) {
+      console.log(qb.elements[i].order_time);
+      break;
+    }
+  }
 }
+
+//setInterval(() => execute(qs), 1000)
 
 function random(min, max) {
   return min + Math.random() * (max - min);
@@ -298,20 +456,25 @@ async function generate() {
     var len = userId.rows.length;
     var u = Math.floor(Math.random() * len);
     var randomUID = userId.rows[u].user_id;
-    //console.log(randomUID);
     //qty
     var randomQty = Math.floor(Math.random() * 1000 ) + 1;
     //category
     var randomCat = Math.round(Math.random());
     //type
     var randomType = Math.round(Math.random())+1;
-    console.log(randomType);
+    //console.log(randomType);
     //price
     var minPrice = parseFloat(marketPrice - (0.12*marketPrice)).toFixed(2);
     var maxPrice = parseFloat(marketPrice + (0.12*marketPrice)).toFixed(2);
     var randomPrice = parseFloat(random(minPrice, maxPrice)).toFixed(2);
     //description
-    var d = 0;
+    var d = Math.floor(Math.random() * 4);
+    //var d=0;
+    //mindis
+    var randomMindis = 0;
+    if(d === 2 || d === 3){
+      randomMindis = Math.floor(random(1, randomQty));
+    }
     //status
     var randomStatus = 2;
     var rem = randomPrice%1;
@@ -329,8 +492,8 @@ async function generate() {
 
     //process
     const randomOrder = await pool.query(
-      "INSERT INTO orders(user_id, qty, category, order_type, price, description, status) VALUES ($1 , $2 , $3 , $4 , $5, $6, $7) RETURNING *",
-      [randomUID, randomQty, randomCat, randomType-1, randomPrice, d, randomStatus]
+      "INSERT INTO orders(user_id, qty, category, order_type, price, description, mindis, status) VALUES ($1 , $2 , $3 , $4 , $5, $6, $7, $8) RETURNING *",
+      [randomUID, randomQty, randomCat, randomType-1, randomPrice, d, randomMindis, randomStatus]
     );
 
     //get last order's id
@@ -346,33 +509,33 @@ async function generate() {
     if(randomStatus === 2) {
       if(randomCat === 0) {
         console.log("Buy order");
-        if(randomType === 1) {
-          console.log("Market order");
-          console.log(randomPrice);
-          marketOrders(qs, id, randomQty);
-          console.log(randomPrice);
-          //console.log(randomOrder.rows[0]);
-        } else if(randomType === 2){
-          console.log("Limit order");
-          console.log(randomPrice);
-          buyLimitOrders(qs, id, randomOrder.rows[0]);
-          console.log(randomPrice);
-          //console.log(randomOrder.rows[0]);
+        if(d === 0 || d === 3) {
+          console.log("None");
+          orders(qs, id, randomOrder.rows[0]);
+          console.log("doneb");
+        } else if(d === 1) {
+          console.log("All or none");
+          allOrders(qs, id, randomOrder.rows[0]);
+          console.log("doneba");
+        } else if (d === 2) {
+          console.log("Minimum fill");
+          minOrders(qs, id, randomOrder.rows[0]);
+          console.log("donebm");
         }
-      } else if(randomCat === 1) {
+      } else {
         console.log("Sell order");
-        if(randomType === 1) {
-          console.log("Market order");
-          console.log(randomPrice);
-          marketOrders(qb, id, randomQty);
-          console.log(randomPrice);
-          //console.log(randomOrder.rows[0]);
-        } else if (randomType === 2) {
-          console.log("Limit order");
-          console.log(randomPrice);
-          sellLimitOrders(qb, id, randomOrder.rows[0]);
-          console.log(randomPrice);
-          //console.log(randomOrder.rows[0]);
+        if(d === 0 || d === 3) {
+          console.log("None");
+          orders(qb, id, randomOrder.rows[0]);
+          console.log("dones");
+        } else if(d === 1) {
+          console.log("All or none");
+          allOrders(qb, id, randomOrder.rows[0]);
+          console.log("donesa");
+        } else if (d === 2) {
+          console.log("Minimum fill");
+          minOrders(qb, id, randomOrder.rows[0]);
+          console.log("donesm");
         }
       }
     }
@@ -382,9 +545,7 @@ async function generate() {
   }
 }
 
-setInterval(() => generate(), 1000);
-
-//setInterval(() => execute(qs), 1000)
+//setInterval(() => generate(), 1000);
 
 //create orders
 //Anytime we create or get data, it will take some time.
@@ -414,6 +575,55 @@ app.post("/login", async(req, res) => {
   } catch (err) {
       console.error(err.message);
     }
+});
+
+app.get('/tradeData', async(req, res) => {
+  try {
+    const trades = await pool.query(
+      "SELECT * FROM trades"
+    );
+    res.json(trades); //returns json data
+  } catch (err) {
+      console.error(err.message);
+  }
+});
+
+app.get('/rejectedOrders', async(req, res) => {
+  try {
+    var status=0;
+    const rejOrders = await pool.query(
+      "SELECT * FROM orders where status = $1", [status]
+    );
+    res.json(rejOrders); //returns json data
+  } catch (err) {
+      console.error(err.message);
+  }
+});
+
+app.get('/waitingOrders', async(req, res) => {
+  try {
+    var status=2;
+    const waitOrders = await pool.query(
+      "SELECT * FROM orders where status = $1", [status]
+    );
+    res.json(waitOrders); //returns json data
+  } catch (err) {
+      console.error(err.message);
+  }
+});
+
+app.post('/orderData', async(req, res) => {
+  try {
+    const id = req.body.id;
+    console.log(id);
+    const orders = await pool.query(
+      "SELECT * FROM orders WHERE user_id = $1", [id]
+    );
+    console.log("Orders" + orders);
+    res.json(orders); //returns json data
+  } catch (err) {
+      console.error(err.message);
+  }
 });
 
 app.get('/trades', async(req, res) => {
@@ -446,13 +656,15 @@ app.post("/orders", async(req, res) => {
     var price = req.body.price;
     var description = req.body.description;
     var status = req.body.status;
+    var left = req.body.left;
+    var mindis = req.body.mindis;
+    var minq = req.body.minq;
     msg="";
     const newOrder = await pool.query(
       //returning * makes it easier to check in POSTMAN!
-      "INSERT INTO orders(user_id, qty, category, order_type, price, description, status) VALUES ($1 , $2 , $3 , $4 , $5, $6, $7) RETURNING *",
-      [uid, qty, category, type, price, description, status]
+      "INSERT INTO orders(user_id, qty, category, order_type, price, description, mindis, status) VALUES ($1 , $2 , $3 , $4 , $5, $6, $7, $8) RETURNING *",
+      [uid, qty, category, type, price, description, mindis, status]
     );
-    //console.log(newOrder.data);
 
     //get last order's id
     const getOrder = await pool.query(
@@ -462,30 +674,33 @@ app.post("/orders", async(req, res) => {
 
     var id = getOrder.rows[0].order_id;
     var time = getOrder.rows[0].order_time;
-    //console.log(getOrder.rows[0].order_id);
-
-    //console.log(generate());
 
     if(status === 2) {
       if(category === 0) {
         console.log("Buy order");
-        if(type === 1) {
-          console.log("Market order");
-          marketOrders(qs, id, qty);
-        } else {
-          console.log("Limit order");
-          buyLimitOrders(qs, id, newOrder.rows[0]);
-          //execute(qb);
+        if(description === 0 || description === 3) {
+          console.log("None");
+          orders(qs, id, newOrder.rows[0]);
+          console.log("doneb");
+        } else if(description === 1) {
+          console.log("All or none");
+          allOrders(qs, id, newOrder.rows[0]);
+        } else if (description === 2) {
+          console.log("Minimum fill");
+          minOrders(qs, id, newOrder.rows[0]);
         }
-      } else if(category === 1) {
+      } else {
         console.log("Sell order");
-        if(type === 1) {
-          console.log("Market order");
-          marketOrders(qb, id, qty);
-        } else {
-          console.log("Limit order");
-          sellLimitOrders(qb, id, newOrder.rows[0]);
-          //execute(qs);
+        if(description === 0 || description === 3) {
+          console.log("None");
+          console.log("dones");
+          orders(qb, id, newOrder.rows[0]);
+        } else if(description === 1) {
+          console.log("All or none");
+          allOrders(qb, id, newOrder.rows[0]);
+        } else if (description === 2) {
+          console.log("Minimum fill");
+          minOrders(qb, id, newOrder.rows[0]);
         }
       }
     } else if(status === 0 && req.body.tick === 1) {

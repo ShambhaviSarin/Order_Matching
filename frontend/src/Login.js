@@ -11,40 +11,6 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faGithub } from '@fortawesome/free-brands-svg-icons';
 import PageFooter from './PageFooter.js';
 
-/*const LoginForm = () => {
-  return (
-    <div className="form">
-          <Form style={{marginLeft:'-10%'}}>
-
-            <Row form style={{marginTop:'5%', marginRight:'-15%'}} inline>
-             <Col md={6}>
-               <FormGroup row style={{marginLeft: '12%'}}>
-                 <Label for="contact" style={{marginTop:'1%'}}>Contact</Label>
-                 <Col md={9}>
-                  <Input type="text" name="contact" id="contact" placeholder="Enter your number" />
-                 </Col>
-               </FormGroup>
-             </Col>
-             <Col md={6}>
-               <FormGroup row style={{marginRight: '-12%'}}>
-                 <Label for="gender" style={{marginTop:'1%'}}>Gender</Label>
-                 <Col md={7}>
-                   <Input type="select" name="gender" id="gender" style={{cursor:'pointer'}} onChange={event => setGender(event.target.value)}>
-                    <option>Male</option>
-                    <option>Female</option>
-                    <option>Others</option>
-                  </Input>
-                </Col>
-               </FormGroup>
-             </Col>
-           </Row>
-          </Form>
-          <Button style={{marginTop: '2%'}} color="info" outline >SIGN UP</Button>
-          <p id="errors1" style={{textAlign: 'left', marginLeft:'20%', marginTop:'5%'}}></p>
-    </div>
-  );
-}*/
-
 const Page = () => {
 
     const [emailLogin, setEmailLogin] = useState('');
@@ -155,7 +121,11 @@ const Page = () => {
                       console.log(formValid);
 
                       if(formValid) {
-                        window.location = `/Shares?id=${id}`;
+                        if(emailLogin === "admin@marrs.com") {
+                            window.location = `/Admin?id=${id}`;
+                        } else {
+                            window.location = `/Shares?id=${id}`;
+                        }
                       } else {
                         var ul = document.createElement('ul');
                         document.getElementById('errors').innerHTML="";
