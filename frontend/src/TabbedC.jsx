@@ -11,7 +11,7 @@ const Tabs = (props) => {
   }
 
   return (
-    <div><div style={{marginTop:'4%',marginLeft:'10%',marginBottom:'-2%',fontSize:'2rem'}}><font color="#240250">Company Financials</font></div><br/><br/>
+    <div><div style={{marginTop:'0%',marginLeft:'10%',marginBottom:'-2%',fontSize:'2rem'}}><font color="#240250">Company Financials</font></div><br/><br/>
     <div className="card text-centre text-dark" style={{marginLeft:'10%',width:'50rem', height:'30rem', marginBottom:'10%'}}>
       <Nav tabs style={{marginTop:'1%',marginLeft:'1%',marginRight:'1%'}}>
         <NavItem>

@@ -14,6 +14,7 @@ import './Shares.css';
 import MSFT from './MSFT';
 import Footer from './footer';
 import Tabs from './TabbedC';
+import About from './About';
 //import Tabb from './TabbedC';
 // Using an ES6 transpiler like Babel
 import Slider from 'react-rangeslider'
@@ -492,6 +493,7 @@ const Shares = (props) => {
         <Performance price = {price}/>
         <MSFT/>
         <Tabs/>
+        <About/>
         <Footer/>
       </div>
     );
