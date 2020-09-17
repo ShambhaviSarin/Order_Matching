@@ -15,6 +15,10 @@ import MSFT from './MSFT';
 import Footer from './footer';
 import Tabs from './TabbedC';
 //import Tabb from './TabbedC';
+// Using an ES6 transpiler like Babel
+import Slider from 'react-rangeslider'
+// To include the default styles
+import 'react-rangeslider/lib/index.css'
 // javascipt plugin for creating charts
 import Chart from "chart.js";
 // react plugin used to create charts
@@ -132,7 +136,7 @@ const OrdersForm = (props) => {
   const id = props.id;
   const [qty, setQty] = useState(0);
   const [type, setType] = useState('Limit');
-  const [price, setPrice] = useState('500');
+  const [price, setPrice] = useState(props.price);
   const [description, setDescription] = useState(0);
   const [mindis, setMinDis] = useState(0);
   const [hidden, setHidden] = useState(1);
@@ -145,19 +149,6 @@ const OrdersForm = (props) => {
     else
       setIcon(faCaretRight);
   }
-
-  useEffect(() => {
-  const interval = setInterval(() => {
-    axios.get(`http://localhost:1337/trades`).then(res => {
-      const data = res.data;
-      console.log(data);
-      setPrice(data);
-    }).catch(err => {
-        console.log(err);
-    });
-  }, 1000);
-    return () => clearInterval(interval);
-  }, []);
 
   return(
     <Form style={{fontSize:'15px', marginTop:'-10%'}}>
@@ -305,7 +296,7 @@ const OrdersForm = (props) => {
   );
 }
 
-const BuySell = () => {
+const BuySell = (props) => {
 
   const [activeTab, setActiveTab] = useState('1');
 
@@ -361,11 +352,11 @@ const BuySell = () => {
                 <TabContent activeTab={activeTab}>
 
                   <TabPane tabId="1" style={{marginTop: '5%', fontSize:'15px'}}>
-                    <OrdersForm tab={"BUY"} id="errorsBuy"/>
+                    <OrdersForm tab={"BUY"} id="errorsBuy" price={props.price}/>
                   </TabPane>
 
                   <TabPane tabId="2" style={{marginTop: '5%', fontSize:'15px'}}>
-                    <OrdersForm tab={"SELL"} id="errorsSell"/>
+                    <OrdersForm tab={"SELL"} id="errorsSell" price={props.price}/>
                   </TabPane>
 
                 </TabContent>
@@ -444,7 +435,48 @@ const Vieew = () => {
   );
 }
 
+const Performance = (props) => {
+  var price = props.price;
+  return(
+    <div>
+      <span style={{fontSize:'2rem', marginLeft:'5%'}}>Performance</span>
+      <Row>
+        <Col></Col>
+          <Col>
+            <div className='slider orientation-reversed'>
+              <div className='slider-horizontal'>
+                <Slider
+                    min={0}
+                    max={10}
+                    value={price}
+                    orientation='horizontal'
+                />
+              <div className='value'>{price}</div>
+            </div>
+          </div>
+        </Col>
+      </Row>
+    </div>
+  );
+}
+
 const Shares = (props) => {
+
+  const [price, setPrice] = useState('500');
+
+  useEffect(() => {
+  const interval = setInterval(() => {
+    axios.get(`http://localhost:1337/trades`).then(res => {
+      const data = res.data;
+      console.log(data);
+      setPrice(data);
+    }).catch(err => {
+        console.log(err);
+    });
+  }, 1000);
+    return () => clearInterval(interval);
+  }, []);
+
     return (
       <div>
         <div style={{marginTop:'2%'}}>
@@ -452,10 +484,12 @@ const Shares = (props) => {
           <hr style={{marginLeft: '-12%', marginRight:'-12%', marginTop:'-0.2%'}}/>
           <br/><br/><br/><br/>
         </div>
-        <div style={{marginLeft:'70%', position:'fixed', marginTop:'-4%'}}><BuySell /></div>
+        <div style={{marginLeft:'70%', position:'fixed', marginTop:'-4%'}}><BuySell price={price}/></div>
         <div style={{marginTop:'3%', marginLeft:'5%', marginRight:'3%'}}>
           <Vieew/>
         </div>
+        <br/><br/>
+        <Performance price = {price}/>
         <MSFT/>
         <Tabs/>
         <Footer/>

@@ -667,6 +667,17 @@ app.get('/totalOrders', async(req, res) => {
   }
 });
 
+app.get('/price', async(req, res) => {
+  try {
+    const trades = await pool.query(
+      "SELECT MIN(price), MAX(price) FROM trades"
+    );
+    res.json(trades); //returns json data
+  } catch (err) {
+      console.error(err.message);
+  }
+});
+
 app.get('/tradeData', async(req, res) => {
   try {
     const trades = await pool.query(
