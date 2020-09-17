@@ -91,142 +91,95 @@ const NavigationBar = () => {
     );
 }
 
-const TradeTable = (props) => {
+const Graphs = (props) => {
 
-  const [data, setData] = useState([]);
-  const [items, setItems] = useState([]);
-  const [page, setPage] = useState(0);
-  const pageSize = 6;
-  const search = window.location.search; // returns the URL query String
-  const params = new URLSearchParams(search);
-  const idFromURL = params.get('id');
+  const [activeTab, setActiveTab] = useState('1');
+  const [activeNav, setActiveNav] = useState(1);
+  const [chartData, setChartData] = useState('data1');
 
-  const pageData = (items) => {
-    return(
-      items.map((row) => {
-        return (
-          <tr>
-            <td>{row.trade_id}</td>
-            <td>{row.buyer_id}</td>
-            <td>{row.seller_id}</td>
-            <td>${row.price}</td>
-            <td>{row.qty}</td>
-            <td>{row.trade_time}</td>
-          </tr>
-        );
-      })
-    );
+  if (window.Chart) {
+    parseOptions(Chart, chartOptions());
   }
 
-  useEffect(() => {
-
-    axios.get(`http://localhost:1337/tradeData`).then(res => {
-      const td = res.data.rows;
-      console.log(td);
-      setData(td);
-    }).catch(err => {
-        console.log(err);
-    });
-  }, []);
-
-  const [active, setActive] = useState(1);
-  const [one, setOne] = useState(0);
-  const [two, setTwo] = useState(1);
-  const [three, setThree] = useState(2);
-
-  const increment = () => {
-    if(page < Math.floor(data.length/pageSize)) {
-      var p = page+1;
-      if(p === 1)
-        setActive(2);
-
-      setOne(page);
-      setTwo(page+1);
-      setThree(page+2);
-      setPage(p);
-    }
+  const toggle = tab => {
+    if(activeTab !== tab) setActiveTab(tab);
   }
 
-  const decrement = () => {
-    if(page > 0) {
-      var p = page-1;
-      if(p === 0)
-        setActive(1);
+  const toggleNavs = (e, index) => {
+    e.preventDefault();
+    setActiveNav(index);
+    var chartData1 = (chartData === "data1") ? "data2" : "data1";
+    setChartData(chartData1)
+  };
 
-      if(p !== 0) {
-        setOne(page-2);
-        setTwo(page-1);
-        setThree(page);
-      }
-      setPage(p);
-    }
-  }
-
-  return(
+  return (
     <>
+      {/* Page content */}
       <Container className="mt--7" fluid>
-        <Row className="mt-5">
-          <div className="col">
+        <Row>
+          <Col className="mb-5 mb-xl-0" xl="8">
             <Card className="bg-gradient-default shadow">
-              <CardHeader className="bg-transparent border-0">
-                <h3 className="text-white mb-0">Your orders</h3>
+              <CardHeader className="bg-transparent">
+                <Row className="align-items-center">
+                  <div className="col">
+                    <h6 className="text-uppercase text-light ls-1 mb-1">
+                      Overview
+                    </h6>
+                    <h2 className="text-white mb-0">Microsoft Corporation (MSFT)</h2>
+                  </div>
+                  <div className="col">
+                  <Nav className="justify-content-end" pills>
+                    <NavItem>
+                      <NavLink className={classnames("py-2 px-3", {active: activeNav === 1})} href="#pablo" onClick={e => toggleNavs(e, 1)}>
+                        <span className="d-none d-md-block">Month</span>
+                        <span className="d-md-none">M</span>
+                      </NavLink>
+                    </NavItem>
+                    <NavItem>
+                      <NavLink className={classnames("py-2 px-3", {active: activeNav === 2})} href="#pablo" onClick={e => toggleNavs(e, 2)}>
+                        <span className="d-none d-md-block">Week</span>
+                        <span className="d-md-none">W</span>
+                      </NavLink>
+                    </NavItem>
+                  </Nav>
+                  </div>
+                </Row>
               </CardHeader>
-              <Table className="align-items-center bg-transparent border-0" responsive style={{color:'white', overflow:'hidden', marginBottom:'-1%', borderTop:'1px solid #5272e4'}}>
-                <thead style={{borderTop:'1px solid #5272e4'}}>
-                  <tr style={{color:'#5272e4', backgroundColor:'#18264d', borderBottom:'1px solid #5272e4'}}>
-                    <th scope="col">Order Id</th>
-                    <th scope="col">Buyer Id</th>
-                    <th scope="col">Seller Id</th>
-                    <th scope="col">Price</th>
-                    <th scope="col">Qty</th>
-                    <th scope="col">Time</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {pageData(data.slice(page,page+pageSize))}
-                </tbody>
-              </Table>
-              <CardFooter className="py-4" style={{backgroundColor:'#18264d'}}>
-                  <nav aria-label="...">
-                    <Pagination className="pagination justify-content-end mb-0" listClassName="justify-content-end mb-0">
-                      <PaginationItem >
-                        <PaginationLink href="#pablo" onClick={() => decrement()}>
-                          <FontAwesomeIcon icon={faAngleLeft} />
-                          <span className="sr-only">Previous</span>
-                        </PaginationLink>
-                      </PaginationItem>
-                      <PaginationItem className={(active === 1)?"active":""}>
-                        <PaginationLink href="#pablo" onClick={() => {
-                          setPage(one);
-                          setActive(1);
-                        }}>
-                          {one+1}
-                        </PaginationLink>
-                      </PaginationItem>
-                      <PaginationItem className={(active === 2)?"active":""}>
-                        <PaginationLink href="#pablo" onClick={() => {
-                          setPage(two);
-                          setActive(2);
-                        }}>
-                          {two+1}
-                        </PaginationLink>
-                      </PaginationItem>
-                      <PaginationItem className={(active === 3)?"active":""}>
-                        <PaginationLink href="#pablo" onClick={() => setPage(three)}>
-                          {three+1}
-                        </PaginationLink>
-                      </PaginationItem>
-                      <PaginationItem>
-                        <PaginationLink href="#pablo" onClick={() => increment()}>
-                          <FontAwesomeIcon icon={faAngleRight} />
-                          <span className="sr-only">Next</span>
-                        </PaginationLink>
-                      </PaginationItem>
-                    </Pagination>
-                  </nav>
-              </CardFooter>
+              <CardBody>
+                {/* Chart */}
+                <div className="chart">
+                  <Line
+                    data={chartExample1[chartData]}
+                    options={chartExample1.options}
+                    getDatasetAtEvent={e => console.log(e)}
+                  />
+                </div>
+              </CardBody>
             </Card>
-          </div>
+          </Col>
+          <Col xl="4">
+            <Card className="shadow">
+              <CardHeader className="bg-transparent">
+                <Row className="align-items-center">
+                  <div className="col">
+                    <h6 className="text-uppercase text-muted ls-1 mb-1">
+                      Performance
+                    </h6>
+                    <h2 className="mb-0">Total orders</h2>
+                  </div>
+                </Row>
+              </CardHeader>
+              <CardBody>
+                {/* Chart */}
+                <div className="chart">
+                  <Bar
+                    data={chartExample2.data}
+                    options={chartExample2.options}
+                  />
+                </div>
+              </CardBody>
+            </Card>
+          </Col>
         </Row>
       </Container>
     </>
@@ -236,12 +189,12 @@ const TradeTable = (props) => {
 const Vieew = () => {
   return(
     <div>
-      <TradeTable />
+      <Graphs />
     </div>
   );
 }
 
-const Admin = (props) => {
+const AdminOrders = (props) => {
     return (
       <div>
         <div>
@@ -250,7 +203,7 @@ const Admin = (props) => {
         <div style={{marginLeft:'13%'}}>
           <NavigationBar/>
         </div>
-        <div style={{marginLeft: '20%', marginRight:'5%'}}>
+        <div style={{marginLeft: '13%', marginRight:'1%'}}>
           <br/><br/><br/><br/>
           <Vieew/>
         </div>
@@ -258,4 +211,4 @@ const Admin = (props) => {
     );
 }
 
-export default Admin;
+export default AdminOrders;

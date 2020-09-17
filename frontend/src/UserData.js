@@ -101,17 +101,35 @@ const TradeTable = (props) => {
   const params = new URLSearchParams(search);
   const idFromURL = params.get('id');
 
+  const accepted = () => {
+    return(
+      <Badge color="" className="badge-dot mr-4">
+        <i className="bg-success" />
+        accepted
+      </Badge>
+    );
+  }
+
+  const rejected = () => {
+    return(
+      <Badge color="" className="badge-dot mr-4">
+        <i className="bg-danger" />
+        rejected
+      </Badge>
+    );
+  }
+
   const pageData = (items) => {
     return(
       items.map((row) => {
         return (
           <tr>
-            <td>{row.trade_id}</td>
-            <td>{row.buyer_id}</td>
-            <td>{row.seller_id}</td>
-            <td>${row.price}</td>
-            <td>{row.qty}</td>
-            <td>{row.trade_time}</td>
+            <td>{row.user_id}</td>
+            <td>{row.full_name}</td>
+            <td>{row.contact}</td>
+            <td>{row.email}</td>
+            <td>{row.gender}</td>
+            <td>{row.pwd}</td>
           </tr>
         );
       })
@@ -120,7 +138,7 @@ const TradeTable = (props) => {
 
   useEffect(() => {
 
-    axios.get(`http://localhost:1337/tradeData`).then(res => {
+    axios.get(`http://localhost:1337/login`).then(res => {
       const td = res.data.rows;
       console.log(td);
       setData(td);
@@ -174,12 +192,12 @@ const TradeTable = (props) => {
               <Table className="align-items-center bg-transparent border-0" responsive style={{color:'white', overflow:'hidden', marginBottom:'-1%', borderTop:'1px solid #5272e4'}}>
                 <thead style={{borderTop:'1px solid #5272e4'}}>
                   <tr style={{color:'#5272e4', backgroundColor:'#18264d', borderBottom:'1px solid #5272e4'}}>
-                    <th scope="col">Order Id</th>
-                    <th scope="col">Buyer Id</th>
-                    <th scope="col">Seller Id</th>
-                    <th scope="col">Price</th>
-                    <th scope="col">Qty</th>
-                    <th scope="col">Time</th>
+                    <th scope="col">User Id</th>
+                    <th scope="col">Full name</th>
+                    <th scope="col">Contact</th>
+                    <th scope="col">Email</th>
+                    <th scope="col">Gender</th>
+                    <th scope="col">Password</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -241,7 +259,7 @@ const Vieew = () => {
   );
 }
 
-const Admin = (props) => {
+const UserData = (props) => {
     return (
       <div>
         <div>
@@ -258,4 +276,4 @@ const Admin = (props) => {
     );
 }
 
-export default Admin;
+export default UserData;
