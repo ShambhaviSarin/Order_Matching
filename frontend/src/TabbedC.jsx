@@ -11,8 +11,8 @@ const Tabs = (props) => {
   }
 
   return (
-    <div><div style={{marginTop:'4%',marginLeft:'10%',marginBottom:'-2%',fontSize:'3rem'}}><font color="#240250">Company Financials</font></div><br/><br/>
-    <div className="card text-centre text-dark" style={{marginLeft:'10%',width:'78rem', height:'48rem', marginBottom:'10%'}}>
+    <div><div style={{marginTop:'4%',marginLeft:'10%',marginBottom:'-2%',fontSize:'2rem'}}><font color="#240250">Company Financials</font></div><br/><br/>
+    <div className="card text-centre text-dark" style={{marginLeft:'10%',width:'50rem', height:'30rem', marginBottom:'10%'}}>
       <Nav tabs style={{marginTop:'1%',marginLeft:'1%',marginRight:'1%'}}>
         <NavItem>
           <NavLink
@@ -51,28 +51,28 @@ const Tabs = (props) => {
         <TabPane tabId="1">
           <Row>
             <Col sm="12">
-              <img src={require('./assets/annualis.png')} alt="fb" width="1150px" height="600px" style={{align:'centre'}}/>
+              <img src={require('./assets/annualis.png')} alt="fb" width="750px" height="400px" style={{align:'centre'}}/>
             </Col>
           </Row>
         </TabPane>
         <TabPane tabId="2">
         <Row>
           <Col sm="12">
-              <img src={require('./assets/quarterlyIs.PNG')} alt="fb" width="1150px" height="600px" style={{align:'centre'}}/>
+              <img src={require('./assets/quarterlyIs.PNG')} alt="fb" width="750px" height="400px" style={{align:'centre'}}/>
             </Col>
         </Row>
         </TabPane>
         <TabPane tabId="3">
         <Row>
           <Col sm="12">
-              <img src={require('./assets/balancesheet.PNG')} alt="fb" width="1150px" height="600px" style={{align:'centre'}}/>
+              <img src={require('./assets/balancesheet.PNG')} alt="fb" width="750px" height="400px" style={{align:'centre'}}/>
             </Col>
         </Row>
         </TabPane>
         <TabPane tabId="4">
         <Row>
           <Col sm="12">
-                <img src={require('./assets/cashflow.PNG')} alt="fb" width="1150px" height="600px" style={{align:'centre'}}/>
+                <img src={require('./assets/cashflow.PNG')} alt="fb" width="750px" height="400px" style={{align:'centre'}}/>
                   </Col>
         </Row>
         </TabPane>
