@@ -133,16 +133,12 @@ const TradeTable = (props) => {
       items.map((row) => {
         return (
           <tr>
-            <td>{row.order_id}</td>
-            <td>{row.user_id}</td>
+            <td>{row.trade_id}</td>
+            <td>{row.buyer_id}</td>
+            <td>{row.seller_id}</td>
             <td>${row.price}</td>
             <td>{row.qty}</td>
-            <td>{row.order_time}</td>
-            <td>{(row.category)?"Sell":"Buy"}</td>
-            <td>{(row.order_type)?"Market":"Limit"}</td>
-            <td>{(row.description === 0)?"None":(row.description === 1)?"All or none":(row.description === 2)?"Minimum Fill":"Disclosed quantity"}</td>
-            <td>{(row.status === 2)?waiting():(row.status === 1)?accepted():rejected()}</td>
-            <td>{((row.description === 2)||(row.description === 3))?row.mindis:"Nil"}</td>
+            <td>{row.trade_time}</td>
           </tr>
         );
       })
@@ -206,15 +202,11 @@ const TradeTable = (props) => {
                 <thead style={{borderTop:'1px solid #5272e4'}}>
                   <tr style={{color:'#5272e4', backgroundColor:'#18264d', borderBottom:'1px solid #5272e4'}}>
                     <th scope="col">Order Id</th>
-                    <th scope="col">User Id</th>
+                    <th scope="col">Buyer Id</th>
+                    <th scope="col">Seller Id</th>
                     <th scope="col">Price</th>
                     <th scope="col">Qty</th>
                     <th scope="col">Time</th>
-                    <th scope="col">Category</th>
-                    <th scope="col">Type</th>
-                    <th scope="col">Extra condition</th>
-                    <th scope="col">Status</th>
-                    <th scope="col">Conditional quantity</th>
                   </tr>
                 </thead>
                 <tbody>
