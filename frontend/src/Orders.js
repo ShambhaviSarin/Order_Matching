@@ -3,15 +3,16 @@ import 'bootstrap/dist/css/bootstrap.css';
 import {Collapse,Navbar,NavbarToggler,NavbarBrand,Nav,NavItem,NavLink,UncontrolledDropdown,
   DropdownToggle,DropdownMenu,DropdownItem,NavbarText,Table,Button,TabContent,TabPane,Row,Col,
   UncontrolledCollapse,Form,FormGroup,Input,Label,Card,Container,CardHeader,CardBody, Media,
-Badge, Progress, CardFooter, Pagination, PaginationItem, PaginationLink, UncontrolledTooltip} from 'reactstrap';
+Badge, Progress, CardFooter, Pagination, PaginationItem, PaginationLink, UncontrolledTooltip, CardTitle } from 'reactstrap';
 import { Link} from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faAngleLeft, faAngleRight } from '@fortawesome/free-solid-svg-icons'
+import { faAngleLeft, faAngleRight, faChartBar,  faChartPie, faUsers, faPercent, faArrowUp, faArrowDown } from '@fortawesome/free-solid-svg-icons'
 import { faUserCircle } from '@fortawesome/free-regular-svg-icons';
+import { faGithub } from '@fortawesome/free-brands-svg-icons';
 import axios from "axios";
 import classnames from 'classnames';
 import FooterPage from './FooterPage';
-import Header from './Header';
+//import UserHeader from './UserHeader';
 // javascipt plugin for creating charts
 import Chart from "chart.js";
 // react plugin used to create charts
@@ -19,60 +20,39 @@ import { Line, Bar } from "react-chartjs-2";
 //import { Line, Bar } from "react-chartjs-2";
 import {chartOptions,parseOptions,chartExample1,chartExample2} from "./charts.js";
 
-const NavigationBar = () => {
+const NavigationBar = (props) => {
     const [isOpen, setIsOpen] = useState(false);
     const toggle = () => setIsOpen(!isOpen);
-    const [name, setName] = useState('Jessica Jones');
-    const [id, setId] = useState(-1);
-
-    useEffect(() => {
-      const search = window.location.search; // returns the URL query String
-      const params = new URLSearchParams(search);
-      const idFromURL = params.get('id');
-      setId(idFromURL);
-      console.log("Id " + idFromURL);
-      axios.get(`http://localhost:1337/login`).then(res => {
-        const data = res.data.rows;
-        console.log(data);
-        for(var row = 0; row<data.length; row++) {
-          console.log("Entered");
-          if(data[row].user_id == idFromURL) {
-            console.log("Yes");
-            console.log(data[row].full_name);
-            setName(data[row].full_name);
-            document.getElementById('name').value = data[row].full_name;
-            console.log(name);
-            break;
-          }
-        }
-      }).catch(err => {
-          console.log(err);
-      });
-    }, []);
 
     const orderClick = () => {
-      window.location = `/Orders?id=${id}`;
+      window.location = `/Orders?id=${props.id}`;
     }
 
     const profileClick = () => {
-      window.location = `/Profile?id=${id}`;
+      window.location = `/Profile?id=${props.id}`;
     }
 
     const dashClick = () => {
-      window.location = `/Shares?id=${id}`;
+      window.location = `/Shares?id=${props.id}`;
     }
 
     return(
-      <Navbar color="link" light expand="md" style={{marginTop:'0.8%'}}>
-        <NavbarBrand href="/"><img src={require('./purple_logo.png')} alt="logo" height="50"/></NavbarBrand>
-        <NavbarToggler onClick={toggle} />
-        <Collapse isOpen={isOpen} navbar>
-          <Nav className="mr-auto" navbar>
-            <NavItem>
-              <NavLink target="_blank" href="https://github.com/ShambhaviSarin/Order_Matching">GitHub</NavLink>
-            </NavItem>
-          </Nav>
-          <NavbarText style={{marginRight:'-4%'}}>
+      <Navbar className="navbar-top navbar-horizontal navbar-light" expand="md">
+        <Container className="px-0">
+          <NavbarBrand to="/" tag={Link}>
+            <img alt="..." src={require("./purple_logo.png")} style={{height:'50px'}}/>
+          </NavbarBrand>
+          <button className="navbar-toggler" id="navbar-collapse-main">
+            <span className="navbar-toggler-icon" />
+          </button>
+          <UncontrolledCollapse navbar toggler="#navbar-collapse-main">
+            <Nav className="ml-auto" navbar>
+              <NavItem>
+                <NavLink className="nav-link-icon" target="_blank" href="https://github.com/ShambhaviSarin/Order_Matching">
+                  <FontAwesomeIcon icon={faGithub}/><span className="nav-link-inner--text">Github</span>
+                </NavLink>
+              </NavItem>
+            </Nav>
             <Nav className="align-items-center d-none d-md-flex" navbar>
               <UncontrolledDropdown nav>
                 <DropdownToggle className="pr-0" nav>
@@ -81,7 +61,7 @@ const NavigationBar = () => {
                       <img alt="..." src={require("./assets/img/theme/team-4-800x800.jpg")}/>
                     </span>
                     <Media className="ml-2 d-none d-lg-block">
-                      <span className="mb-0 text-sm font-weight-bold" id="name">{name}</span>
+                      <span className="mb-0 text-sm font-weight-bold" id="name">{props.name}</span>
                     </Media>
                   </Media>
                 </DropdownToggle>
@@ -99,7 +79,7 @@ const NavigationBar = () => {
                   </DropdownItem>
                   <DropdownItem onClick = {() => orderClick()}>
                     <i className="ni ni-calendar-grid-58" />
-                    <span>Orders</span>
+                    <span>My orders</span>
                   </DropdownItem>
                   <DropdownItem divider />
                   <DropdownItem href="/">
@@ -109,8 +89,8 @@ const NavigationBar = () => {
                 </DropdownMenu>
               </UncontrolledDropdown>
             </Nav>
-          </NavbarText>
-        </Collapse>
+          </UncontrolledCollapse>
+        </Container>
       </Navbar>
     );
 }
@@ -304,14 +284,213 @@ const Vieew = () => {
   );
 }
 
-const Orders = (props) => {
+const UserHeader = (props) => {
+
+    //const [id, setId] = useState(-1);
+    //const id = props.id;
+    const [investments, setInvestments] = useState(0);
+    const [benefits, setBenefits] = useState(0);
+    const [orders, setOrders] = useState(0);
+    const [trades, setTrades] = useState(0);
+    //const [perf, setPerf] = useState(0);
+
+    useEffect(() => {
+      const search = window.location.search; // returns the URL query String
+      const params = new URLSearchParams(search);
+      const idFromURL = params.get('id');
+      console.log(idFromURL);
+
+      const data = {
+        id: idFromURL
+      }
+
+      axios.post(`http://localhost:1337/investments`, data).then(res => {
+        const data = res.data.rows[0].sum;
+        console.log(data);
+        setInvestments(data);
+      }).catch(err => {
+          console.log(err);
+      });
+
+      axios.post(`http://localhost:1337/benefits`, data).then(res => {
+        const data = res.data.rows[0].sum;
+        console.log(data);
+        setBenefits(data);
+      }).catch(err => {
+          console.log(err);
+      });
+
+      axios.post(`http://localhost:1337/orderData`, data).then(res => {
+        const data = res.data.rows;
+        console.log(data);
+        setOrders(data.length);
+      }).catch(err => {
+          console.log(err);
+      });
+
+      axios.post(`http://localhost:1337/userTrades`, data).then(res => {
+        const data = res.data.rows;
+        console.log(data);
+        setTrades(data.length);
+      }).catch(err => {
+          console.log(err);
+      });
+
+    }, []);
+
     return (
-      <div style={{marginLeft: '10%', marginRight:'10%'}}>
-        <NavigationBar />
+      <>
+        <div style={{marginTop:'-5%', marginBottom:'10%'}}>
+          <Container fluid>
+            <div className="header-body">
+              {/* Card stats */}
+              <Row>
+                <Col lg="6" xl="3">
+                  <Card className="card-stats mb-4 mb-xl-0" style={{background:'#e0e0f8'}}>
+                    <CardBody>
+                      <Row>
+                        <div className="col">
+                          <CardTitle tag="h5" className="text-uppercase text-muted mb-0">
+                            Investments
+                          </CardTitle>
+                          <span className="h2 font-weight-bold mb-0">{investments}</span>
+                        </div>
+                        <Col className="col-auto">
+                          <div className="icon icon-shape bg-danger text-white rounded-circle shadow">
+                            <FontAwesomeIcon icon={faChartBar}/>
+                          </div>
+                        </Col>
+                      </Row>
+                      <p className="mt-3 mb-0 text-muted text-sm">
+                        <span className="text-success mr-2">
+                          <FontAwesomeIcon icon={faArrowUp}/> 3.48%
+                        </span>{" "}
+                        <span className="text-nowrap">Since last month</span>
+                      </p>
+                    </CardBody>
+                  </Card>
+                </Col>
+                <Col lg="6" xl="3">
+                  <Card className="card-stats mb-4 mb-xl-0" style={{background:'#e0e0f8'}}>
+                    <CardBody>
+                      <Row>
+                        <div className="col">
+                          <CardTitle tag="h5" className="text-uppercase text-muted mb-0">
+                            Benefits
+                          </CardTitle>
+                          <span className="h2 font-weight-bold mb-0">{benefits}</span>
+                        </div>
+                        <Col className="col-auto">
+                          <div className="icon icon-shape bg-warning text-white rounded-circle shadow">
+                            <FontAwesomeIcon icon={faChartPie}/>
+                          </div>
+                        </Col>
+                      </Row>
+                      <p className="mt-3 mb-0 text-muted text-sm">
+                        <span className="text-danger mr-2">
+                          <FontAwesomeIcon icon={faArrowDown}/> 3.48%
+                        </span>{" "}
+                        <span className="text-nowrap">Since last week</span>
+                      </p>
+                    </CardBody>
+                  </Card>
+                </Col>
+                <Col lg="6" xl="3">
+                  <Card className="card-stats mb-4 mb-xl-0" style={{background:'#e0e0f8'}}>
+                    <CardBody>
+                      <Row>
+                        <div className="col">
+                          <CardTitle tag="h5" className="text-uppercase text-muted mb-0">
+                            Total orders
+                          </CardTitle>
+                          <span className="h2 font-weight-bold mb-0">{orders}</span>
+                        </div>
+                        <Col className="col-auto">
+                          <div className="icon icon-shape bg-yellow text-white rounded-circle shadow">
+                            <FontAwesomeIcon icon={faUsers}/>
+                          </div>
+                        </Col>
+                      </Row>
+                      <p className="mt-3 mb-0 text-muted text-sm">
+                        <span className="text-warning mr-2">
+                          <FontAwesomeIcon icon={faArrowDown}/> 1.10%
+                        </span>{" "}
+                        <span className="text-nowrap">Since yesterday</span>
+                      </p>
+                    </CardBody>
+                  </Card>
+                </Col>
+                <Col lg="6" xl="3">
+                  <Card className="card-stats mb-4 mb-xl-0" style={{background:'#e0e0f8'}}>
+                    <CardBody>
+                      <Row>
+                        <div className="col">
+                          <CardTitle tag="h5" className="text-uppercase text-muted mb-0">
+                            Performance
+                          </CardTitle>
+                          <span className="h2 font-weight-bold mb-0">{((trades/orders)*100).toFixed(2)}%</span>
+                        </div>
+                        <Col className="col-auto">
+                          <div className="icon icon-shape bg-info text-white rounded-circle shadow">
+                            <FontAwesomeIcon icon={faPercent}/>
+                          </div>
+                        </Col>
+                      </Row>
+                      <p className="mt-3 mb-0 text-muted text-sm">
+                        <span className="text-success mr-2">
+                          <FontAwesomeIcon icon={faArrowUp}/> 12%
+                        </span>{" "}
+                        <span className="text-nowrap">Since last month</span>
+                      </p>
+                    </CardBody>
+                  </Card>
+                </Col>
+              </Row>
+            </div>
+          </Container>
+        </div>
+      </>
+    );
+}
+
+const Orders = (props) => {
+
+  const [name, setName] = useState('Jessica Jones');
+  const [id, setId] = useState(-1);
+
+  useEffect(() => {
+    const search = window.location.search; // returns the URL query String
+    const params = new URLSearchParams(search);
+    const idFromURL = params.get('id');
+    setId(idFromURL);
+    console.log("Id " + idFromURL);
+    axios.get(`http://localhost:1337/login`).then(res => {
+      const data = res.data.rows;
+      console.log(data);
+      for(var row = 0; row<data.length; row++) {
+        console.log("Entered");
+        if(data[row].user_id == idFromURL) {
+          console.log("Yes");
+          console.log(data[row].full_name);
+          setName(data[row].full_name);
+          document.getElementById('name').value = data[row].full_name;
+          console.log(name);
+          break;
+        }
+      }
+    }).catch(err => {
+        console.log(err);
+    });
+  }, []);
+
+    return (
+      <div style={{marginLeft: '10%', marginRight:'10%', marginTop:'1.5%'}}>
+        <NavigationBar id={id} name={name}/>
         <hr style={{marginLeft: '-12%', marginRight:'-12%', marginTop:'-0.2%'}}/>
-        <br/><br/><br/><br/>
+        <br/><br/><br/>
+        <UserHeader id={id}/>
         <Vieew />
-        <FooterPage />
+        <FooterPage/>
       </div>
     );
 }

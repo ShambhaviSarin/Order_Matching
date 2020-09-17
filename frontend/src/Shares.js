@@ -7,6 +7,7 @@ import { Link} from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faList, faCog, faSignOutAlt, faCaretRight, faCaretDown } from '@fortawesome/free-solid-svg-icons'
 import { faUserCircle } from '@fortawesome/free-regular-svg-icons';
+import { faGithub } from '@fortawesome/free-brands-svg-icons';
 import axios from "axios";
 import classnames from 'classnames';
 import './Shares.css';
@@ -67,16 +68,22 @@ const NavigationBar = () => {
     }
 
     return(
-      <Navbar color="link" light expand="md" style={{marginTop:'0.8%'}}>
-        <NavbarBrand href="/"><img src={require('./purple_logo.png')} alt="logo" height="50"/></NavbarBrand>
-        <NavbarToggler onClick={toggle} />
-        <Collapse isOpen={isOpen} navbar>
-          <Nav className="mr-auto" navbar>
-            <NavItem>
-              <NavLink target="_blank" href="https://github.com/ShambhaviSarin/Order_Matching">GitHub</NavLink>
-            </NavItem>
-          </Nav>
-          <NavbarText style={{marginRight:'-4%'}}>
+      <Navbar className="navbar-top navbar-horizontal navbar-light" expand="md">
+        <Container className="px-0">
+          <NavbarBrand to="/" tag={Link}>
+            <img alt="..." src={require("./purple_logo.png")} style={{height:'50px'}}/>
+          </NavbarBrand>
+          <button className="navbar-toggler" id="navbar-collapse-main">
+            <span className="navbar-toggler-icon" />
+          </button>
+          <UncontrolledCollapse navbar toggler="#navbar-collapse-main">
+            <Nav className="ml-auto" navbar>
+              <NavItem>
+                <NavLink className="nav-link-icon" target="_blank" href="https://github.com/ShambhaviSarin/Order_Matching">
+                  <FontAwesomeIcon icon={faGithub}/><span className="nav-link-inner--text">Github</span>
+                </NavLink>
+              </NavItem>
+            </Nav>
             <Nav className="align-items-center d-none d-md-flex" navbar>
               <UncontrolledDropdown nav>
                 <DropdownToggle className="pr-0" nav>
@@ -103,7 +110,7 @@ const NavigationBar = () => {
                   </DropdownItem>
                   <DropdownItem onClick = {() => orderClick()}>
                     <i className="ni ni-calendar-grid-58" />
-                    <span>Orders</span>
+                    <span>My orders</span>
                   </DropdownItem>
                   <DropdownItem divider />
                   <DropdownItem href="/">
@@ -113,8 +120,8 @@ const NavigationBar = () => {
                 </DropdownMenu>
               </UncontrolledDropdown>
             </Nav>
-          </NavbarText>
-        </Collapse>
+          </UncontrolledCollapse>
+        </Container>
       </Navbar>
     );
 }
@@ -322,7 +329,7 @@ const BuySell = () => {
   }
 
   return(
-    <div className="navbar-vertical fixed-left">
+    <div>
       <Row>
         <Col xl="11">
           <Card className="shadow">
@@ -441,13 +448,13 @@ const Vieew = () => {
 const Shares = (props) => {
     return (
       <div>
-        <div style={{marginLeft: '10%', marginRight:'10%'}}>
+        <div style={{marginTop:'2%'}}>
           <NavigationBar />
           <hr style={{marginLeft: '-12%', marginRight:'-12%', marginTop:'-0.2%'}}/>
           <br/><br/><br/><br/>
         </div>
-        <div style={{marginLeft:'70%', position:'fixed'}}><BuySell /></div>
-        <div style={{marginTop:'7%', marginLeft:'5%'}}>
+        <div style={{marginLeft:'70%', position:'fixed', marginTop:'-4%'}}><BuySell /></div>
+        <div style={{marginTop:'3%', marginLeft:'5%', marginRight:'3%'}}>
           <Vieew/>
         </div>
         <MSFT/>
@@ -459,21 +466,3 @@ const Shares = (props) => {
 }
 
 export default Shares;
-
-
-
-/*
-
-<Col xl="4">
-
-</Col>
-
-<Table style={{width:'100%'}} borderless>
-  <tbody>
-    <tr>
-      <td className="tabledata1">{props.marketPrice}</td>
-      <td className="tabledata2"><BuySell/></td>
-    </tr>
-  </tbody>
-</Table>
-*/
