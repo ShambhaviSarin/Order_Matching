@@ -13,6 +13,7 @@ import './Shares.css';
 import MSFT from './MSFT';
 import Footer from './footer';
 import Tabs from './TabbedC';
+import About from './About';
 //import Tabb from './TabbedC';
 // javascipt plugin for creating charts
 import Chart from "chart.js";
@@ -451,6 +452,7 @@ const Shares = (props) => {
         </div>
         <MSFT/>
         <Tabs/>
+        <About/>
         <Footer/>
       </div>
     );
