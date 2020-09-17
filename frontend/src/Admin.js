@@ -253,6 +253,7 @@ const Admin = (props) => {
         <div style={{marginLeft: '20%', marginRight:'5%'}}>
           <br/><br/><br/><br/>
           <Vieew/>
+          <FooterPage />
         </div>
       </div>
     );

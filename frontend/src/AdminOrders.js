@@ -206,6 +206,7 @@ const AdminOrders = (props) => {
         <div style={{marginLeft: '13%', marginRight:'1%'}}>
           <br/><br/><br/><br/>
           <Vieew/>
+          <FooterPage />
         </div>
       </div>
     );
