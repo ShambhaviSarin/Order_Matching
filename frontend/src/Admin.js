@@ -13,6 +13,7 @@ import axios from "axios";
 import classnames from 'classnames';
 import FooterPage from './FooterPage';
 import Sidebar from './Sidebar';
+import AdminHeader from './AdminHeader';
 // javascipt plugin for creating charts
 import Chart from "chart.js";
 // react plugin used to create charts
@@ -252,6 +253,7 @@ const Admin = (props) => {
         </div>
         <div style={{marginLeft: '20%', marginRight:'5%'}}>
           <br/><br/><br/><br/>
+          <AdminHeader />
           <Vieew/>
           <FooterPage />
         </div>
