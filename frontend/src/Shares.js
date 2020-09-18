@@ -14,6 +14,7 @@ import './Shares.css';
 import MSFT from './MSFT';
 import Footer from './footer';
 import Tabs from './TabbedC';
+import About from './About';
 //import Tabb from './TabbedC';
 // Using an ES6 transpiler like Babel
 import Slider from 'react-rangeslider'
@@ -437,25 +438,43 @@ const Vieew = () => {
 
 const Performance = (props) => {
   var price = props.price;
+  const [minPrice, setMinPrice] = useState(0);
+  const [maxPrice, setMaxPrice] = useState(price);
+  useEffect(() => {
+  const interval = setInterval(() => {
+    axios.get(`http://localhost:1337/price`).then(res => {
+      const data = res.data.rows[0];
+      console.log(data);
+      setMinPrice(data.min);
+      setMaxPrice(data.max);
+    }).catch(err => {
+        console.log(err);
+    });
+  }, 1000);
+    return () => clearInterval(interval);
+  }, []);
   return(
     <div>
-      <span style={{fontSize:'2rem', marginLeft:'5%'}}>Performance</span>
-      <Row>
-        <Col></Col>
+      <span style={{fontSize:'2rem', marginLeft:'10%', color:"#240250"}}>Performance</span>
+      <br/><br/>
+      <div className="card text-centre text-dark" style={{marginLeft:'10%',width:'50rem', height:'25rem', marginBottom:'10%'}}>
+        <Row>
+          <Col></Col>
           <Col>
             <div className='slider orientation-reversed'>
-              <div className='slider-horizontal'>
+              <div className='slider-horizontal' color="blue" style={{fill:'#240250', backgroundColor:'#240250', flex:'1'}}>
                 <Slider
-                    min={0}
-                    max={10}
-                    value={price}
-                    orientation='horizontal'
+                      min={minPrice}
+                      max={maxPrice}
+                      value={price}
+                      orientation='horizontal'
                 />
-              <div className='value'>{price}</div>
+              </div>
             </div>
-          </div>
-        </Col>
-      </Row>
+          </Col>
+          <Col></Col>
+        </Row>
+      </div>
     </div>
   );
 }
@@ -485,11 +504,12 @@ const Shares = (props) => {
           <br/><br/><br/><br/>
         </div>
         <div style={{marginLeft:'70%', position:'fixed', marginTop:'-4%'}}><BuySell price={price}/></div>
-        <div style={{marginTop:'3%', marginLeft:'5%', marginRight:'3%'}}>
+        <div style={{marginTop:'3%', marginLeft:'10%', marginRight:'3%'}}>
           <Vieew/>
         </div>
         <br/><br/>
         <Performance price = {price}/>
+        <About/>
         <MSFT/>
         <Tabs/>
         <Footer/>
