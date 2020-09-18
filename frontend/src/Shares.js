@@ -17,9 +17,9 @@ import Tabs from './TabbedC';
 import About from './About';
 //import Tabb from './TabbedC';
 // Using an ES6 transpiler like Babel
-import Slider from 'react-rangeslider'
+import Slider from '../node_modules/react-rangeslider'
 // To include the default styles
-import 'react-rangeslider/lib/index.css'
+import '../node_modules/react-rangeslider/lib/index.css'
 // javascipt plugin for creating charts
 import Chart from "chart.js";
 // react plugin used to create charts
@@ -509,9 +509,9 @@ const Shares = (props) => {
         </div>
         <br/><br/>
         <Performance price = {price}/>
-        <About/>
         <MSFT/>
         <Tabs/>
+        <About/>
         <Footer/>
       </div>
     );
