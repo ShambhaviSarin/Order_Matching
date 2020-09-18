@@ -20,6 +20,9 @@ import Chart from "chart.js";
 import { Line, Bar } from "react-chartjs-2";
 //import { Line, Bar } from "react-chartjs-2";
 import {chartOptions,parseOptions,chartExample1,chartExample2} from "./charts.js";
+import { PieChart,
+  Legend,
+} from 'react-minimal-pie-chart';
 
 const NavigationBar = () => {
     const [isOpen, setIsOpen] = useState(false);
@@ -124,13 +127,13 @@ const Graphs = (props) => {
                 <Row className="align-items-center">
                   <div className="col">
                     <h6 className="text-uppercase text-light ls-1 mb-1">
-                      Overview
+                      Microsoft Corporation (MSFT)
                     </h6>
-                    <h2 className="text-white mb-0">Microsoft Corporation (MSFT)</h2>
+                    <h2 className="text-white mb-0">Shareholding pattern</h2>
                   </div>
                   <div className="col">
                   <Nav className="justify-content-end" pills>
-                    <NavItem>
+                    {/*<NavItem>
                       <NavLink className={classnames("py-2 px-3", {active: activeNav === 1})} href="#pablo" onClick={e => toggleNavs(e, 1)}>
                         <span className="d-none d-md-block">Month</span>
                         <span className="d-md-none">M</span>
@@ -141,20 +144,37 @@ const Graphs = (props) => {
                         <span className="d-none d-md-block">Week</span>
                         <span className="d-md-none">W</span>
                       </NavLink>
-                    </NavItem>
+                    </NavItem>*/}
                   </Nav>
                   </div>
                 </Row>
               </CardHeader>
               <CardBody>
                 {/* Chart */}
-                <div className="chart">
+                {/*<div className="chart">
                   <Line
                     data={chartExample1[chartData]}
                     options={chartExample1.options}
                     getDatasetAtEvent={e => console.log(e)}
                   />
-                </div>
+                </div>*/}
+                
+                <PieChart
+                  radius={40}
+                  labelStyle={{
+                    fontSize: '3px'
+                    }}
+                  label={(props) => { return props.dataEntry.title;}}
+                  data={[
+                    { title: 'Promoter', value: 33, color: '#99badd',label:true,legend:true},
+                    { title: 'Foreign Institution ', value: 33, color: '#4682b4',label:true,legend:true },
+                    { title: 'Public Holding ', value: 33, color: '#89CFF0',label:true,legend:true }
+                  ]}
+                  legendData={[{ name: 'Promoters: 33' }, { name: 'Foreign institution: 33' }, { name: 'Public Holding: 10' }]}
+                  legendPosition="bottom"
+
+                  
+                />;
               </CardBody>
             </Card>
           </Col>
