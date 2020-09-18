@@ -116,6 +116,48 @@ const Graphs = (props) => {
     setChartData(chartData1)
   };
 
+  const [w, setW] = useState(31.5);
+  const [r, setR] = useState(31.8);
+  const [a, setA] = useState(36.66);
+  const [total, setTotal] = useState(15975);
+
+  useEffect(() => {
+    axios.get(`http://localhost:1337/rejectedOrders`).then(res => {
+      const data = res.data.rows.length;
+      console.log(data);
+      setR(data);
+      console.log(r);
+    }).catch(err => {
+        console.log(err);
+    });
+
+    axios.get(`http://localhost:1337/waitingOrders`).then(res => {
+      const data = res.data.rows.length;
+      console.log(data);
+      setW(data);
+      console.log(w);
+    }).catch(err => {
+        console.log(err);
+    });
+
+    axios.get(`http://localhost:1337/totalOrders`).then(res => {
+      const data = res.data.rows.length;
+      console.log(data);
+      setTotal(data);
+      console.log(total);
+      const a = total - (w+r);
+      setA(a);
+      setW((w/total)*100);
+      setR((r/total)*100);
+      setA((a/total)*100);
+      console.log(w);
+      console.log(r);
+      console.log(a);
+    }).catch(err => {
+        console.log(err);
+    });
+  }, []);
+
   return (
     <>
       {/* Page content */}
@@ -133,18 +175,6 @@ const Graphs = (props) => {
                   </div>
                   <div className="col">
                   <Nav className="justify-content-end" pills>
-                    {/*<NavItem>
-                      <NavLink className={classnames("py-2 px-3", {active: activeNav === 1})} href="#pablo" onClick={e => toggleNavs(e, 1)}>
-                        <span className="d-none d-md-block">Month</span>
-                        <span className="d-md-none">M</span>
-                      </NavLink>
-                    </NavItem>
-                    <NavItem>
-                      <NavLink className={classnames("py-2 px-3", {active: activeNav === 2})} href="#pablo" onClick={e => toggleNavs(e, 2)}>
-                        <span className="d-none d-md-block">Week</span>
-                        <span className="d-md-none">W</span>
-                      </NavLink>
-                    </NavItem>*/}
                   </Nav>
                   </div>
                 </Row>
@@ -152,13 +182,6 @@ const Graphs = (props) => {
               <CardBody>
                 {/* Chart */}
                 <div className="chart">
-                  {/*<Line
-                    data={chartExample1[chartData]}
-                    options={chartExample1.options}
-                    getDatasetAtEvent={e => console.log(e)}
-                  />
-                </div>*/}
-
                 <PieChart
                   radius={50}
                   labelStyle={{
@@ -166,9 +189,9 @@ const Graphs = (props) => {
                     }}
                   label={(props) => { return props.dataEntry.title;}}
                   data={[
-                    { title: 'Waitlisted orders ', value: 20, color: '#89CFF0',label:true,legend:true },
-                    { title: 'Completed orders', value: 65, color: '#99badd',label:true,legend:true},
-                    { title: 'Pending orders ', value: 25, color: '#4682b4',label:true,legend:true }
+                    { title: 'Waiting orders ', value: 31.5, color: '#89CFF0',label:true,legend:true },
+                    { title: 'Completed orders', value: 32.8, color: '#99badd',label:true,legend:true},
+                    { title: 'Rejected orders ', value: 35.7, color: '#4682b4',label:true,legend:true }
                   ]}
                   legendData={[{ name: 'Promoters: 33' }, { name: 'Foreign institution: 33' }, { name: 'Public Holding: 10' }]}
                   legendPosition="bottom"
@@ -203,14 +226,6 @@ const Graphs = (props) => {
         </Row>
       </Container>
     </>
-  );
-}
-
-const Vieew = () => {
-  return(
-    <div>
-      <Graphs />
-    </div>
   );
 }
 
