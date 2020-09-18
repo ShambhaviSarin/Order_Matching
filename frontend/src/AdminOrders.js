@@ -121,7 +121,7 @@ const Graphs = (props) => {
       {/* Page content */}
       <Container className="mt--7" fluid>
         <Row>
-          <Col className="mb-5 mb-xl-0" xl="8">
+          <Col className="mb-5 mb-xl-0" xl="6">
             <Card className="bg-gradient-default shadow">
               <CardHeader className="bg-transparent">
                 <Row className="align-items-center">
@@ -151,16 +151,16 @@ const Graphs = (props) => {
               </CardHeader>
               <CardBody>
                 {/* Chart */}
-                {/*<div className="chart">
-                  <Line
+                <div className="chart">
+                  {/*<Line
                     data={chartExample1[chartData]}
                     options={chartExample1.options}
                     getDatasetAtEvent={e => console.log(e)}
                   />
                 </div>*/}
-                
+
                 <PieChart
-                  radius={40}
+                  radius={50}
                   labelStyle={{
                     fontSize: '3px'
                     }}
@@ -172,9 +172,8 @@ const Graphs = (props) => {
                   ]}
                   legendData={[{ name: 'Promoters: 33' }, { name: 'Foreign institution: 33' }, { name: 'Public Holding: 10' }]}
                   legendPosition="bottom"
-
-                  
                 />;
+                </div>
               </CardBody>
             </Card>
           </Col>
@@ -221,13 +220,17 @@ const AdminOrders = (props) => {
         <div>
           <Sidebar />
         </div>
-        <div style={{marginLeft:'13%'}}>
+        <div style={{marginRight:'-10%'}}>
           <NavigationBar/>
         </div>
-        <div style={{marginLeft: '13%', marginRight:'1%'}}>
-          <br/><br/><br/><br/>
+        <div style={{marginLeft:'20%', marginTop:'8%', marginRight:'3%'}}>
           <AdminHeader />
-          <Vieew/>
+        </div>
+        <div style={{marginLeft: '20%', marginRight:'-13%', marginTop:'-5%'}}>
+          <br/><br/><br/><br/>
+          <Graphs/>
+        </div>
+        <div style={{marginLeft:'17%'}}>
           <FooterPage />
         </div>
       </div>
