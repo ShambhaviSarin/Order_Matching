@@ -21,17 +21,22 @@ const NavigationBar = (props) => {
 
   const [isOpen, setIsOpen] = useState(false);
   const toggle = () => setIsOpen(!isOpen);
+  const id = props.id;
 
   const orderClick = () => {
-    window.location = `/Orders?id=${props.id}`;
+    window.location = `/Orders?id=${id}`;
   }
 
   const profileClick = () => {
-    window.location = `/Profile?id=${props.id}`;
+    window.location = `/Profile?id=${id}`;
   }
 
   const dashClick = () => {
-    window.location = `/Shares?id=${props.id}`;
+    if(id == 47) {
+      window.location = `/Admin?id=47`;
+    } else {
+      window.location = `/Shares?id=${id}`;
+    }
   }
 
   return (
@@ -83,10 +88,10 @@ const NavigationBar = (props) => {
                     <i className="ni ni-single-02" />
                     <span>My profile</span>
                   </DropdownItem>
-                  <DropdownItem onClick = {() => orderClick()}>
+                  {(id!=47)?(<DropdownItem onClick = {() => orderClick()}>
                     <i className="ni ni-calendar-grid-58" />
-                    <span>Orders</span>
-                  </DropdownItem>
+                    <span>My orders</span>
+                  </DropdownItem>):null}
                   <DropdownItem divider />
                   <DropdownItem href="/">
                     <i className="ni ni-user-run" />
@@ -134,7 +139,7 @@ const UserHeader = (props) => {
 const Vieew = (props) => {
   return (
     <>
-      <UserHeader name={props.name}/>
+      <UserHeader id={props.id} name={props.name}/>
       {/* Page content */}
       <Container className="mt--7" fluid style={{marginLeft:'16.5%'}}>
         <Row>

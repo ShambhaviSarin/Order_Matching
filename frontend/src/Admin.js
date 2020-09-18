@@ -170,7 +170,7 @@ const TradeTable = (props) => {
           <div className="col">
             <Card className="bg-gradient-default shadow">
               <CardHeader className="bg-transparent border-0">
-                <h3 className="text-white mb-0">Your orders</h3>
+                <h3 className="text-white mb-0">All trades</h3>
               </CardHeader>
               <Table className="align-items-center bg-transparent border-0" responsive style={{color:'white', overflow:'hidden', marginBottom:'-1%', borderTop:'1px solid #5272e4'}}>
                 <thead style={{borderTop:'1px solid #5272e4'}}>

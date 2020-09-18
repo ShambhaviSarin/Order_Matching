@@ -42,27 +42,27 @@ const Sidebar = () => {
 
     var routes = [
       {
-        path: "/Admin",
+        path: "/Admin?id=47",
         name: "Trades",
         icon: "ni ni-check-bold text-success"
       },
       {
-        path: "/Admin1",
+        path: "/Admin1?id=47",
         name: "Rejected Orders",
         icon: "ni ni-fat-remove text-orange"
       },
       {
-        path: "/Admin2",
+        path: "/Admin2?id=47",
         name: "Waiting Orders",
         icon: "ni ni-bullet-list-67 text-yellow"
       },
       {
-        path: "/AdminOrders",
+        path: "/AdminOrders?id=47",
         name: "Orders",
         icon: "ni ni-chart-bar-32 text-red"
       },
       {
-        path: "/UserData",
+        path: "/UserData?id=47",
         name: "Users",
         icon: "ni ni-single-02 text-info"
       }
@@ -72,7 +72,9 @@ const Sidebar = () => {
       <Navbar className="navbar-vertical fixed-left navbar-light bg-white" expand="md" id="sidenav-main">
         <Container fluid>
           <NavbarBrand className="pt-0" style={{marginTop:'10%'}}>
-            <img alt='..' className="navbar-brand-img" src={require('./purple_logo.png')} height="100px"/>
+            <NavLink href="/" style={{cursor:'pointer'}}>
+              <img alt='..' className="navbar-brand-img" src={require('./purple_logo.png')} height="100px"/>
+            </NavLink>
           </NavbarBrand>
           <Collapse navbar isOpen={true}>
             <Nav navbar>{createLinks(routes)}</Nav>
