@@ -119,7 +119,7 @@ function orders(q, id, order) {
   } else {
     while(order.qty !== 0) {
       var pos = getMinPriceOrder(q,order.qty,order.minq);
-      console.log("pos"+pos);
+      //console.log("pos"+pos);
       if(pos === -1) {
         if(order.order_type === 1) {
           rejectOrder(id);
@@ -131,28 +131,28 @@ function orders(q, id, order) {
           else
             msg = "Order waiting! No buyers\n"
         }
-        console.log("case 1");
+        //console.log("case 1");
         return;
       } else if (order.order_type === 0 && order.category === 0 && q.elements[pos].price > order.price) {
         qb.enqueue(order);
         msg = "Order waiting! No sellers at this price\n";
-        console.log("case 2");
+        //console.log("case 2");
         return;
       } else if (order.order_type === 0 && order.category === 1 && q.elements[pos].price < order.price) {
         qb.enqueue(order);
         msg = "Order waiting! No buyers at this price\n";
-        console.log("case 3");
+        //console.log("case 3");
         return;
       } else if(q.elements[pos].qty >= order.qty) {
-        console.log("case 4");
-        console.log("Match order: "+ q.elements[pos]);
+        //console.log("case 4");
+        //console.log("Match order: "+ q.elements[pos]);
         //trade executes
         if(order.category === 0) {
           acceptOrder(id, q.elements[pos].order_id, q.elements[pos].price, order.qty);
-          console.log("buy order trade executed");
+          //console.log("buy order trade executed");
         } else {
           acceptOrder(q.elements[pos].order_id, id, q.elements[pos].price, order.qty);
-          console.log("sell order trade executed");
+          //console.log("sell order trade executed");
         }
 
         //update qty
@@ -181,7 +181,7 @@ function orders(q, id, order) {
           q.elements[pos].minq = 1;
         }
 
-        console.log("match order checked");
+        //console.log("match order checked");
         if(order.description === 3) {
           if(order.left > 0) {
             msg = "Disclosed qty executed!"
@@ -200,19 +200,19 @@ function orders(q, id, order) {
         } else {
           order.qty = 0;
         }
-        console.log("202" + msg);
+        console.log(msg);
       } else {
 
-        console.log("case 4");
-        console.log("Match order: "+ q.elements[pos]);
+        ///console.log("case 4");
+        //console.log("Match order: "+ q.elements[pos]);
 
         //execute partial order
         if(order.category === 0) {
           acceptOrder(id, q.elements[pos].order_id, q.elements[pos].price, order.qty);
-          console.log("Buy order trade executed");
+          //console.log("Buy order trade executed");
         } else {
           acceptOrder(q.elements[pos].order_id, id, q.elements[pos].price, order.qty);
-          console.log("Sell order trade executed");
+          //console.log("Sell order trade executed");
         }
         msg = "Partial order executed!\n"
         console.log(msg);
@@ -237,7 +237,7 @@ function orders(q, id, order) {
             q.dequeue();
           }
         }
-        console.log("par done");
+        //console.log("par done");
       }
     }
   }
@@ -264,6 +264,7 @@ function getAllPrice(q, qty, minq) {
 
 //execute buy limit order all or none condition
 function allOrders(q, id, order) {
+  console.log(order.order_time);
   if(q.isEmpty()) {
     if(order.order_type === 1) {
       rejectOrder(id);
@@ -369,6 +370,7 @@ function getMinPrice(q, qty, minq, minQty) {
 
 //execute buy limit order min fill condition
 function minOrders(q, id, order) {
+  console.log(order.order_time);
   if(q.isEmpty()) {
     if(order.order_type === 1) {
       rejectOrder(id);
@@ -519,16 +521,16 @@ async function generate() {
     var len = userId.rows.length;
     var u = Math.floor(Math.random() * len);
     var randomUID = userId.rows[u].user_id;
-    console.log("u generated");
+    //console.log("u generated");
     //qty
     var randomQty = Math.floor(Math.random() * 1000 ) + 1;
-    console.log("q generated");
+    //console.log("q generated");
     //category
     var randomCat = Math.round(Math.random());
-    console.log("c generated");
+    //console.log("c generated");
     //type
     var randomType = Math.round(Math.random())+1;
-    console.log("t generated");
+    //console.log("t generated");
     //price
     var minPrice = parseFloat(marketPrice - (0.12*marketPrice)).toFixed(2);
     var maxPrice = parseFloat(marketPrice + (0.12*marketPrice)).toFixed(2);
@@ -536,7 +538,7 @@ async function generate() {
     //description
     var d = Math.floor(Math.random() * 4);
     //var d=0;
-    console.log("d generated");
+    //console.log("d generated");
     //mindis
     var randomMindis = 0;
     if(d === 2 || d === 3){
@@ -557,7 +559,7 @@ async function generate() {
       }
     }
 
-    console.log("all generated");
+    //console.log("all generated");
     //process
     const randomOrder = await pool.query(
       "INSERT INTO orders(user_id, qty, category, order_type, price, description, mindis, status) VALUES ($1 , $2 , $3 , $4 , $5, $6, $7, $8) RETURNING *",

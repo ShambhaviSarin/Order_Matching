@@ -6,21 +6,21 @@ import "../node_modules/bootstrap/dist/css/bootstrap.min.css";
 import "../node_modules/bootstrap/dist/js/bootstrap.bundle";
 const New_elements = () => {
   const team = [{
-              "img": "img/team/01.jpg",
+              "img": "img/team/01.jpeg",
               "name": "Shambhavi Sarin"
           },
           {
-              "img": "img/team/02.jpg",
+              "img": "img/team/02.jpeg",
               "name": "Akhya Bajpai"
           }, {
-              "img": "img/team/03.jpg",
+              "img": "img/team/03.jpeg",
               "name": "Shantanu Das"
           },{
-              "img": "img/team/04.jpg",
+              "img": "img/team/04.jpeg",
               "name": "Malaika Bedi"
           },
           {
-              "img": "img/team/05.jpg",
+              "img": "img/team/05.jpeg",
               "name": "Richa"
           }
       ]

@@ -436,49 +436,6 @@ const Vieew = () => {
   );
 }
 
-const Performance = (props) => {
-  var price = props.price;
-  const [minPrice, setMinPrice] = useState(0);
-  const [maxPrice, setMaxPrice] = useState(price);
-  useEffect(() => {
-  const interval = setInterval(() => {
-    axios.get(`http://localhost:1337/price`).then(res => {
-      const data = res.data.rows[0];
-      console.log(data);
-      setMinPrice(data.min);
-      setMaxPrice(data.max);
-    }).catch(err => {
-        console.log(err);
-    });
-  }, 1000);
-    return () => clearInterval(interval);
-  }, []);
-  return(
-    <div>
-      <span style={{fontSize:'2rem', marginLeft:'10%', color:"#240250"}}>Performance</span>
-      <br/><br/>
-      <div className="card text-centre text-dark" style={{marginLeft:'10%',width:'50rem', height:'25rem', marginBottom:'10%'}}>
-        <Row>
-          <Col></Col>
-          <Col>
-            <div className='slider orientation-reversed'>
-              <div className='slider-horizontal' color="blue" style={{fill:'#240250', backgroundColor:'#240250', flex:'1'}}>
-                <Slider
-                      min={minPrice}
-                      max={maxPrice}
-                      value={price}
-                      orientation='horizontal'
-                />
-              </div>
-            </div>
-          </Col>
-          <Col></Col>
-        </Row>
-      </div>
-    </div>
-  );
-}
-
 const Shares = (props) => {
 
   const [price, setPrice] = useState('500');
@@ -507,8 +464,6 @@ const Shares = (props) => {
         <div style={{marginTop:'3%', marginLeft:'10%', marginRight:'3%'}}>
           <Vieew/>
         </div>
-        <br/><br/>
-        <Performance price = {price}/>
         <MSFT/>
         <Tabs/>
         <About/>

@@ -22,7 +22,7 @@ import { Line, Bar } from "react-chartjs-2";
 import {chartOptions,parseOptions,chartExample1,chartExample2} from "./charts.js";
 import { PieChart,
   Legend,
-} from 'react-minimal-pie-chart';
+} from '../node_modules/react-minimal-pie-chart';
 
 const NavigationBar = () => {
     const [isOpen, setIsOpen] = useState(false);
@@ -116,12 +116,54 @@ const Graphs = (props) => {
     setChartData(chartData1)
   };
 
+  const [w, setW] = useState(31.5);
+  const [r, setR] = useState(31.8);
+  const [a, setA] = useState(36.66);
+  const [total, setTotal] = useState(15975);
+
+  useEffect(() => {
+    axios.get(`http://localhost:1337/rejectedOrders`).then(res => {
+      const data = res.data.rows.length;
+      console.log(data);
+      setR(data);
+      console.log(r);
+    }).catch(err => {
+        console.log(err);
+    });
+
+    axios.get(`http://localhost:1337/waitingOrders`).then(res => {
+      const data = res.data.rows.length;
+      console.log(data);
+      setW(data);
+      console.log(w);
+    }).catch(err => {
+        console.log(err);
+    });
+
+    axios.get(`http://localhost:1337/totalOrders`).then(res => {
+      const data = res.data.rows.length;
+      console.log(data);
+      setTotal(data);
+      console.log(total);
+      const a = total - (w+r);
+      setA(a);
+      setW((w/total)*100);
+      setR((r/total)*100);
+      setA((a/total)*100);
+      console.log(w);
+      console.log(r);
+      console.log(a);
+    }).catch(err => {
+        console.log(err);
+    });
+  }, []);
+
   return (
     <>
       {/* Page content */}
       <Container className="mt--7" fluid>
         <Row>
-          <Col className="mb-5 mb-xl-0" xl="8">
+          <Col className="mb-5 mb-xl-0" xl="6">
             <Card className="bg-gradient-default shadow">
               <CardHeader className="bg-transparent">
                 <Row className="align-items-center">
@@ -133,48 +175,28 @@ const Graphs = (props) => {
                   </div>
                   <div className="col">
                   <Nav className="justify-content-end" pills>
-                    {/*<NavItem>
-                      <NavLink className={classnames("py-2 px-3", {active: activeNav === 1})} href="#pablo" onClick={e => toggleNavs(e, 1)}>
-                        <span className="d-none d-md-block">Month</span>
-                        <span className="d-md-none">M</span>
-                      </NavLink>
-                    </NavItem>
-                    <NavItem>
-                      <NavLink className={classnames("py-2 px-3", {active: activeNav === 2})} href="#pablo" onClick={e => toggleNavs(e, 2)}>
-                        <span className="d-none d-md-block">Week</span>
-                        <span className="d-md-none">W</span>
-                      </NavLink>
-                    </NavItem>*/}
                   </Nav>
                   </div>
                 </Row>
               </CardHeader>
               <CardBody>
                 {/* Chart */}
-                {/*<div className="chart">
-                  <Line
-                    data={chartExample1[chartData]}
-                    options={chartExample1.options}
-                    getDatasetAtEvent={e => console.log(e)}
-                  />
-                </div>*/}
-                
+                <div className="chart">
                 <PieChart
-                  radius={40}
+                  radius={50}
                   labelStyle={{
                     fontSize: '3px'
                     }}
                   label={(props) => { return props.dataEntry.title;}}
                   data={[
-                    { title: 'Waitlisted orders ', value: 20, color: '#89CFF0',label:true,legend:true },
-                    { title: 'Completed orders', value: 65, color: '#99badd',label:true,legend:true},
-                    { title: 'Pending orders ', value: 25, color: '#4682b4',label:true,legend:true }
+                    { title: 'Waiting orders ', value: 31.5, color: '#89CFF0',label:true,legend:true },
+                    { title: 'Completed orders', value: 32.8, color: '#99badd',label:true,legend:true},
+                    { title: 'Rejected orders ', value: 35.7, color: '#4682b4',label:true,legend:true }
                   ]}
                   legendData={[{ name: 'Promoters: 33' }, { name: 'Foreign institution: 33' }, { name: 'Public Holding: 10' }]}
                   legendPosition="bottom"
-
-                  
                 />;
+                </div>
               </CardBody>
             </Card>
           </Col>
@@ -207,27 +229,23 @@ const Graphs = (props) => {
   );
 }
 
-const Vieew = () => {
-  return(
-    <div>
-      <Graphs />
-    </div>
-  );
-}
-
 const AdminOrders = (props) => {
     return (
       <div>
         <div>
           <Sidebar />
         </div>
-        <div style={{marginLeft:'13%'}}>
+        <div style={{marginRight:'-10%'}}>
           <NavigationBar/>
         </div>
-        <div style={{marginLeft: '13%', marginRight:'1%'}}>
-          <br/><br/><br/><br/>
+        <div style={{marginLeft:'20%', marginTop:'8%', marginRight:'3%'}}>
           <AdminHeader />
-          <Vieew/>
+        </div>
+        <div style={{marginLeft: '20%', marginRight:'-13%', marginTop:'-5%'}}>
+          <br/><br/><br/><br/>
+          <Graphs/>
+        </div>
+        <div style={{marginLeft:'17%'}}>
           <FooterPage />
         </div>
       </div>
