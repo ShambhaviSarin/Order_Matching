@@ -129,7 +129,7 @@ const Graphs = (props) => {
                     <h6 className="text-uppercase text-light ls-1 mb-1">
                       Microsoft Corporation (MSFT)
                     </h6>
-                    <h2 className="text-white mb-0">Shareholding pattern</h2>
+                    <h2 className="text-white mb-0">Orders</h2>
                   </div>
                   <div className="col">
                   <Nav className="justify-content-end" pills>
@@ -166,9 +166,9 @@ const Graphs = (props) => {
                     }}
                   label={(props) => { return props.dataEntry.title;}}
                   data={[
-                    { title: 'Promoter', value: 33, color: '#99badd',label:true,legend:true},
-                    { title: 'Foreign Institution ', value: 33, color: '#4682b4',label:true,legend:true },
-                    { title: 'Public Holding ', value: 33, color: '#89CFF0',label:true,legend:true }
+                    { title: 'Waitlisted orders ', value: 20, color: '#89CFF0',label:true,legend:true },
+                    { title: 'Completed orders', value: 65, color: '#99badd',label:true,legend:true},
+                    { title: 'Pending orders ', value: 25, color: '#4682b4',label:true,legend:true }
                   ]}
                   legendData={[{ name: 'Promoters: 33' }, { name: 'Foreign institution: 33' }, { name: 'Public Holding: 10' }]}
                   legendPosition="bottom"
