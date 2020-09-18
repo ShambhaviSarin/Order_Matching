@@ -626,7 +626,7 @@ process.on('unhandledRejection', (reason, p) => {
     console.error('Unhandled rejection (promise: ', event.promise, ', reason: ', event.reason, ').');
 });*/
 
-setInterval(() => generate(), 1000);
+//setInterval(() => generate(), 1000);
 
 //create orders
 //Anytime we create or get data, it will take some time.
